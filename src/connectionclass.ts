@@ -46,11 +46,15 @@ export class ConnectionClass {
 
       return new Promise((resolve, reject) => {
 
-        const COSMOSDB_USER     = "cockbit-cosmos-db";
-        const COSMOSDB_PASSWORD = "S5eYqFWE5F2ZuzZBojFU3Nv11BcXAcGRBXlIuAaEGpCms7bTxkaMGIExMJOgARbTjgVM6PaQP73oACDbTyOG4A==";
+        const COSMOSDB_USER     = process.env.COSMOSDB_USER;     //  "cockbit-cosmos-db";
+        const COSMOSDB_PASSWORD = process.env.COSMOSDB_PASSWORD; // "S5eYqFWE5F2ZuzZBojFU3Nv11BcXAcGRBXlIuAaEGpCms7bTxkaMGIExMJOgARbTjgVM6PaQP73oACDbTyOG4A==";
         const COSMOSDB_DBNAME   = "cockbit-cosmos-db";
         const COSMOSDB_HOST     = "cockbit-cosmos-db.mongo.cosmos.azure.com";
         const COSMOSDB_PORT     = 10255;
+
+        console.log('Connection Class');
+        console.log('DB Username: ' + COSMOSDB_USER);
+        console.log('DB Password: ' + COSMOSDB_PASSWORD);
 
         let uri = "mongodb://"+COSMOSDB_HOST+":"+COSMOSDB_PORT+"/"+COSMOSDB_DBNAME+"?ssl=true&replicaSet=globaldb";
 
