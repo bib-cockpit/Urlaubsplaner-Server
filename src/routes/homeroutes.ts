@@ -2,12 +2,13 @@ import express, {Application, Request, Response, Router} from 'express';
 import {VersionsinfoClass} from '../versionsinfoclass';
 import {DebugClass} from "../debug";
 import {ConnectionClass} from "../connectionclass";
-import config from "config";
+import {Configclass} from "../configclass";
 
 const Info             = new VersionsinfoClass();
 const Connection       = new ConnectionClass();
 const app: Application = express();
 const Environment      = app.get('env');
+const Config           = new Configclass();
 
 class HomerouterClass {
 
@@ -48,20 +49,17 @@ class HomerouterClass {
           <td>DB Passwort:</td><td>${Connection.COSMOSDB_PASSWORD}</td>
       </tr>
       <tr>
-          <td>DB Passwort from config Environment:</td><td>${config.get('COSMOSDB_PASSWORD')}</td>
+          <td>DB Passwort from config Environment:</td><td>${Config.get('COSMOSDB_PASSWORD')}</td>
       </tr>
       </table>
       </body>
     `;
-
         res.status(200).send(html);
       });
     } catch (error) {
 
       this.Debug.ShowErrorMessage(error, 'HomerouterClass', 'SetRoutes', this.Debug.Typen.Class);
     }
-
-
   }
 }
 

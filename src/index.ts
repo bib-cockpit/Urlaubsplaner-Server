@@ -30,6 +30,7 @@ const Settingsrouter: MitarbeitersettingsrouterClass = new Mitarbeitersettingsro
 const Projektpunkterouter: ProjektpunkteroutsClass = new ProjektpunkteroutsClass();
 const Protokollrouter: ProtokolleroutsClass = new ProtokolleroutsClass();
 
+
 /*
 if(!config.has('COCKPIT_JWTSecretKey')) {
 
@@ -42,8 +43,7 @@ else {
 
   Debug.ShowInfoMessage('COCKPIT_JWTSecretKey: ' + config.get('COCKPIT_JWTSecretKey'), 'index.ts', 'Server');
 }
-
- */
+*/
 
 app.use(morgan('dev')); // http request Debug messages
 app.use((req: Request, res: Response, next: NextFunction) => {
