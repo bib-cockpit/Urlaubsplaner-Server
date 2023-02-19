@@ -52,7 +52,7 @@ class HomerouterClass {
           <td>DB Passwort from config Environment (gespiegelt):</td><td>${Config.get('passwort')}</td>
       </tr>
       <tr>
-          <td>DB Passwort from config Environment (env abfrage):</td><td>${Config.getEnv('COSMOSDB_PASSWORD')}</td>
+          <td>DB Passwort from config Environment (env abfrage intern config):</td><td>${Config.getEnv('ALLOW_CONFIG_MUTATIONS')}</td>
       </tr>
       </table>
       </body>
