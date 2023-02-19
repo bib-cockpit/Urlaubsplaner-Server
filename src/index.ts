@@ -9,13 +9,13 @@ import {ConnectionClass} from "./connectionclass";
 import moment from "moment";
 import {DebugClass} from "./debug";
 import {MitarbeiterrouterClass} from "./routes/mitarbeiterrouts";
-// import config from "config";
 import {RegistrierungrouterClass} from "./routes/registrierungrouts";
 import {ProjekteroutsClass} from "./routes/projekterouts";
 import {MitarbeitersettingsrouterClass} from "./routes/mitarbeitersettingrouts";
 import {ProjektpunkteroutsClass} from "./routes/projektpunkteerouts";
 import {ProtokolleroutsClass} from "./routes/protokollerouts";
 
+const ServerOnline: boolean = true;
 const app: Application = express();
 const Environment = app.get('env');
 const port: number = process.env.PORT ? parseInt(process.env.PORT) : 5000;
@@ -82,14 +82,28 @@ app.listen(port, () => {
   Debug.ShowInfoMessage(`Cockpit Server is listening on port ${port}.....`, 'index.ts', 'Server');
   Debug.ShowInfoMessage(`Startup time ${moment().format('HH:mm:ss')}`, 'index.ts', 'Server');
 
-  Connection.ConnectOnline().then(() => {
+  if(ServerOnline === true) {
 
-    Debug.ShowInfoMessage('Connected to MongoDB......', 'index.ts', 'Server');
+      Connection.ConnectOnline().then(() => {
 
-  }).catch((error) => {
+        Debug.ShowInfoMessage('Connected to Online Server MongoDB......', 'index.ts', 'Server');
 
-    Debug.ShowErrorMessage('Connection to MongoDB failed...', error, 'index.ts', 'Server');
-  });
+      }).catch((error) => {
+
+        Debug.ShowErrorMessage('Connection to Online Server MongoDB failed...', error, 'index.ts', 'Server');
+      });
+
+  } else {
+
+    Connection.ConnectOffline().then(() => {
+
+      Debug.ShowInfoMessage('Connected to Offline Server MongoDB......', 'index.ts', 'Server');
+
+    }).catch((error) => {
+
+      Debug.ShowErrorMessage('Connection to Offline Server MongoDB failed...', error, 'index.ts', 'Server');
+    });
+  }
 });
 
 

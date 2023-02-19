@@ -1,10 +1,13 @@
-import {Request, Response, Router} from 'express';
+import express, {Application, Request, Response, Router} from 'express';
 import {VersionsinfoClass} from '../versionsinfoclass';
 import {DebugClass} from "../debug";
 import {ConnectionClass} from "../connectionclass";
+import config from "config";
 
-const Info       = new VersionsinfoClass();
-const Connection = new ConnectionClass();
+const Info             = new VersionsinfoClass();
+const Connection       = new ConnectionClass();
+const app: Application = express();
+const Environment      = app.get('env');
 
 class HomerouterClass {
 
@@ -33,13 +36,19 @@ class HomerouterClass {
           <td>Versionsdatum:</td><td>${Info.Versionsdatum}</td>
       </tr>
       <tr>
-          <td>Environment:</td><td>${env}</td>
+          <td>Environment from Express (env):</td><td>${Environment}</td>
+      </tr>
+      <tr>
+          <td>Environment from Environment (NODE_ENV):</td><td>${process.env.NODE_ENV}</td>
       </tr>
       <tr>
           <td>DB Unsername:</td><td>${Connection.COSMOSDB_USER}</td>
       </tr>
       <tr>
           <td>DB Passwort:</td><td>${Connection.COSMOSDB_PASSWORD}</td>
+      </tr>
+      <tr>
+          <td>DB Passwort from config Environment:</td><td>${config.get('COSMOSDB_PASSWORD')}</td>
       </tr>
       </table>
       </body>
