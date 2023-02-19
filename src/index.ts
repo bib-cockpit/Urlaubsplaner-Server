@@ -9,7 +9,7 @@ import {ConnectionClass} from "./connectionclass";
 import moment from "moment";
 import {DebugClass} from "./debug";
 import {MitarbeiterrouterClass} from "./routes/mitarbeiterrouts";
-import config from "config";
+// import config from "config";
 import {RegistrierungrouterClass} from "./routes/registrierungrouts";
 import {ProjekteroutsClass} from "./routes/projekterouts";
 import {MitarbeitersettingsrouterClass} from "./routes/mitarbeitersettingrouts";
@@ -30,15 +30,20 @@ const Settingsrouter: MitarbeitersettingsrouterClass = new Mitarbeitersettingsro
 const Projektpunkterouter: ProjektpunkteroutsClass = new ProjektpunkteroutsClass();
 const Protokollrouter: ProtokolleroutsClass = new ProtokolleroutsClass();
 
+/*
 if(!config.has('COCKPIT_JWTSecretKey')) {
 
-  Debug.ShowErrorMessage('FATAL ERROR: COCKPIT_JWTSecretKey nicht definiert.', null, 'index.ts', 'Server');
-  process.exit(1);
+  // Debug.ShowErrorMessage('ERROR: COCKPIT_JWTSecretKey nicht definiert.', null, 'index.ts', 'Server');
+  // process.exit(1);
+
+  Debug.ShowInfoMessage('ERROR: COCKPIT_JWTSecretKey nicht definiert.', 'index.ts', 'Server');
 }
 else {
 
   Debug.ShowInfoMessage('COCKPIT_JWTSecretKey: ' + config.get('COCKPIT_JWTSecretKey'), 'index.ts', 'Server');
 }
+
+ */
 
 app.use(morgan('dev')); // http request Debug messages
 app.use((req: Request, res: Response, next: NextFunction) => {

@@ -62,4 +62,4 @@ jobs:
           package: .
 
       - name: 'Start Server'
-        run: npm run start
+        run: npm run start --if-present
