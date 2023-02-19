@@ -15,7 +15,7 @@ class HomerouterClass {
     this.Debug      = new DebugClass();
   }
 
-  SetRoutes() {
+  SetRoutes(env: string) {
 
     try {
 
@@ -29,6 +29,9 @@ class HomerouterClass {
       </tr>
       <tr>
           <td>Versionsdatum:</td><td>${Info.Versionsdatum}</td>
+      </tr>
+      <tr>
+          <td>Environment:</td><td>${env}</td>
       </tr>
       </table>
       </body>

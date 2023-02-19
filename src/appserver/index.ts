@@ -17,6 +17,7 @@ import {ProjektpunkteroutsClass} from "./routes/projektpunkteerouts";
 import {ProtokolleroutsClass} from "./routes/protokollerouts";
 
 const app: Application = express();
+const Enviroment = app.get('env');
 const port: number = process.env.PORT ? parseInt(process.env.PORT) : 5000;
 const Connection: ConnectionClass = new ConnectionClass();
 const Homerouter: HomerouterClass = new HomerouterClass();
