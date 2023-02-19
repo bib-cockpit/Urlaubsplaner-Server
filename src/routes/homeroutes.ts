@@ -49,7 +49,10 @@ class HomerouterClass {
           <td>DB Passwort:</td><td>${Connection.COSMOSDB_PASSWORD}</td>
       </tr>
       <tr>
-          <td>DB Passwort from config Environment:</td><td>${Config.get('COSMOSDB_PASSWORD')}</td>
+          <td>DB Passwort from config Environment (gespiegelt):</td><td>${Config.get('passwort')}</td>
+      </tr>
+      <tr>
+          <td>DB Passwort from config Environment (env abfrage):</td><td>${Config.getEnv('COSMOSDB_PASSWORD')}</td>
       </tr>
       </table>
       </body>

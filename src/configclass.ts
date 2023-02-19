@@ -35,4 +35,15 @@ export class Configclass {
 
     }
   }
+
+  public getEnv(keyname: string): string {
+
+    try {
+
+      return config.util.getEnv(keyname);
+    }
+    catch (error: any) {
+
+    }
+  }
 };

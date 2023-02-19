@@ -1,5 +1,4 @@
 {
-  "COSMOSDB_PASSWORD":    "COSMOSDB_PASSWORD",
-  "COCKPIT_JWTSecretKey": "COCKPIT_JWTSecretKey",
-  "Kommentar": "Alle Umgebungsvariablen müssen auf dem Server festgelegt werden. Hier in der Liste steht links der Parameter für den Aufruf über das config module. Rechts steht steht der Name der Umgebungsvariablen auf dem Server"
+  "passwort":     "COSMOSDB_PASSWORD",
+  "secretkey":    "COCKPIT_JWTSecretKey"
 }
