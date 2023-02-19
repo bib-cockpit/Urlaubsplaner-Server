@@ -61,5 +61,3 @@ jobs:
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_3A39EA4E6E6D4EC1B21509FD1C11E19F }}
           package: .
 
-      - name: 'Start Server'
-        run: npm run start --if-present
