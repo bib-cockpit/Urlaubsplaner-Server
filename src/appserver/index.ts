@@ -6,7 +6,7 @@ import { HomerouterClass } from './routes/homeroutes';
 import { StandorterouterClass } from './routes/standorterouts';
 import { Application } from "express";
 import {ConnectionClass} from "./connectionclass";
-import moment, {Moment} from "moment";
+import moment from "moment";
 import {DebugClass} from "./debug";
 import {MitarbeiterrouterClass} from "./routes/mitarbeiterrouts";
 import config from "config";
@@ -17,7 +17,7 @@ import {ProjektpunkteroutsClass} from "./routes/projektpunkteerouts";
 import {ProtokolleroutsClass} from "./routes/protokollerouts";
 
 const app: Application = express();
-const Enviroment = app.get('env');
+const Environment = app.get('env');
 const port: number = process.env.PORT ? parseInt(process.env.PORT) : 5000;
 const Connection: ConnectionClass = new ConnectionClass();
 const Homerouter: HomerouterClass = new HomerouterClass();
@@ -50,7 +50,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-Homerouter.SetRoutes();
+Homerouter.SetRoutes(Environment);
 Standorterouter.SetRoutes();
 Mitarbeiterouter.SetRoutes();
 Settingsrouter.SetRoutes();
