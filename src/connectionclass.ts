@@ -7,6 +7,8 @@ export class ConnectionClass {
   public Connection: any;
   public Connected: boolean;
   private Connectionstring: string = '';
+  public readonly COSMOSDB_USER     = process.env.COSMOSDB_USER;
+  public readonly COSMOSDB_PASSWORD = process.env.COSMOSDB_PASSWORD;
 
   public Connect(): Promise<any> {
 
@@ -46,27 +48,22 @@ export class ConnectionClass {
 
       return new Promise((resolve, reject) => {
 
-        const COSMOSDB_USER     = process.env.COSMOSDB_USER;     //  "cockbit-cosmos-db";
-        const COSMOSDB_PASSWORD = process.env.COSMOSDB_PASSWORD; // "S5eYqFWE5F2ZuzZBojFU3Nv11BcXAcGRBXlIuAaEGpCms7bTxkaMGIExMJOgARbTjgVM6PaQP73oACDbTyOG4A==";
+             //  "cockbit-cosmos-db";
+        // "S5eYqFWE5F2ZuzZBojFU3Nv11BcXAcGRBXlIuAaEGpCms7bTxkaMGIExMJOgARbTjgVM6PaQP73oACDbTyOG4A==";
         const COSMOSDB_DBNAME   = "cockbit-cosmos-db";
         const COSMOSDB_HOST     = "cockbit-cosmos-db.mongo.cosmos.azure.com";
         const COSMOSDB_PORT     = 10255;
-
-        console.log('Connection Class');
-        console.log('DB Username: ' + COSMOSDB_USER);
-        console.log('DB Password: ' + COSMOSDB_PASSWORD);
 
         let uri = "mongodb://"+COSMOSDB_HOST+":"+COSMOSDB_PORT+"/"+COSMOSDB_DBNAME+"?ssl=true&replicaSet=globaldb";
 
         this.Connection = connect(uri, {
           auth: {
 
-            user:     COSMOSDB_USER,
-            password: COSMOSDB_PASSWORD,
+            user:     this.COSMOSDB_USER,
+            password: this.COSMOSDB_PASSWORD,
           },
           useNewUrlParser:    true,
           useUnifiedTopology: true,
-
 
         }).then((data: Mongoose) => {
 

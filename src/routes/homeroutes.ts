@@ -1,8 +1,10 @@
 import {Request, Response, Router} from 'express';
 import {VersionsinfoClass} from '../versionsinfoclass';
 import {DebugClass} from "../debug";
+import {ConnectionClass} from "../connectionclass";
 
-const Info = new VersionsinfoClass();
+const Info       = new VersionsinfoClass();
+const Connection = new ConnectionClass();
 
 class HomerouterClass {
 
@@ -32,6 +34,12 @@ class HomerouterClass {
       </tr>
       <tr>
           <td>Environment:</td><td>${env}</td>
+      </tr>
+      <tr>
+          <td>DB Unsername:</td><td>${Connection.COSMOSDB_USER}</td>
+      </tr>
+      <tr>
+          <td>DB Passwort:</td><td>${Connection.COSMOSDB_PASSWORD}</td>
       </tr>
       </table>
       </body>
