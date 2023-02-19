@@ -1,7 +1,0 @@
-{
-  "name": "Cockpit",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "angular"
-}

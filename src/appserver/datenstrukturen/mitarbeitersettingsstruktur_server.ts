@@ -1,0 +1,82 @@
+import mongoose from "mongoose";
+
+interface IMitarbeitersettingsstruktur  {
+
+  _id:                   string;
+  MitarbeiterID:         string;
+  FavoritenID:           string;
+  ProjektID:             string;
+  StandortFilter:        string;
+  Favoritprojektindex:   number;
+
+  AufgabenSortiermodus: string;
+
+  AufgabenShowOffen:        boolean;
+  AufgabenShowGeschlossen:  boolean;
+  AufgabenShowBearbeitung:  boolean;
+  AufgabenShowRuecklauf:    boolean;
+  AufgabenShowMeilensteinOnly: boolean;
+
+  AufgabenTerminfiltervariante:  string;
+  AufgabenTerminfilterStartwert: number;
+  AufgabenTerminfilterEndewert:  number;
+
+  Deleted:                  boolean;
+  HeadermenueMaxFavoriten:  number;
+
+  AufgabenShowMeilensteine:  boolean;
+  AufgabenShowNummer:        boolean;
+  AufgabenShowStartdatum:    boolean;
+  AufgabenShowAufgabe:       boolean;
+  AufgabenShowBemerkung:     boolean;
+  AufgabenShowTage:          boolean;
+  AufgabenShowTermin:        boolean;
+  AufgabenShowStatus:        boolean;
+  AufgabenShowFortschritt:   boolean;
+  AufgabenShowZustaendig:    boolean;
+  AufgabenShowMeintag:       boolean;
+  AufgabenShowZeitansatz:    boolean;
+  AufgabenShowMeinewoche:    boolean;
+};
+
+const Mitarbeitersettingsshema = new mongoose.Schema({
+
+  MitarbeiterID:         {type: String, required: false},
+  FavoritenID:           {type: String, required: false},
+  ProjektID:             {type: String, required: false},
+  StandortFilter:        {type: String, required: false},
+  Favoritprojektindex:   {type: Number,  default: null},
+
+  AufgabenShowOffen:           {type: Boolean, default: false},
+  AufgabenShowGeschlossen:     {type: Boolean, default: false},
+  AufgabenShowBearbeitung:     {type: Boolean, default: false},
+  AufgabenShowRuecklauf:       {type: Boolean, default: false},
+  AufgabenShowMeilensteinOnly: {type: Boolean, default: false},
+
+  Deleted:                  {type: Boolean, default: false},
+  HeadermenueMaxFavoriten:  {type: Number,  default: 6},
+
+  AufgabenSortiermodus:     {type: String, required: false, default: 'TermineAufsteigend'},
+
+  AufgabenMeilensteineNachlauf:   {type: Number,  default: 2},
+
+  AufgabenTerminfiltervariante:  {type: String, required: false, default: null},
+  AufgabenTerminfilterStartwert: {type: Number, required: false, default: null},
+  AufgabenTerminfilterEndewert:  {type: Number, required: false, default: null},
+
+  AufgabenShowMeilensteine:  {type: Boolean, default: false},
+  AufgabenShowMeintag:       {type: Boolean, default: false},
+  AufgabenShowNummer:        {type: Boolean, default: false},
+  AufgabenShowStartdatum:    {type: Boolean, default: false},
+  AufgabenShowAufgabe:       {type: Boolean, default: false},
+  AufgabenShowBemerkung:     {type: Boolean, default: false},
+  AufgabenShowTage:          {type: Boolean, default: false},
+  AufgabenShowTermin:        {type: Boolean, default: false},
+  AufgabenShowStatus:        {type: Boolean, default: false},
+  AufgabenShowFortschritt:   {type: Boolean, default: false},
+  AufgabenShowZustaendig:    {type: Boolean, default: false},
+  AufgabenShowZeitansatz:    {type: Boolean, default: false},
+  AufgabenShowMeinewoche:    {type: Boolean, default: false},
+});
+
+export { Mitarbeitersettingsshema, IMitarbeitersettingsstruktur };
