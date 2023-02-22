@@ -50,7 +50,14 @@ class HomerouterClass {
           <tr>
               <td>Environment (original):</td><td>${process.env.NODE_ENV}</td>
           </tr>
-          <tr>
+
+
+          </table>
+          </body>`;
+
+        /*
+
+                  <tr>
               <td>Environment (config):</td><td>${this.Config.NODE_ENV}</td>
           </tr>
           <tr>
@@ -74,8 +81,7 @@ class HomerouterClass {
           <tr>
               <td>DB Passwort:</td><td>${this.Config.COSMOSDB_PASSWORD}</td>
           </tr>
-          </table>
-          </body>`;
+         */
 
         res.status(200).send(html);
       });
