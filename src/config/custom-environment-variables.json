@@ -1,4 +1,6 @@
 {
-  "passwort":     "COSMOSDB_PASSWORD",
+  "node_endv":    "NODE_ENV",
+  "db_user":      "COSMOSDB_USER",
+  "db_password":  "COSMOSDB_PASSWORD",
   "secretkey":    "COCKPIT_JWTSecretKey"
 }

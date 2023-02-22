@@ -1,3 +1,6 @@
 {
-  "Testeintrag": "Hello production world!"
+  "Statusmessage":   "Hello production world!",
+  "COSMOSDB_DBNAME": "cockbit-cosmos-db",
+  "COSMOSDB_HOST":   "cockbit-cosmos-db.mongo.cosmos.azure.com",
+  "COSMOSDB_PORT":   "10255"
 }

@@ -2,17 +2,15 @@ import express, {Application, Request, Response, Router} from 'express';
 import {VersionsinfoClass} from '../versionsinfoclass';
 import {DebugClass} from "../debug";
 import {ConnectionClass} from "../connectionclass";
-import config from "config";
+import {ConfigClass} from "../configclass";
 
-const Info             = new VersionsinfoClass();
-const Connection       = new ConnectionClass();
-const app: Application = express();
-const Environment      = app.get('env');
+const Info = new VersionsinfoClass();
 
 class HomerouterClass {
 
   public homerouter: any; //  = Router();
   private Debug: DebugClass;
+  private Config: ConfigClass;
 
   constructor() {
 
@@ -20,7 +18,19 @@ class HomerouterClass {
     this.Debug      = new DebugClass();
   }
 
-  SetRoutes(env: string) {
+  Init(config: ConfigClass) {
+
+    try {
+
+      this.Config = config;
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error, 'HomerouterClass', 'Init', this.Debug.Typen.Class);
+    }
+  }
+
+  SetRoutes() {
 
     try {
 
@@ -36,29 +46,29 @@ class HomerouterClass {
           <td>Versionsdatum:</td><td>${Info.Versionsdatum}</td>
       </tr>
       <tr>
-          <td>Environment from Express (env):</td><td>${Environment}</td>
+          <td>Environment:</td><td>${process.env.NODE_ENV}</td>
+      </tr>
+            <tr>
+          <td>Statusmessage:</td><td>${this.Config.Statusmessage}</td>
       </tr>
       <tr>
-          <td>Environment from  (env):</td><td>${process.env.NODE_ENV}</td>
+          <td>DB Unsername:</td><td>${this.Config.COSMOSDB_USER}</td>
       </tr>
       <tr>
-          <td>Environment from Environment (NODE_ENV):</td><td>${config.util.getEnv('NODE_ENV')}</td>
+          <td>DB Passwort:</td><td>${this.Config.COSMOSDB_PASSWORD}</td>
       </tr>
       <tr>
-          <td>DB Unsername:</td><td>${Connection.COSMOSDB_USER}</td>
+          <td>DB Name:</td><td>${this.Config.COSMOSDB_DBNAME}</td>
       </tr>
       <tr>
-          <td>DB Passwort:</td><td>${Connection.COSMOSDB_PASSWORD}</td>
-      </tr>
-      <tr>
-          <td>DB Passwort from config Environment (gespiegelt):</td><td>${config.get('passwort')}</td>
-      </tr>
-      <tr>
-          <td>DB Passwort from config Environment (env abfrage intern config):</td><td>${config.util.getEnv('ALLOW_CONFIG_MUTATIONS')}</td>
+          <td>DB Host:</td><td>${this.Config.COSMOSDB_HOST}</td>
       </tr>
       </table>
       </body>
     `;
+
+        // ${config.get('passwort')}
+
         res.status(200).send(html);
       });
     } catch (error) {

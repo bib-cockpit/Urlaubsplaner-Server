@@ -1,23 +1,31 @@
 import {connect, Mongoose} from "mongoose";
 import {DebugClass} from "./debug";
+import {ConfigClass} from "./configclass";
 
 export class ConnectionClass {
 
   private Debug: DebugClass;
   public Connection: any;
   public Connected: boolean;
+  private Config: ConfigClass;
 
-  public readonly COSMOSDB_USER     = process.env.COSMOSDB_USER;
-  public readonly COSMOSDB_PASSWORD = process.env.COSMOSDB_PASSWORD;
-  public readonly COSMOSDB_DBNAME   = process.env.COSMOSDB_DBNAME;
-  public readonly COSMOSDB_HOST     = process.env.COSMOSDB_HOST;
-  public readonly COSMOSDB_PORT     = process.env.COSMOSDB_PORT;
+  Init(config: ConfigClass) {
+
+    try {
+
+      this.Config = config;
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error, 'ConnectionClass', 'Init', this.Debug.Typen.Class);
+    }
+  }
 
   public ConnectOffline(): Promise<any> {
 
     try {
 
-      let Uri: string = 'mongodb://localhost:27017/cockpitdb';
+      let Uri: string = 'mongodb://' + this.Config.COSMOSDB_HOST + ':' + this.Config.COSMOSDB_PORT + '/' + this.Config.COSMOSDB_DBNAME;
 
       return new Promise((resolve, reject) => {
 
@@ -55,13 +63,13 @@ export class ConnectionClass {
 
       return new Promise((resolve, reject) => {
 
-        let Uri: string = "mongodb://" + this.COSMOSDB_HOST + ":"+this.COSMOSDB_PORT + "/" + this.COSMOSDB_DBNAME + "?ssl=true&replicaSet=globaldb";
+        let Uri: string = "mongodb://" + this.Config.COSMOSDB_HOST + ":"+this.Config.COSMOSDB_PORT + "/" + this.Config.COSMOSDB_DBNAME + "?ssl=true&replicaSet=globaldb";
 
         this.Connection = connect(Uri, {
           auth: {
 
-            user:     this.COSMOSDB_USER,
-            password: this.COSMOSDB_PASSWORD,
+            user:     this.Config.COSMOSDB_USER,
+            password: this.Config.COSMOSDB_PASSWORD,
           },
           useNewUrlParser:    true,
           useUnifiedTopology: true,

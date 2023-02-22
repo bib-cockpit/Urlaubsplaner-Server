@@ -1,3 +1,9 @@
+import * as dotenv from 'dotenv';
+
+if(typeof process.env.NODE_ENV === 'undefined') {
+
+  dotenv.config();
+}
 
 import express, {NextFunction, Request, Response} from "express";
 import helmet from "helmet";
@@ -14,10 +20,10 @@ import {ProjekteroutsClass} from "./routes/projekterouts";
 import {MitarbeitersettingsrouterClass} from "./routes/mitarbeitersettingrouts";
 import {ProjektpunkteroutsClass} from "./routes/projektpunkteerouts";
 import {ProtokolleroutsClass} from "./routes/protokollerouts";
+import config from "config";
+import {ConfigClass} from "./configclass";
 
-const ServerOnline: boolean = true;
 const app: Application = express();
-const Environment = app.get('env');
 const port: number = process.env.PORT ? parseInt(process.env.PORT) : 5000;
 const Connection: ConnectionClass = new ConnectionClass();
 const Homerouter: HomerouterClass = new HomerouterClass();
@@ -29,21 +35,21 @@ const Projekterouter: ProjekteroutsClass = new ProjekteroutsClass();
 const Settingsrouter: MitarbeitersettingsrouterClass = new MitarbeitersettingsrouterClass();
 const Projektpunkterouter: ProjektpunkteroutsClass = new ProjektpunkteroutsClass();
 const Protokollrouter: ProtokolleroutsClass = new ProtokolleroutsClass();
+const Config: ConfigClass = new ConfigClass();
 
+Config.Init(
+  config.util.getEnv('NODE_ENV'),
+  config.get('Statusmessage'),
+  config.get('db_user'),
+  config.get('db_password'),
+  config.get('COSMOSDB_DBNAME'),
+  config.get('COSMOSDB_HOST'),
+  config.get('COSMOSDB_PORT'),
+  config.get('secretkey')
+);
 
-/*
-if(!config.has('COCKPIT_JWTSecretKey')) {
-
-  // Debug.ShowErrorMessage('ERROR: COCKPIT_JWTSecretKey nicht definiert.', null, 'index.ts', 'Server');
-  // process.exit(1);
-
-  Debug.ShowInfoMessage('ERROR: COCKPIT_JWTSecretKey nicht definiert.', 'index.ts', 'Server');
-}
-else {
-
-  Debug.ShowInfoMessage('COCKPIT_JWTSecretKey: ' + config.get('COCKPIT_JWTSecretKey'), 'index.ts', 'Server');
-}
-*/
+Connection.Init(Config);
+Homerouter.Init(Config);
 
 app.use(morgan('dev')); // http request Debug messages
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -55,7 +61,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-Homerouter.SetRoutes(Environment);
+Homerouter.SetRoutes();
 Standorterouter.SetRoutes();
 Mitarbeiterouter.SetRoutes();
 Settingsrouter.SetRoutes();
@@ -82,7 +88,7 @@ app.listen(port, () => {
   Debug.ShowInfoMessage(`Cockpit Server is listening on port ${port}.....`, 'index.ts', 'Server');
   Debug.ShowInfoMessage(`Startup time ${moment().format('HH:mm:ss')}`, 'index.ts', 'Server');
 
-  if(ServerOnline === true) {
+  if(process.env.NODE_ENV === 'production') {
 
       Connection.ConnectOnline().then(() => {
 
