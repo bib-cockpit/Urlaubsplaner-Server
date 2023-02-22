@@ -37,22 +37,30 @@ const Projektpunkterouter: ProjektpunkteroutsClass = new ProjektpunkteroutsClass
 const Protokollrouter: ProtokolleroutsClass = new ProtokolleroutsClass();
 const Config: ConfigClass = new ConfigClass();
 
-/*
+let NODE_ENV: string       = config.has('node_env')        ? config.get('node_env')        : 'none';
+let Statausmessage: string = config.has('Statusmessage')   ? config.get('Statusmessage')   : 'none';
+let User : string          = config.has('db_user')         ? config.get('db_user')         : 'none';
+let Passwort: string       = config.has('db_password')     ? config.get('db_password')     : 'none';
+let DBName: string         = config.has('COSMOSDB_DBNAME') ? config.get('COSMOSDB_DBNAME') : 'none';
+let DBHost: string         = config.has('COSMOSDB_HOST')   ? config.get('COSMOSDB_HOST')   : 'none';
+let DBPort: string         = config.has('COSMOSDB_PORT')   ? config.get('COSMOSDB_PORT')   : 'none';
+let SecretKey: string      = config.has('secretkey')       ? config.get('secretkey')       : 'none';
+
 Config.Init(
-  config.util.getEnv('NODE_ENV'),
-  config.get('Statusmessage'),
-  config.get('db_user'),
-  config.get('db_password'),
-  config.get('COSMOSDB_DBNAME'),
-  config.get('COSMOSDB_HOST'),
-  config.get('COSMOSDB_PORT'),
-  config.get('secretkey')
+  NODE_ENV,
+  Statausmessage,
+  User,
+  Passwort,
+  DBName,
+  DBHost,
+  DBPort,
+  SecretKey
 );
 
 Connection.Init(Config);
 Homerouter.Init(Config);
 
- */
+
 
 app.use(morgan('dev')); // http request Debug messages
 app.use((req: Request, res: Response, next: NextFunction) => {
