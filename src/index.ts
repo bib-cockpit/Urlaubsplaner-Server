@@ -2,12 +2,17 @@ import * as dotenv from 'dotenv';
 
 if(typeof process.env.NODE_ENV === 'undefined') {
 
+  console.log('NODE_ENV nicht definiert. Die Ersatzvariablen aus dotenv werden verwendet.');
+
   dotenv.config();
+}
+else {
+
+  console.log('NODE_ENV ist auf dem Server verrfügbar: ' + process.env.NODE_ENV);
 }
 
 import express, {NextFunction, Request, Response} from "express";
-// import helmet from "helmet";
-// import morgan from "morgan";
+import helmet from "helmet";
 import { HomerouterClass } from './routes/homeroutes';
 import { StandorterouterClass } from './routes/standorterouts';
 import { Application } from "express";
@@ -37,17 +42,14 @@ const Projektpunkterouter: ProjektpunkteroutsClass = new ProjektpunkteroutsClass
 const Protokollrouter: ProtokolleroutsClass = new ProtokolleroutsClass();
 const Config: ConfigClass = new ConfigClass();
 
-let NODE_ENV: string       = config.has('node_env')        ? config.get('node_env')        : 'none';
-let Statausmessage: string = config.has('Statusmessage')   ? config.get('Statusmessage')   : 'none';
-let User : string          = config.has('db_user')         ? config.get('db_user')         : 'none';
-let Passwort: string       = config.has('db_password')     ? config.get('db_password')     : 'none';
-let DBName: string         = config.has('COSMOSDB_DBNAME') ? config.get('COSMOSDB_DBNAME') : 'none';
-let DBHost: string         = config.has('COSMOSDB_HOST')   ? config.get('COSMOSDB_HOST')   : 'none';
-let DBPort: string         = config.has('COSMOSDB_PORT')   ? config.get('COSMOSDB_PORT')   : 'none';
-let SecretKey: string      = config.has('secretkey')       ? config.get('secretkey')       : 'none';
-
-SecretKey = config.util.getEnv('secretkey');
-DBHost    = config.util.getEnv('COSMOSDB_HOST');
+let NODE_ENV: string       = config.has('node_env')        ? config.get('node_env')        : 'nicht definiert';
+let Statausmessage: string = config.has('Statusmessage')   ? config.get('Statusmessage')   : 'nicht definiert';
+let User : string          = config.has('db_user')         ? config.get('db_user')         : 'nicht definiert';
+let Passwort: string       = config.has('db_password')     ? config.get('db_password')     : 'nicht definiert';
+let DBName: string         = config.has('COSMOSDB_DBNAME') ? config.get('COSMOSDB_DBNAME') : 'nicht definiert';
+let DBHost: string         = config.has('COSMOSDB_HOST')   ? config.get('COSMOSDB_HOST')   : 'nicht definiert';
+let DBPort: string         = config.has('COSMOSDB_PORT')   ? config.get('COSMOSDB_PORT')   : 'nicht definiert';
+let SecretKey: string      = config.has('secretkey')       ? config.get('secretkey')       : 'nicht definiert';
 
 Config.Init(
   NODE_ENV,
@@ -85,7 +87,7 @@ Protokollrouter.SetRoutes();
 
 app.use(express.json()); // setze request.body JSON
 app.use(express.urlencoded({extended: true}));
-// app.use(helmet());
+app.use(helmet());
 
 app.use('/',              Homerouter.homerouter);
 app.use('/standorte',     Standorterouter.standorterouter);

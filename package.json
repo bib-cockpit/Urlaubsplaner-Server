@@ -1,10 +1,11 @@
 {
   "name": "BIB_Cockpit_Server",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.05",
+  "description": "Server für die Cockpit Application",
   "main": "index.ts",
   "scripts": {
     "build": "tsc",
+    "copy":  "cp -R src/config dist-server/src/config",
     "start": "node dist-server/src/index.js"
   },
   "keywords": [],
