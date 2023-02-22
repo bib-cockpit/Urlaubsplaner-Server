@@ -1,5 +1,5 @@
 {
-  "name": "BIB Cockpit Server",
+  "name": "BIB_Cockpit_Server",
   "version": "1.0.0",
   "description": "",
   "main": "index.ts",

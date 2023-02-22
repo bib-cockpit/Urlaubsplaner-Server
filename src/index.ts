@@ -37,6 +37,7 @@ const Projektpunkterouter: ProjektpunkteroutsClass = new ProjektpunkteroutsClass
 const Protokollrouter: ProtokolleroutsClass = new ProtokolleroutsClass();
 const Config: ConfigClass = new ConfigClass();
 
+/*
 Config.Init(
   config.util.getEnv('NODE_ENV'),
   config.get('Statusmessage'),
@@ -50,6 +51,8 @@ Config.Init(
 
 Connection.Init(Config);
 Homerouter.Init(Config);
+
+ */
 
 app.use(morgan('dev')); // http request Debug messages
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -88,6 +91,8 @@ app.listen(port, () => {
   Debug.ShowInfoMessage(`Cockpit Server is listening on port ${port}.....`, 'index.ts', 'Server');
   Debug.ShowInfoMessage(`Startup time ${moment().format('HH:mm:ss')}`, 'index.ts', 'Server');
 
+  /*
+
   if(process.env.NODE_ENV === 'production') {
 
       Connection.ConnectOnline().then(() => {
@@ -110,6 +115,8 @@ app.listen(port, () => {
       Debug.ShowErrorMessage('Connection to Offline Server MongoDB failed...', error, 'index.ts', 'Server');
     });
   }
+
+   */
 });
 
 

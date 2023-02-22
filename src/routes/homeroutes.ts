@@ -45,7 +45,14 @@ class HomerouterClass {
       <tr>
           <td>Versionsdatum:</td><td>${Info.Versionsdatum}</td>
       </tr>
-      <tr>
+
+
+      </table>
+      </body>
+    `;
+
+        /*
+              <tr>
           <td>Environment:</td><td>${process.env.NODE_ENV}</td>
       </tr>
             <tr>
@@ -63,9 +70,7 @@ class HomerouterClass {
       <tr>
           <td>DB Host:</td><td>${this.Config.COSMOSDB_HOST}</td>
       </tr>
-      </table>
-      </body>
-    `;
+         */
 
         // ${config.get('passwort')}
 

@@ -18,6 +18,15 @@ export class ConfigClass {
 
     try {
 
+    this.COSMOSDB_USER      = 'nouser';
+    this.COSMOSDB_PASSWORD  = 'nopasswort';
+    this.COSMOSDB_DBNAME    = 'nodbname';
+    this.COSMOSDB_HOST      = 'nohost';
+    this.COSMOSDB_PORT      = 0;
+    this.SecretKey          = 'nokey';
+    this.NODE_ENV           = 'none';
+    this.Statusmessage      = 'Config not Init()';
+
       this.Debug = new DebugClass();
     }
     catch (error) {
