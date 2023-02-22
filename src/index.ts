@@ -1,6 +1,5 @@
 import * as dotenv from 'dotenv';
 
-
 if(typeof process.env.NODE_ENV === 'undefined') {
 
   process.env.NODE_CONFIG_DIR = './config';
@@ -12,7 +11,7 @@ if(typeof process.env.NODE_ENV === 'undefined') {
 else {
 
   console.log('NODE_ENV ist auf dem Server verrfügbar: ' + process.env.NODE_ENV);
-  process.env.NODE_CONFIG_DIR = './dist-server/src/config';
+  // process.env.NODE_CONFIG_DIR = './dist-server/src/config';
 }
 
 import express, {NextFunction, Request, Response} from "express";
