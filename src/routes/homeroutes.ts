@@ -8,8 +8,8 @@ const Info = new VersionsinfoClass();
 
 class HomerouterClass {
 
-  public homerouter: any; //  = Router();
-  private Debug: DebugClass;
+  public  homerouter: Router;
+  private Debug:  DebugClass;
   private Config: ConfigClass;
 
   constructor() {
@@ -64,6 +64,9 @@ class HomerouterClass {
           </tr>
           <tr>
               <td>DB Host:</td><td>${this.Config.COSMOSDB_HOST}</td>
+          </tr>
+          <tr>
+              <td>DB Port:</td><td>${this.Config.COSMOSDB_PORT}</td>
           </tr>
           <tr>
               <td>DB Unsername:</td><td>${this.Config.COSMOSDB_USER}</td>
