@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 
 if(typeof process.env.NODE_ENV === 'undefined') {
 
-  process.env.NODE_CONFIG_DIR = './src/config';
+  process.env.NODE_CONFIG_DIR = './config';
 
   console.log('NODE_ENV nicht definiert. Die Ersatzvariablen aus dotenv werden verwendet.');
 
@@ -12,11 +12,10 @@ if(typeof process.env.NODE_ENV === 'undefined') {
 else {
 
   console.log('NODE_ENV ist auf dem Server verrfügbar: ' + process.env.NODE_ENV);
-  process.env.NODE_CONFIG_DIR = './config';
+  process.env.NODE_CONFIG_DIR = './dist-server/src/config';
 }
 
 import express, {NextFunction, Request, Response} from "express";
-import helmet from "helmet";
 import { HomerouterClass } from './routes/homeroutes';
 import { StandorterouterClass } from './routes/standorterouts';
 import { Application } from "express";
@@ -91,7 +90,7 @@ Protokollrouter.SetRoutes();
 
 app.use(express.json()); // setze request.body JSON
 app.use(express.urlencoded({extended: true}));
-app.use(helmet());
+// app.use(helmet());
 
 app.use('/',              Homerouter.homerouter);
 app.use('/standorte',     Standorterouter.standorterouter);
