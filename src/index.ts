@@ -46,6 +46,9 @@ let DBHost: string         = config.has('COSMOSDB_HOST')   ? config.get('COSMOSD
 let DBPort: string         = config.has('COSMOSDB_PORT')   ? config.get('COSMOSDB_PORT')   : 'none';
 let SecretKey: string      = config.has('secretkey')       ? config.get('secretkey')       : 'none';
 
+SecretKey = config.util.getEnv('secretkey');
+DBHost    = config.util.getEnv('COSMOSDB_HOST');
+
 Config.Init(
   NODE_ENV,
   Statausmessage,
