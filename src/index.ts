@@ -37,28 +37,6 @@ const Projektpunkterouter: ProjektpunkteroutsClass = new ProjektpunkteroutsClass
 const Protokollrouter: ProtokolleroutsClass = new ProtokolleroutsClass();
 const Config: ConfigClass = new ConfigClass();
 
-let NODE_ENV: string       = config.has('node_env')        ? config.get('node_env')        : 'none';
-let Statausmessage: string = config.has('Statusmessage')   ? config.get('Statusmessage')   : 'none';
-let User : string          = config.has('db_user')         ? config.get('db_user')         : 'none';
-let Passwort: string       = config.has('db_password')     ? config.get('db_password')     : 'none';
-let DBName: string         = config.has('COSMOSDB_DBNAME') ? config.get('COSMOSDB_DBNAME') : 'none';
-let DBHost: string         = config.has('COSMOSDB_HOST')   ? config.get('COSMOSDB_HOST')   : 'none';
-let DBPort: string         = config.has('COSMOSDB_PORT')   ? config.get('COSMOSDB_PORT')   : 'none';
-let SecretKey: string      = config.has('secretkey')       ? config.get('secretkey')       : 'none';
-
-Config.Init(
-  NODE_ENV,
-  Statausmessage,
-  User,
-  Passwort,
-  DBName,
-  DBHost,
-  DBPort,
-  SecretKey
-);
-
-Connection.Init(Config);
-Homerouter.Init(Config);
 
 
 
@@ -98,6 +76,29 @@ app.listen(port, () => {
 
   Debug.ShowInfoMessage(`Cockpit Server is listening on port ${port}.....`, 'index.ts', 'Server');
   Debug.ShowInfoMessage(`Startup time ${moment().format('HH:mm:ss')}`, 'index.ts', 'Server');
+
+  let NODE_ENV: string       = config.has('node_env')        ? config.get('node_env')        : 'none';
+  let Statausmessage: string = config.has('Statusmessage')   ? config.get('Statusmessage')   : 'none';
+  let User : string          = config.has('db_user')         ? config.get('db_user')         : 'none';
+  let Passwort: string       = config.has('db_password')     ? config.get('db_password')     : 'none';
+  let DBName: string         = config.has('COSMOSDB_DBNAME') ? config.get('COSMOSDB_DBNAME') : 'none';
+  let DBHost: string         = config.has('COSMOSDB_HOST')   ? config.get('COSMOSDB_HOST')   : 'none';
+  let DBPort: string         = config.has('COSMOSDB_PORT')   ? config.get('COSMOSDB_PORT')   : 'none';
+  let SecretKey: string      = config.has('secretkey')       ? config.get('secretkey')       : 'none';
+
+  Config.Init(
+    NODE_ENV,
+    Statausmessage,
+    User,
+    Passwort,
+    DBName,
+    DBHost,
+    DBPort,
+    SecretKey
+  );
+
+  Connection.Init(Config);
+  Homerouter.Init(Config);
 
   /*
 
