@@ -45,17 +45,13 @@ class HomerouterClass {
       <tr>
           <td>Versionsdatum:</td><td>${Info.Versionsdatum}</td>
       </tr>
-
-
-      </table>
-      </body>
-    `;
-
-        /*
-              <tr>
-          <td>Environment:</td><td>${process.env.NODE_ENV}</td>
+      <tr>
+          <td>Environment (original):</td><td>${process.env.NODE_ENV}</td>
       </tr>
-            <tr>
+      <tr>
+          <td>Environment (config):</td><td>${this.Config.NODE_ENV}</td>
+      </tr>
+      <tr>
           <td>Statusmessage:</td><td>${this.Config.Statusmessage}</td>
       </tr>
       <tr>
@@ -70,6 +66,13 @@ class HomerouterClass {
       <tr>
           <td>DB Host:</td><td>${this.Config.COSMOSDB_HOST}</td>
       </tr>
+
+      </table>
+      </body>
+    `;
+
+        /*
+
          */
 
         // ${config.get('passwort')}
