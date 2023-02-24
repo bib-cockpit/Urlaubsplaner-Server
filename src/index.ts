@@ -5,6 +5,7 @@ if(typeof process.env.NODE_ENV === 'undefined') {
   process.env.NODE_CONFIG_DIR = './config';
 
   console.log('NODE_ENV nicht definiert. Die Ersatzvariablen aus dotenv werden verwendet.');
+  // Test
 
   dotenv.config();
 }
