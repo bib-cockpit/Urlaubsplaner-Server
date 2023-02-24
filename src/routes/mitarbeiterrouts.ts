@@ -2,12 +2,13 @@ import {Request, Response, Router} from 'express';
 import {DebugClass} from "../debug";
 import {MitarbeiterDBClass} from "../database/mitarbeiterdbclass";
 import * as jwt from 'jsonwebtoken';
-import config from "config";
 import {IMitarbeiterstruktur} from "../datenstrukturen/mitarbeiterstruktur_server";
+import {ConfigClass} from "../configclass";
 
 class MitarbeiterrouterClass {
 
   private Debug: DebugClass;
+  private Config: ConfigClass;
   public  mitarbeiterrouter: any;
   private Database: MitarbeiterDBClass;
 
@@ -15,6 +16,7 @@ class MitarbeiterrouterClass {
 
     this.mitarbeiterrouter = Router();
     this.Debug             = new DebugClass();
+    this.Config            = new ConfigClass();
     this.Database          = new MitarbeiterDBClass();
   }
 
@@ -26,7 +28,7 @@ class MitarbeiterrouterClass {
       Vorname: mitarbeiter.Vorname,
       Email:   mitarbeiter.Email
 
-    }, config.get('COCKPIT_JWTSecretKey'));
+    }, this.Config.SecretKey);
   }
 
   SetRoutes() {

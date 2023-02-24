@@ -2,9 +2,9 @@ import {Request, Response, Router} from 'express';
 import {DebugClass} from "../debug";
 import {MitarbeiterDBClass} from "../database/mitarbeiterdbclass";
 import * as jwt from 'jsonwebtoken';
-import config from "config";
 import {IMitarbeiterstruktur} from "../datenstrukturen/mitarbeiterstruktur_server";
 import {AuthenticationClass} from "../middleware/authentication";
+import {ConfigClass} from "../configclass";
 
 class RegistrierungrouterClass {
 
@@ -12,6 +12,7 @@ class RegistrierungrouterClass {
   public  registrierungrouter: any;
   private Database: MitarbeiterDBClass;
   private Authentication: AuthenticationClass;
+  private Config: ConfigClass;
 
   constructor() {
 
@@ -19,6 +20,7 @@ class RegistrierungrouterClass {
     this.Debug               = new DebugClass();
     this.Database            = new MitarbeiterDBClass();
     this.Authentication      = new AuthenticationClass();
+    this.Config              = new ConfigClass();
   }
 
   GetToken(mitarbeiter: IMitarbeiterstruktur): string {
@@ -29,7 +31,7 @@ class RegistrierungrouterClass {
       Vorname: mitarbeiter.Vorname,
       Email:   mitarbeiter.Email
 
-    }, config.get('COCKPIT_JWTSecretKey'));
+    }, this.Config.SecretKey);
   }
 
   SetRoutes() {
