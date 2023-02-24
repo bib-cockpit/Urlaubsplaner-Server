@@ -1,4 +1,4 @@
-import express, {Application, Request, Response, Router} from 'express';
+import {Request, Response, Router} from 'express';
 import {VersionsinfoClass} from '../versionsinfoclass';
 import {DebugClass} from "../debug";
 import {ConnectionClass} from "../connectionclass";
@@ -35,6 +35,9 @@ class HomerouterClass {
     try {
 
       let html: string;
+      let Filename: string = __filename;
+      let Dirname: string  = __dirname;
+      let CWD: string  = process.cwd();
 
       this.homerouter.get('/', (req: Request, res: Response) => {
 
@@ -49,6 +52,15 @@ class HomerouterClass {
           </tr>
           <tr>
               <td>Environment (original):</td><td>${process.env.NODE_ENV}</td>
+          </tr>
+          <tr>
+              <td>CWD:</td><td>${CWD}</td>
+          </tr>
+          <tr>
+              <td>Filename:</td><td>${Filename}</td>
+          </tr>
+          <tr>
+              <td>Dirname:</td><td>${Dirname}</td>
           </tr>
 
 

@@ -27,7 +27,7 @@ import {ProjekteroutsClass} from "./routes/projekterouts";
 import {MitarbeitersettingsrouterClass} from "./routes/mitarbeitersettingrouts";
 import {ProjektpunkteroutsClass} from "./routes/projektpunkteerouts";
 import {ProtokolleroutsClass} from "./routes/protokollerouts";
-import config from "config";
+// import config from "config";
 import {ConfigClass} from "./configclass";
 
 const app: Application = express();
@@ -44,14 +44,14 @@ const Projektpunkterouter: ProjektpunkteroutsClass = new ProjektpunkteroutsClass
 const Protokollrouter: ProtokolleroutsClass = new ProtokolleroutsClass();
 const Config: ConfigClass = new ConfigClass();
 
-let NODE_ENV: string       = config.has('node_env')        ? config.get('node_env')        : 'nicht definiert';
-let Statausmessage: string = config.has('Statusmessage')   ? config.get('Statusmessage')   : 'nicht definiert';
-let User : string          = config.has('db_user')         ? config.get('db_user')         : 'nicht definiert';
-let Passwort: string       = config.has('db_password')     ? config.get('db_password')     : 'nicht definiert';
-let DBName: string         = config.has('COSMOSDB_DBNAME') ? config.get('COSMOSDB_DBNAME') : 'nicht definiert';
-let DBHost: string         = config.has('COSMOSDB_HOST')   ? config.get('COSMOSDB_HOST')   : 'nicht definiert';
-let DBPort: string         = config.has('COSMOSDB_PORT')   ? config.get('COSMOSDB_PORT')   : 'nicht definiert';
-let SecretKey: string      = config.has('secretkey')       ? config.get('secretkey')       : 'nicht definiert';
+let NODE_ENV: string       = 'n.d'; // = config.has('node_env')        ? config.get('node_env')        : 'nicht definiert';
+let Statausmessage: string = 'n.d'; // = config.has('Statusmessage')   ? config.get('Statusmessage')   : 'nicht definiert';
+let User : string          = 'n.d'; // = config.has('db_user')         ? config.get('db_user')         : 'nicht definiert';
+let Passwort: string       = 'n.d'; // = config.has('db_password')     ? config.get('db_password')     : 'nicht definiert';
+let DBName: string         = 'n.d'; // = config.has('COSMOSDB_DBNAME') ? config.get('COSMOSDB_DBNAME') : 'nicht definiert';
+let DBHost: string         = 'n.d'; // = config.has('COSMOSDB_HOST')   ? config.get('COSMOSDB_HOST')   : 'nicht definiert';
+let DBPort: string         = 'n.d'; // = config.has('COSMOSDB_PORT')   ? config.get('COSMOSDB_PORT')   : 'nicht definiert';
+let SecretKey: string      = 'n.d'; // = config.has('secretkey')       ? config.get('secretkey')       : 'nicht definiert';
 
 Config.Init(
   NODE_ENV,
