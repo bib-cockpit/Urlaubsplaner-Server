@@ -22,11 +22,17 @@ export class MitarbeiterDBClass {
       let MitarbeitermodelClass: mongoose.Model<mongoose.Document>;
       let Liste: IMitarbeiterstruktur[] = [];
 
+      this.Debug.ShowInfoMessage('ReadMitarbeiterliste', 'MitarbeiterDBClass', 'ReadMitarbeiterliste');
+
       return new Promise((resolve, reject) => {
 
         MitarbeitermodelClass = model(this.Const.MitarbeitercollectionName, Mitarbeitershema);
 
         MitarbeitermodelClass.find( { Deleted: false } ).sort({Name: 1}).then((data: any) => {
+
+          this.Debug.ShowInfoMessage('Durchsuchen der Mitarbeiterliste wurde ausgeführt', 'MitarbeiterDBClass', 'ReadMitarbeiterliste');
+
+          console.log(data);
 
           data.forEach((mitarbeiter) => {
 
@@ -35,9 +41,10 @@ export class MitarbeiterDBClass {
 
           resolve(Liste);
 
-          console.log('');
 
         }).catch((error: any) => {
+
+          this.Debug.ShowErrorMessage('Fehler beim Lesen der Mitarbeiterliste', error, 'MitarbeiterDBClass', 'ReadMitarbeiterliste')
 
           reject(error);
         });
