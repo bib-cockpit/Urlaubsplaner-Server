@@ -28,7 +28,7 @@ const Mitarbeitershema = new mongoose.Schema({
 
   StandortID:     {type: String, required: false},
   Vorname:        {type: String, required: false},
-  Name:           {type: String, required: false}, // , index: true
+  Name:           {type: String, required: false, index: true},
   Kuerzel:        {type: String, required: false},
   SettingsID:     {type: String, required: false},
   Telefon:        {type: String, required: false},
