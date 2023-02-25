@@ -65,6 +65,9 @@ class HomerouterClass {
           <tr>
               <td>NODE ENV:</td><td>${this.Config.NODE_ENV}</td>
           </tr>
+           <tr>
+              <td>PORT:</td><td>${this.Config.PORT}</td>
+          </tr>
           <tr>
               <td>Statusmessage:</td><td>${this.Config.Statusmessage}</td>
           </tr>

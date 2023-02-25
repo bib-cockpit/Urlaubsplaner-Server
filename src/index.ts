@@ -104,6 +104,8 @@ app.use('/protokolle',    Protokollrouter.protokolllerouter);
 
 app.listen(0, function()  {
 
+  Debug.ShowInfoMessage(`Startlistening...`, 'index.ts', 'Server');
+
   Config.PORT = this.address().port;
 
   Debug.ShowInfoMessage(`Cockpit Server is listening on port ${Config.PORT}.....`, 'index.ts', 'Server');
