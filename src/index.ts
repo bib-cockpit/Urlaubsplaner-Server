@@ -104,7 +104,7 @@ app.use('/projekte',      Projekterouter.projekterouter);
 app.use('/projektpunkte', Projektpunkterouter.projektpunkterouter);
 app.use('/protokolle',    Protokollrouter.protokolllerouter);
 
-let server = app.listen(8080, () =>  {
+let server = app.listen(5000, () =>  {
 
   let adress: any = server.address();
 
