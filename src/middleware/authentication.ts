@@ -20,8 +20,8 @@ export class AuthenticationClass {
     const token: string       = req.header('authorization');
     const key: string         = process.env.COCKPIT_JWTSecretKey;
 
-    Debug.ShowInfoMessage('Check Token: "' + token, 'Authentication', 'check');
-    Debug.ShowInfoMessage('Token Key:   "' + key,   'Authentication', 'check');
+    // Debug.ShowInfoMessage('Check Token: "' + token, 'Authentication', 'check');
+    // Debug.ShowInfoMessage('Token Key:   "' + key,   'Authentication', 'check');
 
     if(!token) return res.status(401).send('Access denied. No token provided.');
 

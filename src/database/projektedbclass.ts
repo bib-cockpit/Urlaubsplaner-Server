@@ -26,18 +26,22 @@ export class ProjekteDBClass {
 
         ProjektmodelClass = model(this.Const.ProjektecollectionName, Projekteshema);
 
-        ProjektmodelClass.find( { Deleted: false } ).sort({Projektname: 1}).then((data: any) => {
+        this.Debug.ShowInfoMessage('Lese Projektliste', 'ProjekteDBClass', 'ReadProjektliste');
+
+        ProjektmodelClass.find( {Deleted: false}).sort({Projektname: 1}).then((data: any) => {
 
           data.forEach((projekt) => {
 
             Liste.push(projekt._doc);
           });
 
+          this.Debug.ShowInfoMessage('Projektliste gelesen und sortiert nach Projektname', 'ProjekteDBClass', 'ReadProjektliste');
+
           resolve(Liste);
 
-          console.log('');
-
         }).catch((error: any) => {
+
+          this.Debug.ShowErrorMessage('Projektliste lesen fehlerhaft.', error, 'ProjekteDBClass', 'ReadProjektliste');
 
           reject(error);
         });

@@ -25,6 +25,8 @@ export class ProjekteroutsClass {
 
       this.projekterouter.get('/', this.Authentication.check,  (req: Request, res: Response) => { //
 
+        this.Debug.ShowInfoMessage('Projekterouten GET Anfrage -> Projektliste auslesen', 'ProjekteroutsClass', 'SetRoutes');
+
         this.Database.ReadProjektliste().then((liste: IProjektestruktur[]) => {
 
           res.status(200).send(liste);
@@ -40,11 +42,9 @@ export class ProjekteroutsClass {
 
         // PUT ist für Update
 
-        console.log('Projekt PUT');
-
         const data = <IProjektestruktur>req.body;
 
-        console.log('Daten: ' + JSON.stringify(data));
+        this.Debug.ShowInfoMessage('Projekterouten PUT Anfrage -> Projekt aktuallisieren', 'ProjekteroutsClass', 'SetRoutes');
 
         this.Database.UpdateProjekt(data).then((result) => {
 
@@ -67,11 +67,9 @@ export class ProjekteroutsClass {
 
         // POST ist für neuen Eintrag
 
-        console.log('Projekte POST');
+        this.Debug.ShowInfoMessage('Projekterouten POST Anfrage -> Projekt hinzufuegen', 'ProjekteroutsClass', 'SetRoutes');
 
         const data = <IProjektestruktur>req.body;
-
-        console.log('Daten: ' + JSON.stringify(data));
 
         this.Database.AddProjekt(data).then((result) => {
 

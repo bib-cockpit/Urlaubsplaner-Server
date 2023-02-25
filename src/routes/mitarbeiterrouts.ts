@@ -43,7 +43,7 @@ class MitarbeiterrouterClass {
         let email = <string>query.email;
         let Daten: any = null;
 
-        this.Debug.ShowInfoMessage('Get Request -> Emailadresse: ' + email, 'Mitarebiterrouts', 'SetRoutes');
+        this.Debug.ShowInfoMessage('Mitarbeiterrouten GET Request -> Emailadresse: ' + email, 'Mitarebiterrouts', 'SetRoutes');
 
         debugger;
 
