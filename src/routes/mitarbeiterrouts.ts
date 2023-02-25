@@ -8,7 +8,6 @@ import {ConfigClass} from "../configclass";
 class MitarbeiterrouterClass {
 
   private Debug: DebugClass;
-  private Config: ConfigClass;
   public  mitarbeiterrouter: any;
   private Database: MitarbeiterDBClass;
 
@@ -16,7 +15,6 @@ class MitarbeiterrouterClass {
 
     this.mitarbeiterrouter = Router();
     this.Debug             = new DebugClass();
-    this.Config            = new ConfigClass();
     this.Database          = new MitarbeiterDBClass();
   }
 
@@ -28,7 +26,7 @@ class MitarbeiterrouterClass {
       Vorname: mitarbeiter.Vorname,
       Email:   mitarbeiter.Email
 
-    }, this.Config.SecretKey);
+    }, process.env.COCKPIT_JWTSecretKey);
   }
 
   SetRoutes() {
@@ -46,6 +44,9 @@ class MitarbeiterrouterClass {
         let Daten: any = null;
 
         this.Debug.ShowInfoMessage('Get Request -> Emailadresse: ' + email, 'Mitarebiterrouts', 'SetRoutes');
+
+        debugger;
+
 
         if(email) {
 

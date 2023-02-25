@@ -4,7 +4,6 @@ import {MitarbeiterDBClass} from "../database/mitarbeiterdbclass";
 import * as jwt from 'jsonwebtoken';
 import {IMitarbeiterstruktur} from "../datenstrukturen/mitarbeiterstruktur_server";
 import {AuthenticationClass} from "../middleware/authentication";
-import {ConfigClass} from "../configclass";
 
 class RegistrierungrouterClass {
 
@@ -12,7 +11,6 @@ class RegistrierungrouterClass {
   public  registrierungrouter: any;
   private Database: MitarbeiterDBClass;
   private Authentication: AuthenticationClass;
-  private Config: ConfigClass;
 
   constructor() {
 
@@ -20,7 +18,6 @@ class RegistrierungrouterClass {
     this.Debug               = new DebugClass();
     this.Database            = new MitarbeiterDBClass();
     this.Authentication      = new AuthenticationClass();
-    this.Config              = new ConfigClass();
   }
 
   GetToken(mitarbeiter: IMitarbeiterstruktur): string {
@@ -31,18 +28,21 @@ class RegistrierungrouterClass {
       Vorname: mitarbeiter.Vorname,
       Email:   mitarbeiter.Email
 
-    }, this.Config.SecretKey);
+    }, process.env.COCKPIT_JWTSecretKey);
   }
 
   SetRoutes() {
 
+
     try {
+
+
 
       // Mitarbeiter lesen ob dieser existiert
 
       let token: string;
 
-      this.registrierungrouter.get('/', this.Authentication.check,  (req: Request, res: Response) => { // ,
+      this.registrierungrouter.get('/', this.Authentication.check,  (req: Request, res: Response) => { //
 
         this.Debug.ShowInfoMessage('Registirierung GET Methode', 'registrierungrouterClass', 'SetRoutes');
 

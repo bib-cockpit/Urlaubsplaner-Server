@@ -1,30 +1,24 @@
-import {NextFunction, Request, Response} from "express";
+import {NextFunction, Response} from "express";
 import * as jwt from 'jsonwebtoken';
 import {DebugClass} from "../debug";
-import {ConfigClass} from "../configclass";
 
 export class AuthenticationClass {
-
-  private Config: ConfigClass;
 
   constructor() {
 
     try  {
 
-      this.Config = new ConfigClass();
-
     }
     catch(error) {
-
 
     }
   }
 
   check (req: any, res: Response, next: NextFunction) {
 
-    const token: string     = req.header('authorization');
-    const key: string       = this.Config.SecretKey;
-    const Debug: DebugClass = new DebugClass();
+    const Debug: DebugClass   = new DebugClass();
+    const token: string       = req.header('authorization');
+    const key: string         = process.env.COCKPIT_JWTSecretKey;
 
     Debug.ShowInfoMessage('Check Token: "' + token, 'Authentication', 'check');
     Debug.ShowInfoMessage('Token Key:   "' + key,   'Authentication', 'check');
