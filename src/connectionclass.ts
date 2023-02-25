@@ -79,6 +79,7 @@ export class ConnectionClass {
           },
           useNewUrlParser:    true,
           useUnifiedTopology: true,
+          useCreateIndex:     true
 
         }).then((data: Mongoose) => {
 
