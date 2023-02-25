@@ -20,7 +20,7 @@ import { HomerouterClass } from './routes/homeroutes';
 import { StandorterouterClass } from './routes/standorterouts';
 import { Application } from "express";
 import {ConnectionClass} from "./connectionclass";
-import moment, {Moment} from "moment";
+import moment from "moment";
 import {DebugClass} from "./debug";
 import {MitarbeiterrouterClass} from "./routes/mitarbeiterrouts";
 import {RegistrierungrouterClass} from "./routes/registrierungrouts";
@@ -104,7 +104,7 @@ app.use('/projekte',      Projekterouter.projekterouter);
 app.use('/projektpunkte', Projektpunkterouter.projektpunkterouter);
 app.use('/protokolle',    Protokollrouter.protokolllerouter);
 
-let server = app.listen(5000, () =>  {
+let server = app.listen(8080, () =>  {
 
   let address: any = server.address();
 
