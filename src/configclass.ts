@@ -12,6 +12,7 @@ export class ConfigClass {
   public COSMOSDB_PORT;
   public SecretKey;
   public NODE_ENV;
+  public PORT;
   public Statusmessage;
 
   constructor() {
@@ -22,7 +23,8 @@ export class ConfigClass {
     this.COSMOSDB_PASSWORD  = 'nopasswort';
     this.COSMOSDB_DBNAME    = 'nodbname';
     this.COSMOSDB_HOST      = 'nohost';
-    this.COSMOSDB_PORT      = 0;
+    this.COSMOSDB_PORT      = '0';
+    this.PORT               = '5000';
     this.SecretKey          = 'nokey';
     this.NODE_ENV           = 'none';
     this.Statusmessage      = 'Config not Init()';
@@ -35,13 +37,14 @@ export class ConfigClass {
     }
   }
 
-  public Init(nodeenv: string, status: string, dbuser: string, dbpass: string, dbname: string, dbhost: string, dbport: string, secretkey: string) {
+  public Init(nodeenv: string, port: string, status: string, dbuser: string, dbpass: string, dbname: string, dbhost: string, dbport: string, secretkey: string) {
 
     try {
 
       this.Debug = new DebugClass();
 
       this.NODE_ENV          = nodeenv;
+      this.PORT              = port;
       this.Statusmessage     = status;
       this.COSMOSDB_USER     = dbuser;
       this.COSMOSDB_PASSWORD = dbpass;

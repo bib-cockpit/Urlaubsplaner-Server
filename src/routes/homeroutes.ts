@@ -63,9 +63,6 @@ class HomerouterClass {
               <td>Dirname:</td><td>${Dirname}</td>
           </tr>
           <tr>
-              <td>Statusmessage:</td><td>${this.Config.Statusmessage}</td>
-          </tr>
-          <tr>
               <td>NODE ENV:</td><td>${this.Config.NODE_ENV}</td>
           </tr>
           <tr>

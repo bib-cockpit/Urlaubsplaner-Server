@@ -69,7 +69,7 @@ export class DebugClass {
     }
   }
 
-  public ShowInfoMessage(message: string, script: string, funktion: string)
+  public ShowInfoMessage(message: any, script: string, funktion: string)
   {
     try {
 

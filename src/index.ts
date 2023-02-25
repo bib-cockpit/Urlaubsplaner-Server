@@ -33,7 +33,6 @@ import {ConfigClass} from "./configclass";
 import helmet from "helmet";
 
 const app: Application = express();
-const port: number = process.env.PORT ? parseInt(process.env.PORT) : 5000;
 const Connection: ConnectionClass = new ConnectionClass();
 const Homerouter: HomerouterClass = new HomerouterClass();
 const Mitarbeiterouter: MitarbeiterrouterClass = new MitarbeiterrouterClass();
@@ -47,6 +46,7 @@ const Protokollrouter: ProtokolleroutsClass = new ProtokolleroutsClass();
 const Config: ConfigClass = new ConfigClass();
 
 let NODE_ENV: string       = config.has('node_env')        ? config.get('node_env')        : 'nicht definiert';
+let Port: string           = 'none'; //            = config.has('port')            ? config.get('port')            : '5000';
 let Statausmessage: string = config.has('Statusmessage')   ? config.get('Statusmessage')   : 'nicht definiert';
 let User : string          = config.has('db_user')         ? config.get('db_user')         : 'nicht definiert';
 let Passwort: string       = config.has('db_password')     ? config.get('db_password')     : 'nicht definiert';
@@ -57,6 +57,7 @@ let SecretKey: string      = config.has('secretkey')       ? config.get('secretk
 
 Config.Init(
   NODE_ENV,
+  Port,
   Statausmessage,
   User,
   Passwort,
@@ -68,7 +69,6 @@ Config.Init(
 
 Connection.Init(Config);
 Homerouter.Init(Config);
-
 
 // app.use(morgan('dev')); // http request Debug messages
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -102,11 +102,14 @@ app.use('/projekte',      Projekterouter.projekterouter);
 app.use('/projektpunkte', Projektpunkterouter.projektpunkterouter);
 app.use('/protokolle',    Protokollrouter.protokolllerouter);
 
-app.listen(port, () => {
+app.listen(0, function()  {
 
-  Debug.ShowInfoMessage(`Cockpit Server is listening on port ${port}.....`, 'index.ts', 'Server');
+  Config.PORT = this.address().port;
+
+  Debug.ShowInfoMessage(`Cockpit Server is listening on port ${Config.PORT}.....`, 'index.ts', 'Server');
   Debug.ShowInfoMessage(`Startup time ${moment().format('HH:mm:ss')}`, 'index.ts', 'Server');
 
+  Debug.ShowInfoMessage('Server adress: ' + this.address(), 'index.ts', 'Server');
 
   if(Config.NODE_ENV === 'production') {
 
