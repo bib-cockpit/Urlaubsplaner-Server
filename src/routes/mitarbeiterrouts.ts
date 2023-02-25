@@ -45,15 +45,23 @@ class MitarbeiterrouterClass {
         let email = <string>query.email;
         let Daten: any = null;
 
+        this.Debug.ShowInfoMessage('Get Request -> Emailadresse: ' + email, 'Mitarebiterrouts', 'SetRoutes');
+
         if(email) {
+
+          this.Debug.ShowInfoMessage('Mitarbeiterdaten auslesen: ' + email, 'Mitarebiterrouts', 'SetRoutes');
 
           this.Database.ReadMitarbeiter(email).then((mitarbeiter: IMitarbeiterstruktur) => {
 
             if(mitarbeiter === null) {
 
               Daten = null;
+
+              this.Debug.ShowInfoMessage('Mitarbeiter nicht gefunden.', 'Mitarebiterrouts', 'SetRoutes');
             }
             else {
+
+              this.Debug.ShowInfoMessage('Mitarbeiter gefunden.', 'Mitarebiterrouts', 'SetRoutes');
 
               token = this.GetToken(mitarbeiter);
 
