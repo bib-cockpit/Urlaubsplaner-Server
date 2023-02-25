@@ -106,13 +106,16 @@ app.use('/protokolle',    Protokollrouter.protokolllerouter);
 
 let server = app.listen(5000, () =>  {
 
-  let adress: any = server.address();
+  let address: any = server.address();
 
-  Config.PORT = adress.port;
+  Config.PORT = address.port;
 
   Debug.ShowInfoMessage(`Cockpit Server is listening on port ${Config.PORT}.....`, 'index.ts', 'Server');
+  Debug.ShowInfoMessage('Address: ' + address['address'], 'index.ts', 'Server');
+  Debug.ShowInfoMessage('Family:  ' + address['family'],  'index.ts', 'Server');
   Debug.ShowInfoMessage(`Startup time ${moment().format('HH:mm:ss')}`, 'index.ts', 'Server');
 
+  console.log(address);
 
   if(Config.NODE_ENV === 'production') {
 
