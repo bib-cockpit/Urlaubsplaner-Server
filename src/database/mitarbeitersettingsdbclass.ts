@@ -61,6 +61,8 @@ export class MitarbeitersettingsDBClass {
 
         delete data._id;
 
+        this.Debug.ShowInfoMessage('Funktion AddMitarbeitersetting -> Settingsmodel erzeugen', 'MitarbeitersettingsDBClass', 'AddMitarbeitersetting');
+
         Mitarbeitermodel = this.GetMitarbeitersettingModel(data);
 
         Mitarbeitermodel.save().then((result: Document<any>) => {
@@ -68,6 +70,8 @@ export class MitarbeitersettingsDBClass {
           resolve(result);
 
         }).catch((error) => {
+
+          this.Debug.ShowErrorMessage('Fehler beim erstellen der Mitarbeitersettings', error, 'AddMitarbeitersetting', 'AddMitarbeitersetting');
 
           reject(error);
         });

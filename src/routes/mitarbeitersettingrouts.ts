@@ -45,12 +45,13 @@ class MitarbeitersettingsrouterClass {
 
       this.mitarbeitersettingrouter.post('/', (req: Request, res: Response) => {
 
-        console.log('Mitarbeitersettings POST');
+        this.Debug.ShowInfoMessage('Mitarbeitersettings POST', 'SetRoutes', 'MitarbeitersettingsrouterClass');
 
         const Setting = <IMitarbeitersettingsstruktur>req.body;
 
         delete Setting._id;
 
+        this.Debug.ShowInfoMessage('Daten:', 'SetRoutes', 'MitarbeitersettingsrouterClass');
         console.log('Daten: ' + JSON.stringify(Setting));
 
         this.Database.AddMitarbeitersetting(Setting).then((result) => {

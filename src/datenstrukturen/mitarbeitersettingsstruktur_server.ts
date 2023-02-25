@@ -6,10 +6,8 @@ interface IMitarbeitersettingsstruktur  {
   MitarbeiterID:         string;
   FavoritenID:           string;
   ProjektID:             string;
-  StandortFilter:        string;
   Favoritprojektindex:   number;
-
-  AufgabenSortiermodus: string;
+  StandortFilter:        string;
 
   AufgabenShowOffen:        boolean;
   AufgabenShowGeschlossen:  boolean;
@@ -20,6 +18,10 @@ interface IMitarbeitersettingsstruktur  {
   AufgabenTerminfiltervariante:  string;
   AufgabenTerminfilterStartwert: number;
   AufgabenTerminfilterEndewert:  number;
+
+  AufgabenSortiermodus:  string;
+
+  AufgabenMeilensteineNachlauf: number;
 
   Deleted:                  boolean;
   HeadermenueMaxFavoriten:  number;
@@ -44,8 +46,8 @@ const Mitarbeitersettingsshema = new mongoose.Schema({
   MitarbeiterID:         {type: String, required: false},
   FavoritenID:           {type: String, required: false},
   ProjektID:             {type: String, required: false},
-  StandortFilter:        {type: String, required: false},
   Favoritprojektindex:   {type: Number,  default: null},
+  StandortFilter:        {type: String, required: false},
 
   AufgabenShowOffen:           {type: Boolean, default: false},
   AufgabenShowGeschlossen:     {type: Boolean, default: false},
