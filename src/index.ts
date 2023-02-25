@@ -73,6 +73,8 @@ Homerouter.Init(Config);
 // app.use(morgan('dev')); // http request Debug messages
 app.use((req: Request, res: Response, next: NextFunction) => {
 
+  req.socket.localPort;
+
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, Authorization");
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
@@ -102,16 +104,16 @@ app.use('/projekte',      Projekterouter.projekterouter);
 app.use('/projektpunkte', Projektpunkterouter.projektpunkterouter);
 app.use('/protokolle',    Protokollrouter.protokolllerouter);
 
-app.listen(0, function()  {
+let server = app.listen(0, () =>  {
 
   Debug.ShowInfoMessage(`Startlistening...`, 'index.ts', 'Server');
 
-  Config.PORT = this.address().port;
+  // Config.PORT = server.address();
 
-  Debug.ShowInfoMessage(`Cockpit Server is listening on port ${Config.PORT}.....`, 'index.ts', 'Server');
+  // Debug.ShowInfoMessage(`Cockpit Server is listening on port ${Config.PORT}.....`, 'index.ts', 'Server');
   Debug.ShowInfoMessage(`Startup time ${moment().format('HH:mm:ss')}`, 'index.ts', 'Server');
 
-  Debug.ShowInfoMessage('Server adress: ' + this.address(), 'index.ts', 'Server');
+  console.log(server.address());
 
   if(Config.NODE_ENV === 'production') {
 
