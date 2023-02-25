@@ -65,17 +65,8 @@ class HomerouterClass {
           <tr>
               <td>Statusmessage:</td><td>${this.Config.Statusmessage}</td>
           </tr>
-
-          </table>
-          </body>`;
-
-        /*
-
           <tr>
-              <td>Environment (config):</td><td>${this.Config.NODE_ENV}</td>
-          </tr>
-          <tr>
-              <td>Environment (config):</td><td>${this.Config.NODE_ENV}</td>
+              <td>NODE ENV:</td><td>${this.Config.NODE_ENV}</td>
           </tr>
           <tr>
               <td>Statusmessage:</td><td>${this.Config.Statusmessage}</td>
@@ -98,7 +89,9 @@ class HomerouterClass {
           <tr>
               <td>DB Passwort:</td><td>${this.Config.COSMOSDB_PASSWORD}</td>
           </tr>
-         */
+          </table>
+        </body>`;
+
 
         res.status(200).send(html);
       });
