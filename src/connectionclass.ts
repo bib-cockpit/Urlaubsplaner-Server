@@ -27,6 +27,9 @@ export class ConnectionClass {
 
       let Uri: string = 'mongodb://' + this.Config.COSMOSDB_HOST + ':' + this.Config.COSMOSDB_PORT + '/' + this.Config.COSMOSDB_DBNAME;
 
+      this.Debug.ShowInfoMessage('Connection String Oflline: ' + Uri, 'ConnectionClass', 'ConnectOffline');
+
+
       return new Promise((resolve, reject) => {
 
         this.Connection = connect(Uri, {
@@ -63,7 +66,10 @@ export class ConnectionClass {
 
       return new Promise((resolve, reject) => {
 
-        let Uri: string = "mongodb://" + this.Config.COSMOSDB_HOST + ":"+this.Config.COSMOSDB_PORT + "/" + this.Config.COSMOSDB_DBNAME + "?ssl=true&replicaSet=globaldb";
+        let Parameter: string = "?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@cockbit-cosmos-db@"
+        let Uri: string = "mongodb://" + this.Config.COSMOSDB_HOST + ":"+this.Config.COSMOSDB_PORT + "/" + this.Config.COSMOSDB_DBNAME + Parameter;
+
+        this.Debug.ShowInfoMessage('Connection String Online: ' + Uri, 'ConnectionClass', 'ConnectOnline');
 
         this.Connection = connect(Uri, {
           auth: {
