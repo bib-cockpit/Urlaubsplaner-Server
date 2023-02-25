@@ -26,8 +26,6 @@ export class ProjektpunkteDBClass {
 
         ProjektpunktemodelClass = model(this.Const.ProjektpunktecollectionName, Projektpunktshema);
 
-        // .sort({ Projektname: 1 })
-
         ProjektpunktemodelClass.find( { Deleted: false, Projektkey: projektkey } ).then((data: any) => {
 
           data.forEach((projektpunkt) => {

@@ -22,7 +22,7 @@ interface IStandortestruktur  {
 
 const Standorteshema = new mongoose.Schema({
 
-  Standort: {type: String,  required: false},
+  Standort: {type: String,  required: false, index: true},
   Kuerzel:  {type: String,  required: false},
   Strasse:  {type: String,  required: false},
   PLZ:      {type: String,  required: false},

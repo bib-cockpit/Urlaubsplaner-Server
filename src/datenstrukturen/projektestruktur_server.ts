@@ -27,7 +27,7 @@ interface IProjektestruktur  {
 
 const Projekteshema = new mongoose.Schema({
 
-  Projektname:      {type: String,  required: false},
+  Projektname:      {type: String,  required: false, index: true },
   ProjektleiterID:  {type: String,  required: false},
   StellvertreterID: {type: String,  required: false},
   StandortID:       {type: String,  required: false},

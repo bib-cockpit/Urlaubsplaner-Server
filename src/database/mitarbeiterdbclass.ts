@@ -30,14 +30,14 @@ export class MitarbeiterDBClass {
 
         MitarbeitermodelClass.find( { Deleted: false } ).sort({Name: 1}).then((data: any) => {
 
-          this.Debug.ShowInfoMessage('Durchsuchen der Mitarbeiterliste wurde ausgeführt', 'MitarbeiterDBClass', 'ReadMitarbeiterliste');
-
-          console.log(data);
+          this.Debug.ShowInfoMessage('Durchsuchen der Mitarbeiterliste wurde ausgeführt. ', 'MitarbeiterDBClass', 'ReadMitarbeiterliste');
 
           data.forEach((mitarbeiter) => {
 
             Liste.push(mitarbeiter._doc);
           });
+
+          this.Debug.ShowInfoMessage(Liste.length + ' Mitarbeitereintraege vorhanden.', 'MitarbeiterDBClass', 'ReadMitarbeiterliste');
 
           resolve(Liste);
 
