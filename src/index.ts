@@ -2,7 +2,7 @@ import * as dotenv from 'dotenv';
 
 if(typeof process.env.NODE_ENV === 'undefined') {
 
-  process.env.NODE_CONFIG_DIR = './config';
+  process.env.NODE_CONFIG_DIR = './src/config';
 
   console.log('NODE_ENV nicht definiert. Die Ersatzvariablen aus dotenv werden verwendet.');
   // Test
@@ -20,7 +20,7 @@ import { HomerouterClass } from './routes/homeroutes';
 import { StandorterouterClass } from './routes/standorterouts';
 import { Application } from "express";
 import {ConnectionClass} from "./connectionclass";
-import moment from "moment";
+import moment, {Moment} from "moment";
 import {DebugClass} from "./debug";
 import {MitarbeiterrouterClass} from "./routes/mitarbeiterrouts";
 import {RegistrierungrouterClass} from "./routes/registrierungrouts";
@@ -45,8 +45,8 @@ const Projektpunkterouter: ProjektpunkteroutsClass = new ProjektpunkteroutsClass
 const Protokollrouter: ProtokolleroutsClass = new ProtokolleroutsClass();
 const Config: ConfigClass = new ConfigClass();
 
+let Port: string           = 'none';
 let NODE_ENV: string       = config.has('node_env')        ? config.get('node_env')        : 'nicht definiert';
-let Port: string           = 'none'; //            = config.has('port')            ? config.get('port')            : '5000';
 let Statausmessage: string = config.has('Statusmessage')   ? config.get('Statusmessage')   : 'nicht definiert';
 let User : string          = config.has('db_user')         ? config.get('db_user')         : 'nicht definiert';
 let Passwort: string       = config.has('db_password')     ? config.get('db_password')     : 'nicht definiert';
@@ -104,16 +104,15 @@ app.use('/projekte',      Projekterouter.projekterouter);
 app.use('/projektpunkte', Projektpunkterouter.projektpunkterouter);
 app.use('/protokolle',    Protokollrouter.protokolllerouter);
 
-let server = app.listen(0, () =>  {
+let server = app.listen(8080, () =>  {
 
-  Debug.ShowInfoMessage(`Startlistening...`, 'index.ts', 'Server');
+  let adress: any = server.address();
 
-  // Config.PORT = server.address();
+  Config.PORT = adress.port;
 
-  // Debug.ShowInfoMessage(`Cockpit Server is listening on port ${Config.PORT}.....`, 'index.ts', 'Server');
+  Debug.ShowInfoMessage(`Cockpit Server is listening on port ${Config.PORT}.....`, 'index.ts', 'Server');
   Debug.ShowInfoMessage(`Startup time ${moment().format('HH:mm:ss')}`, 'index.ts', 'Server');
 
-  console.log(server.address());
 
   if(Config.NODE_ENV === 'production') {
 
