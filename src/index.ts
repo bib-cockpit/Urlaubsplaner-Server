@@ -30,6 +30,7 @@ import {ProjektpunkteroutsClass} from "./routes/projektpunkteerouts";
 import {ProtokolleroutsClass} from "./routes/protokollerouts";
 import config from "config";
 import {ConfigClass} from "./configclass";
+import helmet from "helmet";
 
 const app: Application = express();
 const port: number = process.env.PORT ? parseInt(process.env.PORT) : 5000;
@@ -90,7 +91,7 @@ Protokollrouter.SetRoutes();
 
 app.use(express.json()); // setze request.body JSON
 app.use(express.urlencoded({extended: true}));
-// app.use(helmet());
+app.use(helmet());
 
 app.use('/',              Homerouter.homerouter);
 app.use('/standorte',     Standorterouter.standorterouter);
@@ -106,32 +107,29 @@ app.listen(port, () => {
   Debug.ShowInfoMessage(`Cockpit Server is listening on port ${port}.....`, 'index.ts', 'Server');
   Debug.ShowInfoMessage(`Startup time ${moment().format('HH:mm:ss')}`, 'index.ts', 'Server');
 
-  /*
 
-  if(process.env.NODE_ENV === 'production') {
+  if(Config.NODE_ENV === 'production') {
 
       Connection.ConnectOnline().then(() => {
 
-        Debug.ShowInfoMessage('Connected to Online Server MongoDB......', 'index.ts', 'Server');
+        Debug.ShowInfoMessage('Connected to Online Mongo Database......', 'index.ts', 'Server');
 
       }).catch((error) => {
 
-        Debug.ShowErrorMessage('Connection to Online Server MongoDB failed...', error, 'index.ts', 'Server');
+        Debug.ShowErrorMessage('Connection to Online Mongo Database failed...', error, 'index.ts', 'Server');
       });
 
   } else {
 
     Connection.ConnectOffline().then(() => {
 
-      Debug.ShowInfoMessage('Connected to Offline Server MongoDB......', 'index.ts', 'Server');
+      Debug.ShowInfoMessage('Connected to Offline Mongo Database......', 'index.ts', 'Server');
 
     }).catch((error) => {
 
-      Debug.ShowErrorMessage('Connection to Offline Server MongoDB failed...', error, 'index.ts', 'Server');
+      Debug.ShowErrorMessage('Connection to Offline Mongo Dataabase failed...', error, 'index.ts', 'Server');
     });
   }
-
-   */
 });
 
 
