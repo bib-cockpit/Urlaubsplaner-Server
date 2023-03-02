@@ -70,12 +70,9 @@ Config.Init(
 Connection.Init(Config);
 Homerouter.Init(Config);
 
-// app.use(morgan('dev')); // http request Debug messages
 app.use((req: Request, res: Response, next: NextFunction) => {
 
-  req.socket.localPort;
-
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Origin',  '*');
   res.setHeader('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, Authorization");
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
 
@@ -93,7 +90,7 @@ Protokollrouter.SetRoutes();
 
 app.use(express.json()); // setze request.body JSON
 app.use(express.urlencoded({extended: true}));
-app.use(helmet());
+// app.use(helmet());
 
 app.use('/',              Homerouter.homerouter);
 app.use('/standorte',     Standorterouter.standorterouter);
