@@ -70,6 +70,8 @@ Config.Init(
 Connection.Init(Config);
 Homerouter.Init(Config);
 
+// No 'Access-Control-Allow-Origin' header is present on the requested resource
+
 app.use((req: Request, res: Response, next: NextFunction) => {
 
   res.setHeader('Access-Control-Allow-Origin',  '*');
