@@ -36,14 +36,18 @@ export class ProtokolleroutsClass {
         let query = req.query;
         let Projektkey = <string>query.projektkey;
 
-        console.log('ReaD Protokolle: ');
+        console.log('Read Protokolle: ');
         console.log('Projektkey: ' + Projektkey);
 
         this.Database.ReadProtkollliste(Projektkey).then((liste: IProtokollstruktur[]) => {
 
+          res.setHeader('Access-Control-Allow-Origin',  '*');
+
           res.status(200).send(liste);
 
         }).catch((error) => {
+
+          res.setHeader('Access-Control-Allow-Origin',  '*');
 
           res.status(400).send(error.message);
 
