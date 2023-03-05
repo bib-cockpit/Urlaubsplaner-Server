@@ -20,6 +20,8 @@ export class AuthenticationClass {
     const token: string       = req.header('authorization');
     const key: string         = process.env.COCKPIT_JWTSecretKey;
 
+
+
     if(!token) return res.status(401).send('Access denied. No token provided.');
 
     try {
