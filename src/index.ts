@@ -72,9 +72,6 @@ Config.Init(
 Connection.Init(Config);
 Homerouter.Init(Config);
 
-  // res.setHeader('Access-Control-Allow-Origin',  '*');
-
-app.use(helmet);
 app.use((req: Request, res: Response, next: NextFunction) => {
 
   res.setHeader('Access-Control-Allow-Origin',  '*');
