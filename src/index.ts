@@ -72,8 +72,6 @@ Config.Init(
 Connection.Init(Config);
 Homerouter.Init(Config);
 
-/*
-
 app.use((req: Request, res: Response, next: NextFunction) => {
 
   res.setHeader('Access-Control-Allow-Origin',  '*');
@@ -82,10 +80,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
   next();
 });
-
- */
-
-
 
 Homerouter.SetRoutes();
 Standorterouter.SetRoutes();
