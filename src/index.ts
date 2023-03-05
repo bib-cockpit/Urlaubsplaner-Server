@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-import cors from 'cors';
+// import cors from 'cors';
 
 if(typeof process.env.NODE_ENV === 'undefined') {
 
@@ -73,8 +73,6 @@ Config.Init(
 Connection.Init(Config);
 Homerouter.Init(Config);
 
-// No 'Access-Control-Allow-Origin' header is present on the requested resource
-
 
 app.use((req: Request, res: Response, next: NextFunction) => {
 
@@ -86,7 +84,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 
-app.use(cors());
+// app.use(cors());
 
 Homerouter.SetRoutes();
 Standorterouter.SetRoutes();
