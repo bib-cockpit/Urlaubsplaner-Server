@@ -1,5 +1,4 @@
 import * as dotenv from 'dotenv';
-// import cors from 'cors';
 
 if(typeof process.env.NODE_ENV === 'undefined') {
 
@@ -73,10 +72,11 @@ Config.Init(
 Connection.Init(Config);
 Homerouter.Init(Config);
 
+  // res.setHeader('Access-Control-Allow-Origin',  '*');
 
+/*
 app.use((req: Request, res: Response, next: NextFunction) => {
 
-  res.setHeader('Access-Control-Allow-Origin',  '*');
   res.setHeader('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, Authorization");
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
 
@@ -84,7 +84,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 
-// app.use(cors());
+ */
 
 Homerouter.SetRoutes();
 Standorterouter.SetRoutes();

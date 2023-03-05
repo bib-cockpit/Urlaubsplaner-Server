@@ -4,6 +4,7 @@ import {MitarbeiterDBClass} from "../database/mitarbeiterdbclass";
 import * as jwt from 'jsonwebtoken';
 import {IMitarbeiterstruktur} from "../datenstrukturen/mitarbeiterstruktur_server";
 import {AuthenticationClass} from "../middleware/authentication";
+import cors from 'cors';
 
 class RegistrierungrouterClass {
 
@@ -33,21 +34,18 @@ class RegistrierungrouterClass {
 
   SetRoutes() {
 
+    // https://bib-cockpit-server.azurewebsites.net/.auth/login/aad/callback'
 
     try {
-
-
 
       // Mitarbeiter lesen ob dieser existiert
 
       let token: string;
 
+      this.registrierungrouter.use(cors());
+      this.registrierungrouter.options('*', cors());
+
       this.registrierungrouter.get('/', this.Authentication.check,  (req: Request, res: Response) => {
-
-
-        res.setHeader('Access-Control-Allow-Origin',  '*');
-        res.setHeader('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
 
         this.Debug.ShowInfoMessage('Registirierung GET Methode', 'registrierungrouterClass', 'SetRoutes');
 
