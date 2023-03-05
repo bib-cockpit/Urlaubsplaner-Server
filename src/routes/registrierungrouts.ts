@@ -47,11 +47,17 @@ class RegistrierungrouterClass {
 
       this.registrierungrouter.get('/', this.Authentication.check,  (req: Request, res: Response) => {
 
+
+
         this.Debug.ShowInfoMessage('Registirierung GET Methode', 'registrierungrouterClass', 'SetRoutes');
 
         let query = req.query;
         let email = <string>query.email;
         let Daten: any = null;
+
+        res.setHeader('Access-Control-Allow-Origin',  '*');
+        res.setHeader('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
 
         this.Database.ReadMitarbeiter(email).then((mitarbeiter: IMitarbeiterstruktur) => {
 
