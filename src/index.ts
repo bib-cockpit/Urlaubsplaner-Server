@@ -72,6 +72,7 @@ Config.Init(
 Connection.Init(Config);
 Homerouter.Init(Config);
 
+/*
 app.use((req: Request, res: Response, next: NextFunction) => {
 
   res.setHeader('Access-Control-Allow-Origin',  '*');
@@ -80,6 +81,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
   next();
 });
+ */
 
 
 Homerouter.SetRoutes();
@@ -94,7 +96,7 @@ Changelogrouter.SetRoutes();
 
 app.use(express.json()); // setze request.body JSON
 app.use(express.urlencoded({extended: true}));
-// app.use(helmet());
+app.use(helmet());
 
 app.use('/',              Homerouter.homerouter);
 app.use('/standorte',     Standorterouter.standorterouter);
