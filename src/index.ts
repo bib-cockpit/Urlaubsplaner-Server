@@ -1,4 +1,5 @@
 import * as dotenv from 'dotenv';
+import cors from 'cors';
 
 if(typeof process.env.NODE_ENV === 'undefined') {
 
@@ -28,6 +29,7 @@ import {ProjekteroutsClass} from "./routes/projekterouts";
 import {MitarbeitersettingsrouterClass} from "./routes/mitarbeitersettingrouts";
 import {ProjektpunkteroutsClass} from "./routes/projektpunkteerouts";
 import {ProtokolleroutsClass} from "./routes/protokollerouts";
+import {ChangelogrouterClass} from "./routes/changelogrouts";
 import config from "config";
 import {ConfigClass} from "./configclass";
 import helmet from "helmet";
@@ -43,6 +45,7 @@ const Projekterouter: ProjekteroutsClass = new ProjekteroutsClass();
 const Settingsrouter: MitarbeitersettingsrouterClass = new MitarbeitersettingsrouterClass();
 const Projektpunkterouter: ProjektpunkteroutsClass = new ProjektpunkteroutsClass();
 const Protokollrouter: ProtokolleroutsClass = new ProtokolleroutsClass();
+const Changelogrouter: ChangelogrouterClass = new ChangelogrouterClass();
 const Config: ConfigClass = new ConfigClass();
 
 let Port: string           = 'none';
@@ -71,16 +74,19 @@ Connection.Init(Config);
 Homerouter.Init(Config);
 
 // No 'Access-Control-Allow-Origin' header is present on the requested resource
+//   res.setHeader('Access-Control-Allow-Origin',  '*');
+
 
 app.use((req: Request, res: Response, next: NextFunction) => {
 
-  res.setHeader('Access-Control-Allow-Origin',  '*');
   res.setHeader('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, Authorization");
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
 
-
   next();
 });
+
+
+app.use(cors());
 
 Homerouter.SetRoutes();
 Standorterouter.SetRoutes();
@@ -90,6 +96,7 @@ Registrierungrouter.SetRoutes();
 Projekterouter.SetRoutes();
 Projektpunkterouter.SetRoutes();
 Protokollrouter.SetRoutes();
+Changelogrouter.SetRoutes();
 
 app.use(express.json()); // setze request.body JSON
 app.use(express.urlencoded({extended: true}));
@@ -103,6 +110,7 @@ app.use('/registrierung', Registrierungrouter.registrierungrouter);
 app.use('/projekte',      Projekterouter.projekterouter);
 app.use('/projektpunkte', Projektpunkterouter.projektpunkterouter);
 app.use('/protokolle',    Protokollrouter.protokolllerouter);
+app.use('/changelog',     Changelogrouter.changelogrouter);
 
 let server = app.listen(8080, () =>  {
 

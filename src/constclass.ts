@@ -7,6 +7,7 @@ export class Constclass {
   public readonly SettingscollectionName: string;
   public readonly ProjektpunktecollectionName: string;
   public readonly ProtokollcollectionName: string;
+  public readonly ChangelogcollectionName: string;
 
   constructor() {
 
@@ -17,5 +18,6 @@ export class Constclass {
     this.ProjektecollectionName      = 'projekte';
     this.ProjektpunktecollectionName = 'projektpunkte';
     this.ProtokollcollectionName     = 'protokolle';
+    this.ChangelogcollectionName     = 'changelog';
   }
 };
