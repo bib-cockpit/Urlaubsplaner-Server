@@ -4,7 +4,6 @@ import {MitarbeiterDBClass} from "../database/mitarbeiterdbclass";
 import * as jwt from 'jsonwebtoken';
 import {IMitarbeiterstruktur} from "../datenstrukturen/mitarbeiterstruktur_server";
 import {AuthenticationClass} from "../middleware/authentication";
-import cors from 'cors';
 
 class RegistrierungrouterClass {
 
@@ -42,9 +41,6 @@ class RegistrierungrouterClass {
 
       let token: string;
 
-      this.registrierungrouter.use(cors());
-      this.registrierungrouter.options('*', cors());
-
       // , this.Authentication.check
 
       this.registrierungrouter.get('/',  (req: Request, res: Response) => {
@@ -54,10 +50,6 @@ class RegistrierungrouterClass {
         let query = req.query;
         let email = <string>query.email;
         let Daten: any = null;
-
-        res.setHeader('Access-Control-Allow-Origin',  '*');
-        res.setHeader('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
 
         this.Database.ReadMitarbeiter(email).then((mitarbeiter: IMitarbeiterstruktur) => {
 
