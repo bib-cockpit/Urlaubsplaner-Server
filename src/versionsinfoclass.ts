@@ -1,8 +1,8 @@
 
 class VersionsinfoClass {
 
-  public Verion: number = 0.05;
-  public Versionsdatum: string = '22.02.2023';
+  public Verion: number = 0.06;
+  public Versionsdatum: string = '05.03.2023';
 }
 
 export {VersionsinfoClass}

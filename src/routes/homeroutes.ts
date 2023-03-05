@@ -1,7 +1,6 @@
 import {Request, Response, Router} from 'express';
 import {VersionsinfoClass} from '../versionsinfoclass';
 import {DebugClass} from "../debug";
-import {ConnectionClass} from "../connectionclass";
 import {ConfigClass} from "../configclass";
 
 const Info = new VersionsinfoClass();
