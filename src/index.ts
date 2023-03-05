@@ -72,6 +72,7 @@ Config.Init(
 Connection.Init(Config);
 Homerouter.Init(Config);
 
+/*
 
 app.use((req: Request, res: Response, next: NextFunction) => {
 
@@ -81,6 +82,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
   next();
 });
+
+ */
 
 
 
