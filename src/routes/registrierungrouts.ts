@@ -45,6 +45,8 @@ class RegistrierungrouterClass {
 
       this.registrierungrouter.get('/',  (req: Request, res: Response) => {
 
+        res.setHeader('Access-Control-Allow-Origin',  '*');
+
         this.Debug.ShowInfoMessage('Registirierung GET Methode', 'registrierungrouterClass', 'SetRoutes');
 
         let query = req.query;
@@ -67,6 +69,8 @@ class RegistrierungrouterClass {
               Token: token
             };
           }
+
+
 
           res.status(200).send(Daten);
 
