@@ -4,7 +4,6 @@ import {AuthenticationClass} from "../middleware/authentication";
 import {IProtokollstruktur} from "../datenstrukturen/protokollstruktur_server";
 import {ProtokollDBClass} from "../database/protokolledbclass";
 
-
 export class ProtokolleroutsClass {
 
   public  protokolllerouter: any;
@@ -26,13 +25,6 @@ export class ProtokolleroutsClass {
 
       this.protokolllerouter.get('/', this.Authentication.check,  (req: Request, res: Response) => {
 
-        /*
-        res.setHeader('Access-Control-Allow-Origin',  '*');
-        res.setHeader('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
-
-         */
-
         let query = req.query;
         let Projektkey = <string>query.projektkey;
 
@@ -41,13 +33,9 @@ export class ProtokolleroutsClass {
 
         this.Database.ReadProtkollliste(Projektkey).then((liste: IProtokollstruktur[]) => {
 
-          res.setHeader('Access-Control-Allow-Origin',  '*');
-
           res.status(200).send(liste);
 
         }).catch((error) => {
-
-          res.setHeader('Access-Control-Allow-Origin',  '*');
 
           res.status(400).send(error.message);
 

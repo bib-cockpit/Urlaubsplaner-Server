@@ -33,24 +33,13 @@ class RegistrierungrouterClass {
 
   SetRoutes() {
 
-    // https://bib-cockpit-server.azurewebsites.net/.auth/login/aad/callback'
-
     try {
 
       // Mitarbeiter lesen ob dieser existiert
 
       let token: string;
 
-      // , this.Authentication.check
-
-      this.registrierungrouter.get('/',  (req: Request, res: Response) => {
-
-        /*
-        res.setHeader('Access-Control-Allow-Origin',  '*');
-        res.setHeader('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
-
-         */
+      this.registrierungrouter.get('/', this.Authentication.check, (req: Request, res: Response) => {
 
         this.Debug.ShowInfoMessage('Registirierung GET Methode', 'registrierungrouterClass', 'SetRoutes');
 
@@ -74,9 +63,6 @@ class RegistrierungrouterClass {
               Token: token
             };
           }
-
-
-
           res.status(200).send(Daten);
 
         }).catch((error) => {
