@@ -36,10 +36,11 @@ class RegistrierungrouterClass {
     try {
 
       // Mitarbeiter lesen ob dieser existiert
+      // this.Authentication.check,
 
       let token: string;
 
-      this.registrierungrouter.get('/', this.Authentication.check, (req: Request, res: Response) => {
+      this.registrierungrouter.get('/',  (req: Request, res: Response) => {
 
         this.Debug.ShowInfoMessage('Registirierung GET Methode', 'registrierungrouterClass', 'SetRoutes');
 

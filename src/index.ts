@@ -31,7 +31,7 @@ import {ProtokolleroutsClass} from "./routes/protokollerouts";
 import {ChangelogrouterClass} from "./routes/changelogrouts";
 import config from "config";
 import {ConfigClass} from "./configclass";
-import helmet from "helmet";
+// import helmet from "helmet";
 
 const app: Application = express();
 const Connection: ConnectionClass = new ConnectionClass();
@@ -93,7 +93,7 @@ Changelogrouter.SetRoutes();
 
 app.use(express.json()); // setze request.body JSON
 app.use(express.urlencoded({extended: true}));
-app.use(helmet());
+// app.use(helmet());
 
 app.use('/',              Homerouter.homerouter);
 app.use('/standorte',     Standorterouter.standorterouter);
