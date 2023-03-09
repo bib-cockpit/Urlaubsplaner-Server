@@ -28,7 +28,7 @@ export class ChangelogDBClass {
 
         ChangelogmodelClass = model(this.Const.ChangelogcollectionName, Changelogshema);
 
-        ChangelogmodelClass.find( { Deleted: false } ).sort({Name: 1}).then((data: any) => {
+        ChangelogmodelClass.find({ Deleted: false }).then((data: any) => {
 
           this.Debug.ShowInfoMessage('Durchsuchen der Changelogliste wurde ausgeführt. ', 'ChangelogDBClass', 'ReadChangelogliste');
 
