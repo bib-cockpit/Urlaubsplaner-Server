@@ -74,6 +74,8 @@ Homerouter.Init(Config);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
 
+  Debug.ShowInfoMessage(`Recieved new request....`, 'index.ts', 'Server');
+
   res.setHeader('Access-Control-Allow-Origin',  '*');
   res.setHeader('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept, Authorization");
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
@@ -116,9 +118,9 @@ let server = app.listen(8080, () =>  {
   Debug.ShowInfoMessage('Family:  ' + address['family'],  'index.ts', 'Server');
   Debug.ShowInfoMessage(`Startup time ${moment().format('HH:mm:ss')}`, 'index.ts', 'Server');
 
-  console.log(address);
-
   if(Config.NODE_ENV === 'production') {
+
+
 
       Connection.ConnectOnline().then(() => {
 
