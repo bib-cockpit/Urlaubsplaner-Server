@@ -48,6 +48,8 @@ class RegistrierungrouterClass {
         let email = <string>query.email;
         let Daten: any = null;
 
+        res.setHeader('Access-Control-Allow-Origin',  '*');
+
         this.Database.ReadMitarbeiter(email).then((mitarbeiter: IMitarbeiterstruktur) => {
 
           if(mitarbeiter === null) {
