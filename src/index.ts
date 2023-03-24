@@ -98,6 +98,8 @@ passport.use(new BearerStrategy(options, function(token: ITokenPayload, done: Ve
   let user: any;
   let error: any;
 
+  console.log('Token: ' + token);
+
   if(token) {
 
     user  = { username: token.preferred_username };
@@ -114,7 +116,7 @@ passport.use(new BearerStrategy(options, function(token: ITokenPayload, done: Ve
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-app.use(helmet());
+// app.use(helmet());
 
 Connection.Init(Config);
 Homerouter.Init(Config);
@@ -131,6 +133,7 @@ Protokollrouter.SetRoutes();
 Changelogrouter.SetRoutes();
 
 app.use('/',              Homerouter.homerouter);
+app.use('/.auth/login/aad/callback', Homerouter.homerouter);
 app.use('/error',         Errorrouter.errorrouter);
 app.use('/standorte',     Standorterouter.standorterouter);
 app.use('/mitarbeiter',   Mitarbeiterouter.mitarbeiterrouter);
