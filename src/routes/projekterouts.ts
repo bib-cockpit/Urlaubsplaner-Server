@@ -23,7 +23,7 @@ export class ProjekteroutsClass {
 
     try {
 
-      this.projekterouter.get('/', this.Authentication.check,  (req: Request, res: Response) => { //
+      this.projekterouter.get('/', this.Authentication.authenticate,  (req: Request, res: Response) => { //
 
         this.Debug.ShowInfoMessage('Projekterouten GET Anfrage -> Projektliste auslesen', 'ProjekteroutsClass', 'SetRoutes');
 

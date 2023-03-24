@@ -2,18 +2,21 @@ import {Request, Response, Router} from 'express';
 import {VersionsinfoClass} from '../versionsinfoclass';
 import {DebugClass} from "../debug";
 import {ConfigClass} from "../configclass";
-
-const Info = new VersionsinfoClass();
+import {AuthenticationClass} from "../middleware/authentication";
 
 class HomerouterClass {
 
   public  homerouter: Router;
   private Debug:  DebugClass;
   private Config: ConfigClass;
+  private Auth: AuthenticationClass;
+  private Info: VersionsinfoClass;
 
   constructor() {
 
     this.homerouter = Router();
+    this.Auth       = new AuthenticationClass();
+    this.Info       = new VersionsinfoClass();
     this.Debug      = new DebugClass();
   }
 
@@ -44,10 +47,10 @@ class HomerouterClass {
           `<body style="font-family: Tahoma"><b>Cockpit Server</b><br><br>
            <table>
            <tr>
-              <td>Versionsnummer:</td><td>${Info.Verion}</td>
+              <td>Versionsnummer:</td><td>${this.Info.Verion}</td>
           </tr>
           <tr>
-              <td>Versionsdatum:</td><td>${Info.Versionsdatum}</td>
+              <td>Versionsdatum:</td><td>${this.Info.Versionsdatum}</td>
           </tr>
           <tr>
               <td>Environment (original):</td><td>${process.env.NODE_ENV}</td>
@@ -71,9 +74,6 @@ class HomerouterClass {
               <td>Statusmessage:</td><td>${this.Config.Statusmessage}</td>
           </tr>
           <tr>
-              <td>SecretKey:</td><td>${this.Config.SecretKey}</td>
-          </tr>
-          <tr>
               <td>DB Name:</td><td>${this.Config.COSMOSDB_DBNAME}</td>
           </tr>
           <tr>
@@ -88,11 +88,16 @@ class HomerouterClass {
           <tr>
               <td>DB Passwort:</td><td>${this.Config.COSMOSDB_PASSWORD}</td>
           </tr>
+          <tr>
+              <td>TENANT ID:</td><td>${this.Config.TENANT_ID}</td>
+          </tr>
+          <tr>
+              <td>SERVER APPLICATION ID:</td><td>${this.Config.SERVER_APPLICATION_ID}</td>
+          </tr>
           </table>
         </body>`;
 
-
-        res.status(200).send(html);
+        res.status(200).send({Status: 'Text muss im Homerouter geändert werden.'});
       });
     } catch (error) {
 
@@ -100,7 +105,6 @@ class HomerouterClass {
     }
   }
 }
-
 
 export { HomerouterClass };
 

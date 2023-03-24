@@ -1,9 +1,7 @@
 import {Request, Response, Router} from 'express';
 import {DebugClass} from "../debug";
 import {MitarbeiterDBClass} from "../database/mitarbeiterdbclass";
-import * as jwt from 'jsonwebtoken';
 import {IMitarbeiterstruktur} from "../datenstrukturen/mitarbeiterstruktur_server";
-import {ConfigClass} from "../configclass";
 
 class MitarbeiterrouterClass {
 
@@ -18,24 +16,11 @@ class MitarbeiterrouterClass {
     this.Database          = new MitarbeiterDBClass();
   }
 
-  GetToken(mitarbeiter: IMitarbeiterstruktur): string {
-
-    return jwt.sign({
-
-      Name:    mitarbeiter.Name,
-      Vorname: mitarbeiter.Vorname,
-      Email:   mitarbeiter.Email
-
-    }, process.env.COCKPIT_JWTSecretKey);
-  }
-
   SetRoutes() {
 
     try {
 
       // Mitarbeiterliste lesen
-
-      let token: string;
 
       this.mitarbeiterrouter.get('/', (req: Request, res: Response) => {
 
@@ -61,12 +46,9 @@ class MitarbeiterrouterClass {
 
               this.Debug.ShowInfoMessage('Mitarbeiter gefunden.', 'Mitarebiterrouts', 'SetRoutes');
 
-              token = this.GetToken(mitarbeiter);
-
               Daten = {
 
                 Mitrabeiter: mitarbeiter,
-                Token: token
               };
             }
 

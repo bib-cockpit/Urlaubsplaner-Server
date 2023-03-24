@@ -1,6 +1,7 @@
 {
-  "node_env":     "NODE_ENV",
-  "db_user":      "COSMOSDB_USER",
-  "db_password":  "COSMOSDB_PASSWORD",
-  "secretkey":    "COCKPIT_JWTSecretKey"
+  "node_env":      "NODE_ENV",
+  "db_user":       "COSMOSDB_USER",
+  "db_password":   "COSMOSDB_PASSWORD",
+  "tenant_id":     "TENANT_ID",
+  "server_app_id": "SERVER_APPLICATION_ID"
 }

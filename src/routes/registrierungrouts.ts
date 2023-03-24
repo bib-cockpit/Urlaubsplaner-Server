@@ -1,7 +1,6 @@
 import {Request, Response, Router} from 'express';
 import {DebugClass} from "../debug";
 import {MitarbeiterDBClass} from "../database/mitarbeiterdbclass";
-import * as jwt from 'jsonwebtoken';
 import {IMitarbeiterstruktur} from "../datenstrukturen/mitarbeiterstruktur_server";
 import {AuthenticationClass} from "../middleware/authentication";
 
@@ -20,27 +19,14 @@ class RegistrierungrouterClass {
     this.Authentication      = new AuthenticationClass();
   }
 
-  GetToken(mitarbeiter: IMitarbeiterstruktur): string {
-
-    return jwt.sign({
-
-      Name:    mitarbeiter.Name,
-      Vorname: mitarbeiter.Vorname,
-      Email:   mitarbeiter.Email
-
-    }, process.env.COCKPIT_JWTSecretKey);
-  }
-
   SetRoutes() {
 
     try {
 
       // Mitarbeiter lesen ob dieser existiert
-      // this.Authentication.check,
 
-      let token: string;
 
-      this.registrierungrouter.get('/',  (req: Request, res: Response) => {
+      this.registrierungrouter.get('/', this.Authentication.authenticate, (req: Request, res: Response) => {
 
         this.Debug.ShowInfoMessage('Registirierung GET Methode', 'registrierungrouterClass', 'SetRoutes');
 
@@ -58,12 +44,9 @@ class RegistrierungrouterClass {
           }
           else {
 
-            token = this.GetToken(mitarbeiter);
-
             Daten = {
 
               Mitarbeiter: mitarbeiter,
-              Token: token
             };
           }
           res.status(200).send(Daten);
@@ -77,7 +60,7 @@ class RegistrierungrouterClass {
 
       // POST ist für neuen Mitarbeiter
 
-      this.registrierungrouter.post('/',  (req: Request, res: Response) => { // this.Authentication.check,
+      this.registrierungrouter.post('/',  (req: Request, res: Response) => {
 
         console.log('Mitarbeiter POST');
 
@@ -89,9 +72,7 @@ class RegistrierungrouterClass {
 
         this.Database.AddMitarbeiter(Mitarbeiter).then((result) => {
 
-          token = this.GetToken(Mitarbeiter);
-
-          res.status(200).send({ message: 'Added: ' + Mitarbeiter.Name, Token: token, Mitarbeiter: result._doc });
+          res.status(200).send({ message: 'Added: ' + Mitarbeiter.Name, Mitarbeiter: result._doc });
 
         }).catch((error) => {
 

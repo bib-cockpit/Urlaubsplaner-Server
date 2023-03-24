@@ -23,7 +23,7 @@ export class ProtokolleroutsClass {
 
     try {
 
-      this.protokolllerouter.get('/', this.Authentication.check,  (req: Request, res: Response) => {
+      this.protokolllerouter.get('/', this.Authentication.authenticate,  (req: Request, res: Response) => {
 
         let query = req.query;
         let Projektkey = <string>query.projektkey;

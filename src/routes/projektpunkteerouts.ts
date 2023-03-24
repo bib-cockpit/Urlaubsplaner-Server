@@ -23,7 +23,7 @@ export class ProjektpunkteroutsClass {
 
     try {
 
-      this.projektpunkterouter.get('/', this.Authentication.check,  (req: Request, res: Response) => {
+      this.projektpunkterouter.get('/', this.Authentication.authenticate,  (req: Request, res: Response) => {
 
 
         let query = req.query;

@@ -26,9 +26,7 @@ export class StandorterouterClass {
 
     try {
 
-      this.standorterouter.get('/',  (req: Request, res: Response) => { // this.Authentication.check,
-
-        // this.Debug.ShowInfoMessage('Headers: ' + JSON.stringify(req.headers), 'StandorterouterClass', 'SetRoutes');
+      this.standorterouter.get('/',  (req: Request, res: Response) => {
 
         this.Database.ReadStandortliste().then((liste: IStandortestruktur[]) => {
 
