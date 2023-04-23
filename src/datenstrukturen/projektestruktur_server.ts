@@ -23,6 +23,16 @@ interface IProjektestruktur  {
   Verfasser:            IVerfasserstruktur;
   Beteiligtenliste:     IProjektbeteiligtestruktur[];
   Bauteilliste:         IBauteilstruktur[];
+  ProjektIsNew:         boolean;
+  ProjektIsReal:        boolean;
+
+  TeamsID:          string;
+  TeamsDescription: string;
+  TeamsName:        string;
+
+  ProtokolleFolderID:    string;
+  BautagebuchFolderID:   string;
+  BaustellenLOPFolderID: string;
 };
 
 const Projekteshema = new mongoose.Schema({
@@ -40,11 +50,22 @@ const Projekteshema = new mongoose.Schema({
   PLZ:              {type: String,  required: false},
   Ort:              {type: String,  required: false},
   Deleted:          {type: Boolean, required: false, default: false},
+  ProjektIsNew:     {type: Boolean, required: false, default: true},
+  ProjektIsReal:    {type: Boolean, required: false, default: true},
   Zeitstempel:      {type: Number, required: false},
   Zeitpunkt:        {type: String, required: false},
   Verfasser:        Verfassershema,
   Beteiligtenliste: [Projektbeteiligteeshema],
-  Bauteilliste:     [Bauteilshema]
+  Bauteilliste:     [Bauteilshema],
+
+
+  TeamsID:          {type: String,  required: false},
+  TeamsDescription: {type: String,  required: false},
+  TeamsName:        {type: String,  required: false},
+
+  ProtokolleFolderID:    {type: String,  required: false},
+  BautagebuchFolderID:   {type: String,  required: false},
+  BaustellenLOPFolderID: {type: String,  required: false},
 });
 
 export { IProjektestruktur, Projekteshema };

@@ -31,6 +31,12 @@ export class AuthenticationClass {
     })(req, res, next);
   }
 
+  public asyncMiddleware = fn =>
+    (req, res, next) => {
+      Promise.resolve(fn(req, res, next))
+        .catch(next);
+    };
+
   public cors = (req: any, res: Response, next: NextFunction) => {
 
     res.header("Access-Control-Allow-Origin", "*");

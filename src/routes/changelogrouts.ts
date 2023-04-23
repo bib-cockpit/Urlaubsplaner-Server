@@ -32,10 +32,11 @@ class ChangelogrouterClass {
 
         this.Database.ReadChangelogliste().then((liste: IChangelogstruktur[]) => {
 
-
           res.status(200).send(liste);
 
         }).catch((error) => {
+
+          debugger;
 
           res.status(400).send(error.message);
 

@@ -13,22 +13,26 @@ export class ConfigClass {
   public PORT;
   public Statusmessage;
   public SERVER_APPLICATION_ID;
+  public SERVER_APPLICATION_SECRET;
   public TENANT_ID;
+  public MICROSOFT_LOGIN_ENDPOINT
 
   constructor() {
 
     try {
 
-    this.COSMOSDB_USER         = 'nouser';
-    this.COSMOSDB_PASSWORD     = 'nopasswort';
-    this.COSMOSDB_DBNAME       = 'nodbname';
-    this.COSMOSDB_HOST         = 'nohost';
-    this.COSMOSDB_PORT         = '0';
-    this.PORT                  = '5000';
-    this.NODE_ENV              = 'none';
-    this.Statusmessage         = 'Config not Init()';
-    this.SERVER_APPLICATION_ID = 'none';
-    this.TENANT_ID             = 'none';
+    this.COSMOSDB_USER             = 'nouser';
+    this.COSMOSDB_PASSWORD         = 'nopasswort';
+    this.COSMOSDB_DBNAME           = 'nodbname';
+    this.COSMOSDB_HOST             = 'nohost';
+    this.COSMOSDB_PORT             = '0';
+    this.PORT                      = '5000';
+    this.NODE_ENV                  = 'none';
+    this.Statusmessage             = 'Config not Init()';
+    this.SERVER_APPLICATION_ID     = 'none';
+    this.SERVER_APPLICATION_SECRET = 'none';
+    this.TENANT_ID                 = 'none';
+    this.MICROSOFT_LOGIN_ENDPOINT  = 'https://login.microsoftonline.com/';
 
       this.Debug = new DebugClass();
     }
@@ -38,7 +42,17 @@ export class ConfigClass {
     }
   }
 
-  public Init(nodeenv: string, port: string, status: string, dbuser: string, dbpass: string, dbname: string, dbhost: string, dbport: string, tenantid: string, server_app_id: string) {
+  public Init(nodeenv: string,
+              port: string,
+              status: string,
+              dbuser: string,
+              dbpass: string,
+              dbname: string,
+              dbhost: string,
+              dbport: string,
+              tenantid: string,
+              server_app_id: string,
+              server_app_secret: string) {
 
     try {
 
@@ -52,8 +66,10 @@ export class ConfigClass {
       this.COSMOSDB_DBNAME       = dbname;
       this.COSMOSDB_HOST         = dbhost;
       this.COSMOSDB_PORT         = dbport;
-      this.SERVER_APPLICATION_ID = server_app_id;
       this.TENANT_ID             = tenantid;
+
+      this.SERVER_APPLICATION_ID     = server_app_id;
+      this.SERVER_APPLICATION_SECRET = server_app_secret;
     }
     catch (error) {
 

@@ -20,7 +20,6 @@ const Projektpunktanmerkungshema = new mongoose.Schema({
   Zeitstempel:     {type: Number,    required: false},
   Zeitstring:      {type: String,    required: false},
   Verfasser: Verfassershema,
-
 });
 
 export { IProjektpunktanmerkungstruktur, Projektpunktanmerkungshema };

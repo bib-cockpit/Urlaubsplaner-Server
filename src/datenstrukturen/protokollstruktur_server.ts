@@ -1,5 +1,8 @@
 import {IVerfasserstruktur, Verfassershema} from "./verfasserstruktur_server";
 import mongoose from "mongoose";
+import {IProjektpunktestruktur} from "./projektpunktestruktur_server";
+import {IProjektbeteiligtestruktur} from "./projektbeteiligtestruktur_server";
+import {IMitarbeiterstruktur} from "./mitarbeiterstruktur_server";
 
 interface IProtokollstruktur  {
 
@@ -22,6 +25,31 @@ interface IProtokollstruktur  {
   DownloadURL: string;
   Verfasser: IVerfasserstruktur;
   Deleted: boolean;
+
+  Betreff: string,
+  Nachricht: string,
+  CcEmpfaengerExternIDListe: string[],
+  CcEmpfaengerInternIDListe: string[],
+  EmpfaengerExternIDListe: string[],
+  EmpfaengerInternIDListe: string[],
+  Filename: string,
+  GesendetZeitstempel: number,
+  GesendetZeitstring: string,
+
+  Projektpunkteliste?: IProjektpunktestruktur[];
+  Kostengruppenliste?: string[];
+  ExternZustaendigListe?: string[][];
+  InternZustaendigListe?: string[][];
+  ExterneTeilnehmerliste?: string[];
+  InterneTeilnehmerliste?: string[];
+  CcEmpfaengerliste?: {
+    Name:  string;
+    Email: string;
+  }[];
+  Empfaengerliste?: {
+    Name:  string;
+    Email: string;
+  }[];
 };
 
 const Protokollshema = new mongoose.Schema({
@@ -43,7 +71,17 @@ const Protokollshema = new mongoose.Schema({
   ShowDetails:            {type: Boolean,  required: false},
   DownloadURL:            {type: String,   required: false},
   Deleted:                {type: Boolean,  required: false},
-  Verfasser:              Verfassershema
+  Verfasser:              Verfassershema,
+
+  Betreff:                   {type: String,   required: false},
+  Nachricht:                 {type: String,   required: false},
+  CcEmpfaengerExternIDListe: {type: [String], required: false},
+  CcEmpfaengerInternIDListe: {type: [String], required: false},
+  EmpfaengerExternIDListe:   {type: [String], required: false},
+  EmpfaengerInternIDListe:   {type: [String], required: false},
+  Filename:                  {type: String,   required: false},
+  GesendetZeitstempel:       {type: Number,   required: false},
+  GesendetZeitstring:        {type: String,   required: false},
 });
 
 export { IProtokollstruktur, Protokollshema };

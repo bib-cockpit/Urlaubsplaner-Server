@@ -36,6 +36,14 @@ import {ConfigClass} from "./configclass";
 import {AuthenticationClass} from "./middleware/authentication";
 import {ErrorrouterClass} from "./routes/errorroutes";
 import helmet from "helmet";
+import {SitesrouterClass} from "./routes/sitesroutes";
+import {SaveProtokolleroutsClass} from "./routes/saveprotokollerouts";
+import {SendProtokolleroutsClass} from "./routes/sendprotokollerouts";
+import {AddTeamsmemberroutsClass} from "./routes/addteamsmemberrouts";
+import {UsertesamsroutsClass} from "./routes/userteamsrouts";
+import {BautagebuchouterClass} from "./routes/bautagebuchrouts";
+import {SaveBautagebuchroutsClass} from "./routes/savebautagebuchrouts";
+import {SendBautagebuchroutsClass} from "./routes/sendbautagebuchrouts";
 
 const app: Application = express();
 const Connection: ConnectionClass = new ConnectionClass();
@@ -52,17 +60,26 @@ const Changelogrouter: ChangelogrouterClass = new ChangelogrouterClass();
 const Errorrouter: ErrorrouterClass = new ErrorrouterClass();
 const Config: ConfigClass = new ConfigClass();
 const Auth: AuthenticationClass = new AuthenticationClass();
+const Sitesrouter: SitesrouterClass = new SitesrouterClass();
+const SaveProtokollerouter: SaveProtokolleroutsClass = new SaveProtokolleroutsClass();
+const SaveBautagebuchrouter: SaveBautagebuchroutsClass = new SaveBautagebuchroutsClass();
+const SendProtokollerouter: SendProtokolleroutsClass = new SendProtokolleroutsClass();
+const SendBautagebuchrouter: SendBautagebuchroutsClass = new SendBautagebuchroutsClass();
+const Userteamsrouter: UsertesamsroutsClass = new UsertesamsroutsClass();
+const AddTeamsmembersrouter: AddTeamsmemberroutsClass = new AddTeamsmemberroutsClass();
+const Bautagebuchrouter: BautagebuchouterClass = new BautagebuchouterClass();
 
-let Port: string           = 'none';
-let NODE_ENV: string       = config.has('node_env')         ? config.get('node_env')              : 'nicht definiert';
-let Statausmessage: string = config.has('Statusmessage')    ? config.get('Statusmessage')         : 'nicht definiert';
-let User : string          = config.has('db_user')          ? config.get('db_user')               : 'nicht definiert';
-let Passwort: string       = config.has('db_password')      ? config.get('db_password')           : 'nicht definiert';
-let DBName: string         = config.has('COSMOSDB_DBNAME')  ? config.get('COSMOSDB_DBNAME')       : 'nicht definiert';
-let DBHost: string         = config.has('COSMOSDB_HOST')    ? config.get('COSMOSDB_HOST')         : 'nicht definiert';
-let DBPort: string         = config.has('COSMOSDB_PORT')    ? config.get('COSMOSDB_PORT')         : 'nicht definiert';
-let Tenant_ID: string      = config.has('tenant_id')        ? config.get('tenant_id')             : 'nicht definiert';
-let Server_App_ID: string  = config.has('server_app_id')    ? config.get('server_app_id')         : 'nicht definiert';
+let Port: string              = 'none';
+let NODE_ENV: string          = config.has('node_env')          ? config.get('node_env')              : 'nicht definiert';
+let Statausmessage: string    = config.has('Statusmessage')     ? config.get('Statusmessage')         : 'nicht definiert';
+let User : string             = config.has('db_user')           ? config.get('db_user')               : 'nicht definiert';
+let Passwort: string          = config.has('db_password')       ? config.get('db_password')           : 'nicht definiert';
+let DBName: string            = config.has('COSMOSDB_DBNAME')   ? config.get('COSMOSDB_DBNAME')       : 'nicht definiert';
+let DBHost: string            = config.has('COSMOSDB_HOST')     ? config.get('COSMOSDB_HOST')         : 'nicht definiert';
+let DBPort: string            = config.has('COSMOSDB_PORT')     ? config.get('COSMOSDB_PORT')         : 'nicht definiert';
+let Tenant_ID: string         = config.has('tenant_id')         ? config.get('tenant_id')             : 'nicht definiert';
+let Server_App_ID: string     = config.has('server_app_id')     ? config.get('server_app_id')         : 'nicht definiert';
+let Server_App_Secret: string = config.has('server_app_secret') ? config.get('server_app_secret')     : 'nicht definiert';
 
 Config.Init(
   NODE_ENV,
@@ -74,7 +91,8 @@ Config.Init(
   DBHost,
   DBPort,
   Tenant_ID,
-  Server_App_ID
+  Server_App_ID,
+  Server_App_Secret
 );
 
 const version = 'v2.0';
@@ -120,6 +138,13 @@ app.use(express.urlencoded({extended: true}));
 
 Connection.Init(Config);
 Homerouter.Init(Config);
+Sitesrouter.Init(Config);
+SaveProtokollerouter.Init(Config);
+SaveBautagebuchrouter.Init(Config);
+SendProtokollerouter.Init(Config);
+SendBautagebuchrouter.Init(Config);
+Userteamsrouter.Init(Config);
+AddTeamsmembersrouter.Init(Config);
 
 Homerouter.SetRoutes();
 Errorrouter.SetRoutes();
@@ -131,18 +156,34 @@ Projekterouter.SetRoutes();
 Projektpunkterouter.SetRoutes();
 Protokollrouter.SetRoutes();
 Changelogrouter.SetRoutes();
+Sitesrouter.SetRoutes();
+SaveProtokollerouter.SetRoutes();
+SaveBautagebuchrouter.SetRoutes();
+SendProtokollerouter.SetRoutes();
+SendBautagebuchrouter.SetRoutes();
+Userteamsrouter.SetRoutes();
+AddTeamsmembersrouter.SetRoutes();
+Bautagebuchrouter.SetRoutes();
 
-app.use('/',              Homerouter.homerouter);
+app.use('/',               Homerouter.homerouter);
 app.use('/.auth/login/aad/callback', Homerouter.homerouter);
-app.use('/error',         Errorrouter.errorrouter);
-app.use('/standorte',     Standorterouter.standorterouter);
-app.use('/mitarbeiter',   Mitarbeiterouter.mitarbeiterrouter);
-app.use('/settings',      Settingsrouter.mitarbeitersettingrouter);
-app.use('/registrierung', Registrierungrouter.registrierungrouter);
-app.use('/projekte',      Projekterouter.projekterouter);
-app.use('/projektpunkte', Projektpunkterouter.projektpunkterouter);
-app.use('/protokolle',    Protokollrouter.protokolllerouter);
-app.use('/changelog',     Changelogrouter.changelogrouter);
+app.use('/error',          Errorrouter.errorrouter);
+app.use('/standorte',      Standorterouter.standorterouter);
+app.use('/mitarbeiter',    Mitarbeiterouter.mitarbeiterrouter);
+app.use('/settings',       Settingsrouter.mitarbeitersettingrouter);
+app.use('/registrierung',  Registrierungrouter.registrierungrouter);
+app.use('/projekte',       Projekterouter.projekterouter);
+app.use('/projektpunkte',  Projektpunkterouter.projektpunkterouter);
+app.use('/protokolle',     Protokollrouter.protokolllerouter);
+app.use('/changelog',      Changelogrouter.changelogrouter);
+app.use('/sites',          Sitesrouter.sitesrouter);
+app.use('/saveprotokoll',  SaveProtokollerouter.saveprotokolllerouter);
+app.use('/savebautagebuch',SaveBautagebuchrouter.savebautagebuchrouter);
+app.use('/sendprotokoll',  SendProtokollerouter.sendprotokolllerouter);
+app.use('/sendbautagebuch',SendBautagebuchrouter.sendbautagebuchrouter);
+app.use('/userteams',      Userteamsrouter.userteamsrouter);
+app.use('/addteamsmember', AddTeamsmembersrouter.teamsmemberrouter);
+app.use('/bautagebuch',    Bautagebuchrouter.bautagebuchouter);
 
 let server = app.listen(8080, () =>  {
 
