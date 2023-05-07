@@ -9,6 +9,7 @@ export class Constclass {
   public readonly ProtokollcollectionName: string;
   public readonly ChangelogcollectionName: string;
   public readonly BautagebuchecollectionName: string;
+  public readonly LOPListecollectionName: string;
 
   constructor() {
 
@@ -21,5 +22,6 @@ export class Constclass {
     this.ProtokollcollectionName     = 'protokolle';
     this.ChangelogcollectionName     = 'changelog';
     this.BautagebuchecollectionName  = 'bautagebuch';
+    this.LOPListecollectionName      = 'lopliste';
   }
 };

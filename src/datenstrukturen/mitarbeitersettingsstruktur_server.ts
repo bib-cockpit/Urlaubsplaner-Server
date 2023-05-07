@@ -39,6 +39,8 @@ interface IMitarbeitersettingsstruktur  {
   AufgabenShowMeintag:       boolean;
   AufgabenShowZeitansatz:    boolean;
   AufgabenShowMeinewoche:    boolean;
+
+  LOPListeGeschlossenZeitfilter: number;
 };
 
 const Mitarbeitersettingsshema = new mongoose.Schema({
@@ -79,6 +81,8 @@ const Mitarbeitersettingsshema = new mongoose.Schema({
   AufgabenShowZustaendig:    {type: Boolean, default: false},
   AufgabenShowZeitansatz:    {type: Boolean, default: false},
   AufgabenShowMeinewoche:    {type: Boolean, default: false},
+
+  LOPListeGeschlossenZeitfilter:    {type: Number, default: false},
 });
 
 export { Mitarbeitersettingsshema, IMitarbeitersettingsstruktur };

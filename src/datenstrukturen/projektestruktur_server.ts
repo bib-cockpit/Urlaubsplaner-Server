@@ -23,7 +23,6 @@ interface IProjektestruktur  {
   Verfasser:            IVerfasserstruktur;
   Beteiligtenliste:     IProjektbeteiligtestruktur[];
   Bauteilliste:         IBauteilstruktur[];
-  ProjektIsNew:         boolean;
   ProjektIsReal:        boolean;
 
   TeamsID:          string;
@@ -50,7 +49,6 @@ const Projekteshema = new mongoose.Schema({
   PLZ:              {type: String,  required: false},
   Ort:              {type: String,  required: false},
   Deleted:          {type: Boolean, required: false, default: false},
-  ProjektIsNew:     {type: Boolean, required: false, default: true},
   ProjektIsReal:    {type: Boolean, required: false, default: true},
   Zeitstempel:      {type: Number, required: false},
   Zeitpunkt:        {type: String, required: false},

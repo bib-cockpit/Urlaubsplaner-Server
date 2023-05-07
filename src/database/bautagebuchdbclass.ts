@@ -15,7 +15,7 @@ export class BautagebuchDBClass {
     this.Const = new Constclass();
   }
 
-  public Readbautagebuchliste(): Promise<any> {
+  public Readbautagebuchliste(projektkey: string): Promise<any> {
 
     try {
 
@@ -26,7 +26,7 @@ export class BautagebuchDBClass {
 
         BautagebuchmodelClass = model(this.Const.BautagebuchecollectionName, Bautagebuchshema);
 
-        BautagebuchmodelClass.find( { Deleted: false } ).sort({Bautagebuch: 1}).then((data: any) => {
+        BautagebuchmodelClass.find( { Deleted: false, Projektkey: projektkey } ).sort({Bautagebuch: 1}).then((data: any) => {
 
           data.forEach((Bautagebuch) => {
 

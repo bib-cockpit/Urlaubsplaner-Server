@@ -1,12 +1,9 @@
 import {Request, Response, Router} from 'express';
 import {DebugClass} from "../debug";
 import {AuthenticationClass} from "../middleware/authentication";
-import {IProtokollstruktur} from "../datenstrukturen/protokollstruktur_server";
 import {ProtokollDBClass} from "../database/protokolledbclass";
-import {Dir} from "fs";
 import {ConfidentialClientApplication} from "@azure/msal-node";
 import {Client} from "@microsoft/microsoft-graph-client";
-import {Sitesstruktur} from "../datenstrukturen/sitesstruktur_server";
 import {ConfigClass} from "../configclass";
 
 export class UsertesamsroutsClass {

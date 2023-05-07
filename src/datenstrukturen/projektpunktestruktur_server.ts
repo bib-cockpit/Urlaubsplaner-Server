@@ -8,12 +8,15 @@ interface IProjektpunktestruktur {
   ProjektID:           string;
   ProjektleiterID:     string;
   ProtokollID:         string;
+  LOPListeID:          string;
+  Prioritaet:          string;
   Projektkey:          string;
   NotizenID:           string;
   FestlegungskategorieID: string;
   Listenposition:      number;
   Nummer:              string;
   Aufgabe:             string;
+  Thematik:            string;
   Startzeitsptempel:   number;
   Startzeitstring:     string;
   Endezeitstempel:     number;
@@ -65,12 +68,15 @@ const Projektpunktshema = new mongoose.Schema({
   ProjektID:              {type: String,  required: false},
   ProjektleiterID:        {type: String,  required: false},
   ProtokollID:            {type: String,  required: false},
+  LOPListeID:             {type: String,  required: false},
+  Prioritaet:             {type: String,  required: false},
   Projektkey:             {type: String,  required: false},
   NotizenID:              {type: String,  required: false},
   FestlegungskategorieID: {type: String,  required: false},
   Listenposition:         {type: Number,  required: false},
   Nummer:                 {type: String,  required: false},
   Aufgabe:                {type: String,  required: false},
+  Thematik:               {type: String,  required: false},
   Startzeitsptempel:      {type: Number,  required: false},
   Startzeitstring:        {type: String,  required: false},
   Endezeitstempel:        {type: Number,  required: false},

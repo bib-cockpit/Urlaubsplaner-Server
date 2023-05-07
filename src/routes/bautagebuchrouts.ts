@@ -27,7 +27,13 @@ export class BautagebuchouterClass {
 
       this.bautagebuchouter.get('/',  (req: Request, res: Response) => {
 
-        this.Database.Readbautagebuchliste().then((liste: IBautagebuchstruktur[]) => {
+        let query = req.query;
+        let Projektkey = <string>query.projektkey;
+
+        console.log('Read Bautagebücher: ');
+        console.log('Projektkey: ' + Projektkey);
+
+        this.Database.Readbautagebuchliste(Projektkey).then((liste: IBautagebuchstruktur[]) => {
 
           res.status(200).send(liste);
 

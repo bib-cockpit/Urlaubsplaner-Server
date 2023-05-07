@@ -44,6 +44,7 @@ import {UsertesamsroutsClass} from "./routes/userteamsrouts";
 import {BautagebuchouterClass} from "./routes/bautagebuchrouts";
 import {SaveBautagebuchroutsClass} from "./routes/savebautagebuchrouts";
 import {SendBautagebuchroutsClass} from "./routes/sendbautagebuchrouts";
+import {LOPListeroutsClass} from "./routes/loplisterouts";
 
 const app: Application = express();
 const Connection: ConnectionClass = new ConnectionClass();
@@ -68,6 +69,7 @@ const SendBautagebuchrouter: SendBautagebuchroutsClass = new SendBautagebuchrout
 const Userteamsrouter: UsertesamsroutsClass = new UsertesamsroutsClass();
 const AddTeamsmembersrouter: AddTeamsmemberroutsClass = new AddTeamsmemberroutsClass();
 const Bautagebuchrouter: BautagebuchouterClass = new BautagebuchouterClass();
+const LOPListerouter: LOPListeroutsClass = new LOPListeroutsClass();
 
 let Port: string              = 'none';
 let NODE_ENV: string          = config.has('node_env')          ? config.get('node_env')              : 'nicht definiert';
@@ -164,6 +166,7 @@ SendBautagebuchrouter.SetRoutes();
 Userteamsrouter.SetRoutes();
 AddTeamsmembersrouter.SetRoutes();
 Bautagebuchrouter.SetRoutes();
+LOPListerouter.SetRoutes();
 
 app.use('/',               Homerouter.homerouter);
 app.use('/.auth/login/aad/callback', Homerouter.homerouter);
@@ -184,6 +187,7 @@ app.use('/sendbautagebuch',SendBautagebuchrouter.sendbautagebuchrouter);
 app.use('/userteams',      Userteamsrouter.userteamsrouter);
 app.use('/addteamsmember', AddTeamsmembersrouter.teamsmemberrouter);
 app.use('/bautagebuch',    Bautagebuchrouter.bautagebuchouter);
+app.use('/lopliste',       LOPListerouter.loplisterouter);
 
 let server = app.listen(8080, () =>  {
 
