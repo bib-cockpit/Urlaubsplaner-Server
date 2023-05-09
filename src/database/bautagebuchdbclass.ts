@@ -26,7 +26,7 @@ export class BautagebuchDBClass {
 
         BautagebuchmodelClass = model(this.Const.BautagebuchecollectionName, Bautagebuchshema);
 
-        BautagebuchmodelClass.find( { Deleted: false, Projektkey: projektkey } ).sort({Bautagebuch: 1}).then((data: any) => {
+        BautagebuchmodelClass.find( { Deleted: false, Projektkey: projektkey } ).then((data: any) => {
 
           data.forEach((Bautagebuch) => {
 

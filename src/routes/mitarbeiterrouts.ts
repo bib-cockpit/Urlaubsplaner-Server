@@ -2,18 +2,21 @@ import {Request, Response, Router} from 'express';
 import {DebugClass} from "../debug";
 import {MitarbeiterDBClass} from "../database/mitarbeiterdbclass";
 import {IMitarbeiterstruktur} from "../datenstrukturen/mitarbeiterstruktur_server";
+import {AuthenticationClass} from "../middleware/authentication";
 
 class MitarbeiterrouterClass {
 
   private Debug: DebugClass;
   public  mitarbeiterrouter: any;
   private Database: MitarbeiterDBClass;
+  private Authentication: AuthenticationClass;
 
   constructor() {
 
     this.mitarbeiterrouter = Router();
     this.Debug             = new DebugClass();
     this.Database          = new MitarbeiterDBClass();
+    this.Authentication    = new AuthenticationClass();
   }
 
   SetRoutes() {
@@ -22,11 +25,26 @@ class MitarbeiterrouterClass {
 
       // Mitarbeiterliste lesen
 
-      this.mitarbeiterrouter.get('/', (req: Request, res: Response) => {
+      this.mitarbeiterrouter.get('/', this.Authentication.authenticate, (req: Request, res: Response) => {
 
-        let query = req.query;
-        let email = <string>query.email;
+        // let query = req.query;
+        // let email = <string>query.email;
         let Daten: any = null;
+
+
+        this.Database.ReadMitarbeiterliste().then((liste: IMitarbeiterstruktur[]) => {
+
+
+          res.status(200).send(liste);
+
+        }).catch((error) => {
+
+          res.status(400).send(error.message);
+
+        });
+
+        /*
+
 
         this.Debug.ShowInfoMessage('Mitarbeiterrouten GET Request -> Emailadresse: ' + email, 'Mitarebiterrouts', 'SetRoutes');
 
@@ -73,6 +91,8 @@ class MitarbeiterrouterClass {
 
           });
         }
+
+         */
 
       });
 

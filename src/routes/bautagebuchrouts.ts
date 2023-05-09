@@ -25,7 +25,7 @@ export class BautagebuchouterClass {
 
     try {
 
-      this.bautagebuchouter.get('/',  (req: Request, res: Response) => {
+      this.bautagebuchouter.get('/',  this.Authentication.authenticate, (req: Request, res: Response) => {
 
         let query = req.query;
         let Projektkey = <string>query.projektkey;

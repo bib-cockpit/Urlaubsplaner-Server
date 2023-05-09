@@ -26,7 +26,7 @@ export class StandorterouterClass {
 
     try {
 
-      this.standorterouter.get('/',  (req: Request, res: Response) => {
+      this.standorterouter.get('/',  this.Authentication.authenticate,  (req: Request, res: Response) => {
 
         this.Database.ReadStandortliste().then((liste: IStandortestruktur[]) => {
 
