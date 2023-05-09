@@ -201,7 +201,16 @@ export class SaveProtokolleroutsClass {
           html += '</tr>';
           html += '</table>'
 
-          html += '<td style="width:  70px; text-align: center;">' + Eintrag.Endezeitstring + '</td>';
+          html += '</td>';
+
+          html += '<td style="width:  70px; text-align: center;">';
+
+          if(Eintrag.Status !== 'Festlegung' && Eintrag.Status !== 'Protokollpunkt') {
+
+            html += Eintrag.Endezeitstring;
+          }
+
+          html += '</td>';
           html += '<td style="width: 100px; text-align: center; color: white !important; background: ' + this.GetStatuscolor(Eintrag.Status) + ' !important;">'  + this.GetStatustext(Eintrag.Status) + '</td>';
           html += '<td style="width:  70px; text-align: center;">';
 

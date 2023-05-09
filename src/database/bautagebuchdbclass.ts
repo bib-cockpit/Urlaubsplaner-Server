@@ -35,8 +35,6 @@ export class BautagebuchDBClass {
 
           resolve(Liste);
 
-          console.log('');
-
         }).catch((error: any) => {
 
           reject(error);
