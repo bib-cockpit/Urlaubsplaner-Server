@@ -19,11 +19,15 @@ export class AuthenticationClass {
 
     passport.authenticate('oauth-bearer', {session: false }, (err, user, token) => {
 
+      debugger;
+
       if(user !== false) {
 
         next();
       }
       else {
+
+        debugger;
 
         res.status(401).send('User Unauthorized');
       }

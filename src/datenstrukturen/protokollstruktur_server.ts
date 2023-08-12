@@ -20,7 +20,6 @@ interface IProtokollstruktur  {
   Startstempel: number;
   Endestempel:  number;
   Besprechungsort: string;
-  Leistungsphase: string;
   ShowDetails: boolean;
   DownloadURL: string;
   Verfasser: IVerfasserstruktur;
@@ -67,7 +66,6 @@ const Protokollshema = new mongoose.Schema({
   Startstempel:           {type: Number,   required: false},
   Endestempel:            {type: Number,   required: false},
   Besprechungsort:        {type: String,   required: false},
-  Leistungsphase:         {type: String,   required: false},
   ShowDetails:            {type: Boolean,  required: false},
   DownloadURL:            {type: String,   required: false},
   Deleted:                {type: Boolean,  required: false},

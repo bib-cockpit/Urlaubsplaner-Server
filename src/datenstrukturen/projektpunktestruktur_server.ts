@@ -9,6 +9,7 @@ interface IProjektpunktestruktur {
   ProjektleiterID:     string;
   ProtokollID:         string;
   LOPListeID:          string;
+  EmailID:             string;
   Prioritaet:          string;
   Projektkey:          string;
   NotizenID:           string;
@@ -48,6 +49,7 @@ interface IProjektpunktestruktur {
   OpenFestlegung:      boolean;
   Fachbereich:         string;
   Deleted:             boolean;
+  Leistungsphase:      string;
 
   Verfasser: IVerfasserstruktur;
 
@@ -61,6 +63,8 @@ interface IProjektpunktestruktur {
   ZustaendigeExternIDListe: string[];
   ZustaendigeInternIDListe: string[];
   Zustaendigkeitsliste?:    string[];
+
+  Kostengruppenname?: string;
 };
 
 const Projektpunktshema = new mongoose.Schema({
@@ -69,6 +73,8 @@ const Projektpunktshema = new mongoose.Schema({
   ProjektleiterID:        {type: String,  required: false},
   ProtokollID:            {type: String,  required: false},
   LOPListeID:             {type: String,  required: false},
+  EmailID:                {type: String,  required: false},
+  Leistungsphase:         {type: String,  required: false},
   Prioritaet:             {type: String,  required: false},
   Projektkey:             {type: String,  required: false},
   NotizenID:              {type: String,  required: false},
@@ -95,6 +101,7 @@ const Projektpunktshema = new mongoose.Schema({
   Bildbreite:             {type: Number,  required: false, default: false},
   Bildhoehe:              {type: Number,  required: false, default: false},
   Querdarstellung:        {type: Boolean, required: false, default: false},
+  OpenFestlegung:         {type: Boolean, required: false, default: false},
   Anmerkungenliste:       [Projektpunktanmerkungshema],
   Fortschritt:            {type: Number,  required: false, default: false},
   Fachbereich:            {type: String,  required: false},

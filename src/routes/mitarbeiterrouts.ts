@@ -25,75 +25,23 @@ class MitarbeiterrouterClass {
 
       // Mitarbeiterliste lesen
 
+
       this.mitarbeiterrouter.get('/', this.Authentication.authenticate, (req: Request, res: Response) => {
 
-        // let query = req.query;
-        // let email = <string>query.email;
-        let Daten: any = null;
-
-
         this.Database.ReadMitarbeiterliste().then((liste: IMitarbeiterstruktur[]) => {
+
+          debugger;
 
 
           res.status(200).send(liste);
 
         }).catch((error) => {
 
+          debugger;
+
           res.status(400).send(error.message);
 
         });
-
-        /*
-
-
-        this.Debug.ShowInfoMessage('Mitarbeiterrouten GET Request -> Emailadresse: ' + email, 'Mitarebiterrouts', 'SetRoutes');
-
-        if(email) {
-
-          this.Debug.ShowInfoMessage('Mitarbeiterdaten auslesen: ' + email, 'Mitarebiterrouts', 'SetRoutes');
-
-          this.Database.ReadMitarbeiter(email).then((mitarbeiter: IMitarbeiterstruktur) => {
-
-            if(mitarbeiter === null) {
-
-              Daten = null;
-
-              this.Debug.ShowInfoMessage('Mitarbeiter nicht gefunden.', 'Mitarebiterrouts', 'SetRoutes');
-            }
-            else {
-
-              this.Debug.ShowInfoMessage('Mitarbeiter gefunden.', 'Mitarebiterrouts', 'SetRoutes');
-
-              Daten = {
-
-                Mitrabeiter: mitarbeiter,
-              };
-            }
-
-            res.status(200).send(Daten);
-
-          }).catch((error) => {
-
-            res.status(400).send(error.message);
-
-          });
-        }
-        else {
-
-          this.Database.ReadMitarbeiterliste().then((liste: IMitarbeiterstruktur[]) => {
-
-
-            res.status(200).send(liste);
-
-          }).catch((error) => {
-
-            res.status(400).send(error.message);
-
-          });
-        }
-
-         */
-
       });
 
       // POST ist für neuen Mitarbeiter
@@ -105,6 +53,8 @@ class MitarbeiterrouterClass {
         const Mitarbeiter = <IMitarbeiterstruktur>req.body;
 
         delete Mitarbeiter._id;
+
+        debugger;
 
         console.log('Daten: ' + JSON.stringify(Mitarbeiter));
 

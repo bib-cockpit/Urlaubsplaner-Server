@@ -119,7 +119,7 @@ class SitesrouterClass {
 
                 if(Eintrag.id.indexOf('ea457111-b3f1-4c73-a8ae-cb1cbaf6d244') !== -1) {
 
-                  debugger;
+                  // debugger;
                }
              }
              else {
@@ -134,7 +134,7 @@ class SitesrouterClass {
              }
              else {
 
-               debugger;
+               // debugger;
              }
 
              if(Eintrag.webUrl) {

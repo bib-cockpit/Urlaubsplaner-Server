@@ -8,6 +8,10 @@ interface IMitarbeitersettingsstruktur  {
   ProjektID:             string;
   Favoritprojektindex:   number;
   StandortFilter:        string;
+  LeistungsphaseFilter:  string;
+  OberkostengruppeFilter:  number;
+  HauptkostengruppeFilter: number;
+  UnterkostengruppeFilter: number;
 
   AufgabenShowOffen:        boolean;
   AufgabenShowGeschlossen:  boolean;
@@ -50,6 +54,7 @@ const Mitarbeitersettingsshema = new mongoose.Schema({
   ProjektID:             {type: String, required: false},
   Favoritprojektindex:   {type: Number,  default: null},
   StandortFilter:        {type: String, required: false},
+  LeistungsphaseFilter:  {type: String, required: false},
 
   AufgabenShowOffen:           {type: Boolean, default: false},
   AufgabenShowGeschlossen:     {type: Boolean, default: false},
@@ -67,6 +72,10 @@ const Mitarbeitersettingsshema = new mongoose.Schema({
   AufgabenTerminfiltervariante:  {type: String, required: false, default: null},
   AufgabenTerminfilterStartwert: {type: Number, required: false, default: null},
   AufgabenTerminfilterEndewert:  {type: Number, required: false, default: null},
+
+  OberkostengruppeFilter:   {type: Number, required: false, default: null},
+  HauptkostengruppeFilter:  {type: Number, required: false, default: null},
+  UnterkostengruppeFilter:  {type: Number, required: false, default: null},
 
   AufgabenShowMeilensteine:  {type: Boolean, default: false},
   AufgabenShowMeintag:       {type: Boolean, default: false},

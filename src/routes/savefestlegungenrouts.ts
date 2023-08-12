@@ -13,10 +13,12 @@ import {IMitarbeiterstruktur} from "../datenstrukturen/mitarbeiterstruktur_serve
 import * as Buffer from "buffer";
 import moment, {Moment} from "moment";
 import {IProjektestruktur} from "../datenstrukturen/projektestruktur_server";
+import {IProjektpunktestruktur} from "../datenstrukturen/projektpunktestruktur_server";
+import {IKostengruppenstruktur} from "../datenstrukturen/kostengruppenstruktur_server";
 
-export class SaveProtokolleroutsClass {
+export class SaveFestlegungenroutsClass {
 
-  public  saveprotokolllerouter: any;
+  public  savefestlegungenrouter: any;
   private Debug: DebugClass;
   private Database: ProtokollDBClass;
   private Authentication: AuthenticationClass;
@@ -26,7 +28,7 @@ export class SaveProtokolleroutsClass {
 
     this.Debug                  = new DebugClass();
     this.Database               = new ProtokollDBClass();
-    this.saveprotokolllerouter = Router();
+    this.savefestlegungenrouter = Router();
     this.Authentication         = new AuthenticationClass();
   }
 
@@ -38,7 +40,7 @@ export class SaveProtokolleroutsClass {
 
     } catch (error) {
 
-      this.Debug.ShowErrorMessage(error, 'SaveProtokolleroutsClass', 'Init', this.Debug.Typen.Class);
+      this.Debug.ShowErrorMessage(error, 'SaveFestlegungenroutsClass', 'Init', this.Debug.Typen.Class);
     }
   }
 
@@ -52,21 +54,36 @@ export class SaveProtokolleroutsClass {
       let endpoint   = this.Config.MICROSOFT_LOGIN_ENDPOINT;
       let Secret     = this.Config.SERVER_APPLICATION_SECRET;
       let putdata: any;
+      let Gruppe: IProjektpunktestruktur;
+      let Punkt: IProjektpunktestruktur;
+      let Ursprung: string;
+      let GesendetZeitstempel: number;
+      let GesendetZeitstring: string;
 
 
-      this.saveprotokolllerouter.put('/', async (req: Request, res: Response) => {
+      this.savefestlegungenrouter.put('/', async (req: Request, res: Response) => {
 
-        console.log('Save Protokoll');
+        console.log('Save Festlegungen');
 
         const data: any   = req.body;
         const TeamsID: string     = data.TeamsID;
         const DirectoryID: string = data.DirectoryID;
         const Filename: string    = data.Filename;
-        const Protokoll: IProtokollstruktur = data.Protokoll;
         const Standort: IStandortestruktur = data.Standort;
         const Mitarbeiter: IMitarbeiterstruktur = data.Mitarbeiter;
         const Projekt: IProjektestruktur = data.Projekt;
         const ShowMailinformations: boolean = data.ShowMailinformations;
+        const Displayliste: IProjektpunktestruktur[][] = data.Displayliste;
+        const Kostengruppenliste: IProjektpunktestruktur[] = data.Kostengruppenliste;
+        const Datum: string = moment().format('DD.MM.YYYY');
+        const CcEmpfaengerliste: {
+          Name:  string;
+          Email: string;
+        }[] = data.CcEmpfaengerliste;
+        const Empfaengerliste: {
+          Name:  string;
+          Email: string;
+        }[] = data.Empfaengerliste;
 
         const imageblob   = await this.ReadLogo();
         const browser     = await puppeteer.launch();
@@ -85,7 +102,7 @@ export class SaveProtokolleroutsClass {
         html += '<!DOCTYPE html>';
         html += '<html>';
         html += '<head>';
-        html += '<title>` + Protokoll.Titel + `</title>';
+        html += '<title>Festlegungen' + Projekt.Projektname + '</title>';
 
         html += '<style>';
         html += 'body { font-family: tahoma; font-size: 14px; }';
@@ -105,14 +122,13 @@ export class SaveProtokolleroutsClass {
         html += '<tr>';
         html += '<td style="width: 50%">';
 
-        // Protokoll Infos
+        // Projekt Infos
 
         html += '<table class="docinnertable">';
-        html += '<tr><td style="font-weight: bold">Thema</td><td>' + Protokoll.Titel + '</td></tr>';
-        html += '<tr><td style="font-weight: bold">Besprechungsort</td><td>' + Protokoll.Besprechungsort + '</td></tr>';
-        html += '<tr><td style="font-weight: bold">Datum</td><td>' + Protokoll.Zeitstring + '</td></tr>';
-        html += '<tr><td style="font-weight: bold">Projektnummer</td><td>' + Projekt.Projektnummer + '</td></tr>';
-        html += '<tr><td style="font-weight: bold">Protokollnummer</td><td>' + Protokoll.Protokollnummer + '</td></tr>';
+        html += '<tr><td style="font-weight: bold; font-size: 120%" colspan="2">Festlegungsliste</td></tr>';
+        html += '<tr><td style="font-weight: bold">Porjekt</td><td>' + Projekt.Projektname + '</td></tr>';
+        html += '<tr><td style="font-weight: bold">Porjektnummer</td><td>' + Projekt.Projektnummer + '</td></tr>';
+        html += '<tr><td style="font-weight: bold">Stand</td><td>' + Datum + '</td></tr>';
         html += '</table>';
 
         html += '</td>';
@@ -136,109 +152,70 @@ export class SaveProtokolleroutsClass {
 
         html += '<br><br>';
 
-        // Teilnehmer
-
-        html += '<table class="docinnertable" style="width: 100%">';
-        html += '<tr>';
-        html += '<td rowspan="2" style="width: 90px"><b>Teilnehmer</b></td>';
-        html += '<td>';
-
-        for(let i = 0; i < Protokoll.ExterneTeilnehmerliste.length; i++) {
-
-          html += Protokoll.ExterneTeilnehmerliste[i];
-          if(i < Protokoll.ExterneTeilnehmerliste.length - 1) html += ', ';
-        }
-
-        html += '</td>';
-        html += '</tr>';
-        html += '<tr>';
-        html += '<td>';
-
-        for(let i = 0; i < Protokoll.InterneTeilnehmerliste.length; i++) {
-
-          html += Protokoll.InterneTeilnehmerliste[i];
-          if(i < Protokoll.InterneTeilnehmerliste.length - 1) html += ', ';
-        }
-
-        html += '</td>';
-        html += '</tr>';
-        html += '</table>';
-
-        html += '<br><br>';
-
         // Prtokollpunkte
 
-        html += '<table class="docinnertable" style="width: 100%">';
-        html += '<tr>';
-        html += '<td style="font-weight: bold; width: 30px">Nr.</td>';
-        html += '<td style="font-weight: bold; width: auto">Beschreibung</td>';
-        html += '<td style="font-weight: bold; width: 70px; text-align: center;">Termin</td>';
-        html += '<td style="font-weight: bold; width: 70px; text-align: center;">Status</td>';
-        html += '<td style="font-weight: bold; width: 70px; text-align: center;">Zuständig</td>';
-        html += '</tr>';
+        html += '<table  style="width: 100%">';
 
-        Punkteindex = 0;
-        Nummer      = 1;
+        for(let i = 0; i < Kostengruppenliste.length; i++) {
 
-        for(let Eintrag of Protokoll.Projektpunkteliste) {
-
-          html += '<tr valign="top">';
-          html += '<td style="width: 30px">'  + Nummer.toString() + '</td>';
-          html += '<td style="width: 400px">';
-
-          html += '<table class="nobordersmalltable">';
-
-          if(Protokoll.Kostengruppenliste[Punkteindex] !== 'none') {
-
-            html += '<tr>';
-            html += '<td style="color: #FF9333 !important; font-weight: bold;">' + Protokoll.Kostengruppenliste[Punkteindex] + '</td>';
-            html += '</tr>';
-          }
+          Gruppe = Kostengruppenliste[i];
 
           html += '<tr>';
-          html += '<td>'  + Eintrag.Aufgabe + '</td>';
+          html += '<td style="font-weight: bold; font-size: 120%">';
+          html += Gruppe.Kostengruppenname;
+          html += '</td>';
           html += '</tr>';
-          html += '</table>'
+          html += '<tr>';
+          html += '<td>';
 
-          html += '</td>';
+          html += '<table class="docinnertable" style="width: 100%">';
+          html += '<tr>';
+          html += '<td style="font-weight: bold; width: 30px">Nr.</td>';
+          html += '<td style="font-weight: bold; width: 70px">Datum</td>';
+          html += '<td style="font-weight: bold; width: auto;">Beschreibung</td>';
+          html += '<td style="font-weight: bold; width: 70px; text-align: center;">Phase</td>';
+          html += '<td style="font-weight: bold; width: 70px; text-align: center;">Ursprung</td>';
+          html += '</tr>';
 
-          html += '<td style="width:  70px; text-align: center;">';
+          Punkteindex = 0;
+          Nummer = 1;
 
-          if(Eintrag.Status !== 'Festlegung' && Eintrag.Status !== 'Protokollpunkt') {
 
-            html += Eintrag.Endezeitstring;
-          }
+          for (let j = 0; j < Displayliste[i].length; j++) {
 
-          html += '</td>';
-          html += '<td style="width: 100px; text-align: center; color: white !important; background: ' + this.GetStatuscolor(Eintrag.Status) + ' !important;">'  + this.GetStatustext(Eintrag.Status) + '</td>';
-          html += '<td style="width:  70px; text-align: center;">';
+            Punkt = Displayliste[i][j];
+            Ursprung = Punkt.ProtokollID !== null ? 'P' : '';
 
-          // Prtokollpunkte Zuständigkeiten
+            html += '<tr valign="top">';
+            html += '<td style="width: 30px">' + (j + 1).toString() + '</td>';
+            html += '<td style="width: 70px">' + Punkt.Startzeitstring + '</td>';
+            html += '<td style="width: auto">';
 
-          html += '<table class="nobordersmalltable" style="width: 100%">';
+              html += '<table class="nobordersmalltable">';
+              html += '<tr>';
 
-          for(let Intern of Protokoll.InternZustaendigListe[Punkteindex]) {
+              if(Punkt.OpenFestlegung) {
 
-            html += '<tr><td style="text-align: center; font-size: 90%">' + Intern + '</td></tr>';
-          }
+                html += '<td style="padding: 4px;"><div style="width: 10px; height: 10px; background: red; border-radius: 50%"></div></td>';
+              }
 
-          if(Protokoll.ExternZustaendigListe[Punkteindex].length > 0) {
+              html += '<td>' + Punkt.Aufgabe + '</td>';
+              html += '</tr>';
+              html += '</table>';
 
-            html += '<tr><td style="text-align: center; font-size: 110%; font-weight: bold">&bull;</td></tr>';
-          }
-
-          for(let Extern of Protokoll.ExternZustaendigListe[Punkteindex]) {
-
-            html += '<tr><td style="text-align: center; font-size: 90%">' + Extern + '</td></tr>';
+            html += '</td>';
+            html += '<td style="width: 70px; text-align: center;">' + Punkt.Leistungsphase + '</td>';
+            html += '<td style="width: 70px; text-align: center;">' + Ursprung + '</td>';
+            html += '</tr>';
           }
 
           html += '</table>';
 
           html += '</td>';
           html += '</tr>';
-
-          Punkteindex++;
-          Nummer++;
+          html += '<tr>';
+          html += '<td style="height: 8px"></td>';
+          html += '</tr>';
         }
 
         html += '</table>';
@@ -246,8 +223,8 @@ export class SaveProtokolleroutsClass {
         if(ShowMailinformations === true) {
 
           SendeZeitpunkt = moment();
-          Protokoll.GesendetZeitstempel = SendeZeitpunkt.valueOf();
-          Protokoll.GesendetZeitstring  = SendeZeitpunkt.format('DD.MM.YYYY HH:mm');
+          GesendetZeitstempel = SendeZeitpunkt.valueOf();
+          GesendetZeitstring  = SendeZeitpunkt.format('DD.MM.YYYY HH:mm');
 
           html += '<br><br><br>';
 
@@ -259,24 +236,24 @@ export class SaveProtokolleroutsClass {
           html += '<tr>';
           html += '<td style="vertical-align: top">';
 
-          for(let i = 0; i < Protokoll.Empfaengerliste.length; i++) {
+          for(let i = 0; i < Empfaengerliste.length; i++) {
 
-            html += Protokoll.Empfaengerliste[i].Email;
-            if (i < Protokoll.Empfaengerliste.length - 1) html += '<br>';
+            html += Empfaengerliste[i].Email;
+            if (i < Empfaengerliste.length - 1) html += '<br>';
           }
 
           html += '</td>';
           html += '<td style="vertical-align: top">';
 
-          for(let i = 0; i < Protokoll.CcEmpfaengerliste.length; i++) {
+          for(let i = 0; i < CcEmpfaengerliste.length; i++) {
 
-            html += Protokoll.CcEmpfaengerliste[i].Email;
-            if (i < Protokoll.CcEmpfaengerliste.length - 1) html += '<br>';
+            html += CcEmpfaengerliste[i].Email;
+            if (i < CcEmpfaengerliste.length - 1) html += '<br>';
           }
 
           html += '</td>';
           html += '</tr>';
-          html += '<tr><td colspan="2">Gesendet: ' + Protokoll.GesendetZeitstring + '</td></tr>';
+          html += '<tr><td colspan="2">Gesendet: ' + GesendetZeitstring + '</td></tr>';
           html += '</table>';
 
           html += '</body>';
@@ -324,10 +301,14 @@ export class SaveProtokolleroutsClass {
 
           putdata = await graphClient.api(Url).put(pdf);
 
-          console.log('Protokoll ' + Filename + ' wurde erstellt.');
+          console.log('Festlegungsliste ' + Filename + ' wurde erstellt.');
 
-          putdata.GesendetZeitstempel = Protokoll.GesendetZeitstempel;
-          putdata.GesendetZeitstring  = Protokoll.GesendetZeitstring;
+          /*
+                    SendeZeitpunkt = moment();
+          Protokoll.GesendetZeitstempel = SendeZeitpunkt.valueOf();
+          Protokoll.GesendetZeitstring  = SendeZeitpunkt.format('DD.MM.YYYY HH:mm');
+           */
+
 
           res.status(200).send(putdata);
         }
@@ -335,7 +316,7 @@ export class SaveProtokolleroutsClass {
 
           debugger;
 
-          console.error('Protokoll ' + Filename + ' erstellen fehlgeschlagen: ' + error.message);
+          console.error('Festlegungen ' + Filename + ' erstellen fehlgeschlagen: ' + error.message);
 
           res.status(error.statusCode).send({ Error: error.message });
         }
@@ -343,7 +324,7 @@ export class SaveProtokolleroutsClass {
 
     } catch (error) {
 
-      this.Debug.ShowErrorMessage(error.message, error,  'SaveProtokolleroutsClass', 'SetRoutes');
+      this.Debug.ShowErrorMessage(error.message, error,  'SaveFestlegungenroutsClass', 'SetRoutes');
     }
   }
 
@@ -363,66 +344,6 @@ export class SaveProtokolleroutsClass {
         }
       });
     });
-  }
-
-  private GetStatustext(status): string {
-
-    switch (status) {
-
-      case 'Protokollpunkt':
-
-        return 'Info';
-
-        break;
-
-      case 'Ruecklauf':
-
-        return 'Rücklauf';
-
-        break;
-
-      default:
-
-        return status;
-
-        break;
-    }
-  }
-
-  private GetStatuscolor(status): string {
-
-    switch (status) {
-
-      case 'Offen':
-
-        return '#008080';
-
-        break;
-
-      case 'Protokollpunkt':
-
-        return '#34495E';
-
-        break;
-
-      case 'Geschlossen':
-
-        return '#008000';
-
-        break;
-
-      case 'Ruecklauf':
-
-        return '#0020C2';
-
-        break;
-
-      case 'Festlegung':
-
-        return '#FF9333';
-
-        break;
-    }
   }
 }
 

@@ -22,6 +22,8 @@ export class MitarbeiterDBClass {
       let MitarbeitermodelClass: mongoose.Model<mongoose.Document>;
       let Liste: IMitarbeiterstruktur[] = [];
 
+
+
       this.Debug.ShowInfoMessage('ReadMitarbeiterliste', 'MitarbeiterDBClass', 'ReadMitarbeiterliste');
 
       return new Promise((resolve, reject) => {

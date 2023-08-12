@@ -19,6 +19,7 @@ interface IProjektestruktur  {
   Projektfarbe:         string;
   Projektkurzname:      string;
   Projektnummer:        string;
+  Leistungsphase:       string;
   Status:               string;
   Verfasser:            IVerfasserstruktur;
   Beteiligtenliste:     IProjektbeteiligtestruktur[];
@@ -44,6 +45,7 @@ const Projekteshema = new mongoose.Schema({
   Projektkurzname:  {type: String,  required: false},
   Projektfarbe:     {type: String,  required: false},
   Projektnummer:    {type: String,  required: false},
+  Leistungsphase:   {type: String,  required: false},
   Status:           {type: String,  required: false},
   Strasse:          {type: String,  required: false},
   PLZ:              {type: String,  required: false},

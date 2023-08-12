@@ -45,6 +45,9 @@ import {BautagebuchouterClass} from "./routes/bautagebuchrouts";
 import {SaveBautagebuchroutsClass} from "./routes/savebautagebuchrouts";
 import {SendBautagebuchroutsClass} from "./routes/sendbautagebuchrouts";
 import {LOPListeroutsClass} from "./routes/loplisterouts";
+import {EmailrouterClass} from "./routes/emailrouts";
+import {SendFestlegungenroutsClass} from "./routes/sendfestlegungenrouts";
+import {SaveFestlegungenroutsClass} from "./routes/savefestlegungenrouts";
 
 const app: Application = express();
 const Connection: ConnectionClass = new ConnectionClass();
@@ -70,6 +73,9 @@ const Userteamsrouter: UsertesamsroutsClass = new UsertesamsroutsClass();
 const AddTeamsmembersrouter: AddTeamsmemberroutsClass = new AddTeamsmemberroutsClass();
 const Bautagebuchrouter: BautagebuchouterClass = new BautagebuchouterClass();
 const LOPListerouter: LOPListeroutsClass = new LOPListeroutsClass();
+const Emailrouter: EmailrouterClass = new EmailrouterClass();
+const SendFestlegungenrouts: SendFestlegungenroutsClass = new SendFestlegungenroutsClass();
+const SaveFestlegungenrouts: SaveFestlegungenroutsClass = new SaveFestlegungenroutsClass();
 
 let Port: string              = 'none';
 let NODE_ENV: string          = config.has('node_env')          ? config.get('node_env')              : 'nicht definiert';
@@ -103,13 +109,15 @@ const options: IBearerStrategyOptionWithRequest =  {
 
   identityMetadata:`https://login.microsoftonline.com/${Tenant_ID}/${version}/.well-known/openid-configuration`,
   clientID: Server_App_ID,
+  audience: Server_App_ID,
   loggingLevel: "info", // 'info', 'warn','error'.
   passReqToCallback: false, // auf false lassen sonst done function in BearerStrategy undefined
   isB2C:false,
-  validateIssuer:false,
+  validateIssuer: true,
   loggingNoPII: true, // true === no personal informtions like token is logged
   scope: ["database_access"]
 };
+
 
 app.use(Auth.cors);
 app.use(passport.initialize());
@@ -147,6 +155,8 @@ SendProtokollerouter.Init(Config);
 SendBautagebuchrouter.Init(Config);
 Userteamsrouter.Init(Config);
 AddTeamsmembersrouter.Init(Config);
+SendFestlegungenrouts.Init(Config);
+SaveFestlegungenrouts.Init(Config);
 
 Homerouter.SetRoutes();
 Errorrouter.SetRoutes();
@@ -167,6 +177,9 @@ Userteamsrouter.SetRoutes();
 AddTeamsmembersrouter.SetRoutes();
 Bautagebuchrouter.SetRoutes();
 LOPListerouter.SetRoutes();
+Emailrouter.SetRoutes();
+SendFestlegungenrouts.SetRoutes();
+SaveFestlegungenrouts.SetRoutes();
 
 app.use('/',               Homerouter.homerouter);
 app.use('/.auth/login/aad/callback', Homerouter.homerouter);
@@ -180,14 +193,17 @@ app.use('/projektpunkte',  Projektpunkterouter.projektpunkterouter);
 app.use('/protokolle',     Protokollrouter.protokolllerouter);
 app.use('/changelog',      Changelogrouter.changelogrouter);
 app.use('/sites',          Sitesrouter.sitesrouter);
-app.use('/saveprotokoll',  SaveProtokollerouter.saveprotokolllerouter);
-app.use('/savebautagebuch',SaveBautagebuchrouter.savebautagebuchrouter);
-app.use('/sendprotokoll',  SendProtokollerouter.sendprotokolllerouter);
-app.use('/sendbautagebuch',SendBautagebuchrouter.sendbautagebuchrouter);
+app.use('/saveprotokoll',    SaveProtokollerouter.saveprotokolllerouter);
+app.use('/sendprotokoll',    SendProtokollerouter.sendprotokolllerouter);
+app.use('/savefestlegungen', SaveFestlegungenrouts.savefestlegungenrouter);
+app.use('/sendfestlegungen', SendFestlegungenrouts.sendfestlegungenrouter);
+app.use('/savebautagebuch',  SaveBautagebuchrouter.savebautagebuchrouter);
+app.use('/sendbautagebuch',  SendBautagebuchrouter.sendbautagebuchrouter);
 app.use('/userteams',      Userteamsrouter.userteamsrouter);
 app.use('/addteamsmember', AddTeamsmembersrouter.teamsmemberrouter);
 app.use('/bautagebuch',    Bautagebuchrouter.bautagebuchouter);
 app.use('/lopliste',       LOPListerouter.loplisterouter);
+app.use('/email',          Emailrouter.emailrouter);
 
 let server = app.listen(8080, () =>  {
 
@@ -199,6 +215,8 @@ let server = app.listen(8080, () =>  {
   Debug.ShowInfoMessage('Address: ' + address['address'], 'index.ts', 'Server');
   Debug.ShowInfoMessage('Family:  ' + address['family'],  'index.ts', 'Server');
   Debug.ShowInfoMessage(`Startup time ${moment().format('HH:mm:ss')}`, 'index.ts', 'Server');
+
+
 
   if(Config.NODE_ENV === 'production') {
 
