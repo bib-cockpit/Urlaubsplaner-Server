@@ -183,7 +183,7 @@ SendFestlegungenrouts.SetRoutes();
 SaveFestlegungenrouts.SetRoutes();
 
 app.use('/',               Homerouter.homerouter);
-// app.use('/.auth/login/aad/callback', Homerouter.homerouter);
+app.use('/.auth/login/aad/callback', Homerouter.homerouter);
 app.use('/error',          Errorrouter.errorrouter);
 app.use('/standorte',      Standorterouter.standorterouter);
 app.use('/mitarbeiter',    Mitarbeiterouter.mitarbeiterrouter);
