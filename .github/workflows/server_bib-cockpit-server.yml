@@ -58,5 +58,5 @@ jobs:
         with:
           app-name: 'BAE Cockpit Server'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_4EB708A8053B4B3AB9BDF4C5E5EE0CCE }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
           package: .
