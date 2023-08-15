@@ -7,7 +7,6 @@ if(typeof process.env.NODE_ENV === 'undefined') {
   process.env.NODE_CONFIG_DIR = './config';
 
   console.log('NODE_ENV nicht definiert. Die Ersatzvariablen aus dotenv werden verwendet.');
-  // Test
 
   dotenv.config();
 }
@@ -119,7 +118,7 @@ const options: IBearerStrategyOptionWithRequest =  {
   scope: ['database_access']
 };
 
-/*
+
 
 let Strategy = new BearerStrategy(options, function(token: ITokenPayload, done: VerifyCallback) {
 
@@ -140,13 +139,9 @@ let Strategy = new BearerStrategy(options, function(token: ITokenPayload, done: 
   done(error, user, token);
 });
 
- */
-
-
-
 app.use(Auth.cors);
-// app.use(passport.initialize());
-// passport.use(Strategy);
+app.use(passport.initialize());
+passport.use(Strategy);
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
