@@ -30,14 +30,9 @@ class MitarbeiterrouterClass {
 
         this.Database.ReadMitarbeiterliste().then((liste: IMitarbeiterstruktur[]) => {
 
-          debugger;
-
-
           res.status(200).send(liste);
 
         }).catch((error) => {
-
-          debugger;
 
           res.status(400).send(error.message);
 
@@ -53,8 +48,6 @@ class MitarbeiterrouterClass {
         const Mitarbeiter = <IMitarbeiterstruktur>req.body;
 
         delete Mitarbeiter._id;
-
-        debugger;
 
         console.log('Daten: ' + JSON.stringify(Mitarbeiter));
 
@@ -77,8 +70,6 @@ class MitarbeiterrouterClass {
         const data = <IMitarbeiterstruktur>req.body;
 
         console.log('Daten: ' + JSON.stringify(data));
-
-
 
         this.Database.UpdateMitarbeiter(data).then((result) => {
 

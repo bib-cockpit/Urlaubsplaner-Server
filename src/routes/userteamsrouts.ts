@@ -45,6 +45,7 @@ export class UsertesamsroutsClass {
       let Secret     = this.Config.SERVER_APPLICATION_SECRET;
       let getdata: any;
       let Url: string;
+      let Error: any;
 
       this.userteamsrouter.put('/', async (req: Request, res: Response) => {
 
@@ -73,35 +74,44 @@ export class UsertesamsroutsClass {
         }
         catch (error) {
 
-          debugger;
+          console.log('Token ist feherhaft.');
+
+          token = null;
+          Error =error;
         }
 
-        const graphClient = Client.init({
+        if(token !== null) {
 
-          authProvider: done => {
+          const graphClient = Client.init({
 
-            done(null, token.accessToken);
+            authProvider: done => {
+
+              done(null, token.accessToken);
+            }
+          });
+
+          Url = '/users/' + UserID + '/joinedTeams';
+
+          try {
+
+            getdata = await graphClient.api(Url).get();
+
+            console.log('Abfrage wurde erstellt.');
+
+            res.status(200).send(getdata);
           }
-        });
+          catch(error: any) {
 
-        Url = '/users/' + UserID + '/joinedTeams';
+            console.error('Abfrage fehlgeschlagen: ' + error.message);
 
-        try {
-
-          getdata = await graphClient.api(Url).get();
-
-          console.log('Abfrage wurde erstellt.');
-
-          res.status(200).send(getdata);
+            res.status(400).send({ Error: error.message });
+          }
         }
-        catch(error: any) {
+        else {
 
-          console.error('Abfrage fehlgeschlagen: ' + error.message);
-
-          res.status(error.statusCode).send({ Error: error.message });
+          res.status(400).send(Error.message);
         }
       });
-
     } catch (error) {
 
       this.Debug.ShowErrorMessage(error.message, error,  'TesterroutsClass', 'SetRoutes');

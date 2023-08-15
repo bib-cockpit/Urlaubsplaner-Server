@@ -103,34 +103,33 @@ Config.Init(
   Server_App_Secret
 );
 
+
+
 const version = 'v2.0';
+const clientid = 'bc457d46-6f13-4fa7-a973-e94cf4102dd9';
 
 const options: IBearerStrategyOptionWithRequest =  {
 
   identityMetadata:`https://login.microsoftonline.com/${Tenant_ID}/${version}/.well-known/openid-configuration`,
-  clientID: Server_App_ID,
-  audience: Server_App_ID,
+  clientID: Server_App_ID, //  Server_App_ID,
+  // issuer: `https://login.microsoftonline.com/${Tenant_ID}/${version}`, // nicht notwendig
+  audience: 'api://8289bad1-d444-4958-9033-832603d0e244', // notwendig
   loggingLevel: "info", // 'info', 'warn','error'.
   passReqToCallback: false, // auf false lassen sonst done function in BearerStrategy undefined
-  isB2C:false,
-  validateIssuer: true,
-  loggingNoPII: true, // true === no personal informtions like token is logged
-  scope: ["database_access"]
+  // isB2C:false, nicht notwendig
+  validateIssuer: false, //  notwendig auf false
+  loggingNoPII: false, // true === no personal informtions like token is logged
+  scope: ['database_access']
 };
 
-
-app.use(Auth.cors);
-app.use(passport.initialize());
-passport.use(new BearerStrategy(options, function(token: ITokenPayload, done: VerifyCallback) {
+let Strategy = new BearerStrategy(options, function(token: ITokenPayload, done: VerifyCallback) {
 
   let user: any;
   let error: any;
 
-  console.log('Token: ' + token);
-
   if(token) {
 
-    user  = { username: token.preferred_username };
+    user  = { username: token.unique_name };
     error = null;
   }
   else {
@@ -140,7 +139,13 @@ passport.use(new BearerStrategy(options, function(token: ITokenPayload, done: Ve
   }
 
   done(error, user, token);
-}));
+});
+
+
+
+app.use(Auth.cors);
+app.use(passport.initialize());
+passport.use(Strategy);
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));

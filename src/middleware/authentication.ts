@@ -1,6 +1,4 @@
 import {NextFunction, Request, Response} from "express";
-import * as jwt from 'jsonwebtoken';
-import {DebugClass} from "../debug";
 import passport from 'passport';
 
 export class AuthenticationClass {
@@ -19,15 +17,11 @@ export class AuthenticationClass {
 
     passport.authenticate('oauth-bearer', {session: false }, (err, user, token) => {
 
-      debugger;
-
       if(user !== false) {
 
         next();
       }
       else {
-
-        debugger;
 
         res.status(401).send('User Unauthorized');
       }
