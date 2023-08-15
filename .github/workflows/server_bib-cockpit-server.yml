@@ -26,7 +26,7 @@ jobs:
           npm install
           npm run build --if-present
           npm run copy --if-present
-          
+
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r -q
 
@@ -48,7 +48,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: node-app
-          
+
       - name: unzip artifact for deployment
         run: unzip release.zip
 
@@ -56,7 +56,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'bae-cockpit-server'
+          app-name: 'bae-cockpit-server - Zip Deploy'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_4EB708A8053B4B3AB9BDF4C5E5EE0CCE }}
           package: .
