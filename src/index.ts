@@ -103,10 +103,7 @@ Config.Init(
   Server_App_Secret
 );
 
-
-
 const version = 'v2.0';
-const clientid = 'bc457d46-6f13-4fa7-a973-e94cf4102dd9';
 
 const options: IBearerStrategyOptionWithRequest =  {
 
@@ -191,7 +188,7 @@ SendFestlegungenrouts.SetRoutes();
 SaveFestlegungenrouts.SetRoutes();
 
 app.use('/',               Homerouter.homerouter);
-app.use('/.auth/login/aad/callback', Homerouter.homerouter);
+// app.use('/.auth/login/aad/callback', Homerouter.homerouter);
 app.use('/error',          Errorrouter.errorrouter);
 app.use('/standorte',      Standorterouter.standorterouter);
 app.use('/mitarbeiter',    Mitarbeiterouter.mitarbeiterrouter);
