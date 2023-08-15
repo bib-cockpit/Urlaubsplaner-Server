@@ -13,6 +13,8 @@ export class AuthenticationClass {
     }
   }
 
+
+
   public authenticate = (req: Request, res: Response, next: NextFunction) => {
 
     passport.authenticate('oauth-bearer', {session: false }, (err, user, token) => {
@@ -22,6 +24,8 @@ export class AuthenticationClass {
         next();
       }
       else {
+
+
 
         res.status(401).send('User Unauthorized');
       }

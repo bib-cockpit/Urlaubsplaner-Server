@@ -118,7 +118,7 @@ const options: IBearerStrategyOptionWithRequest =  {
   passReqToCallback: false, // auf false lassen sonst done function in BearerStrategy undefined
   // isB2C:false, nicht notwendig
   validateIssuer: false, //  notwendig auf false
-  loggingNoPII: false, // true === no personal informtions like token is logged
+  loggingNoPII: true, // true === no personal informtions like token is logged
   scope: ['database_access']
 };
 

@@ -1,4 +1,4 @@
-import {Request, Response, Router} from 'express';
+import {NextFunction, Request, Response, Router} from 'express';
 import {VersionsinfoClass} from '../versionsinfoclass';
 import {DebugClass} from "../debug";
 import {ConfigClass} from "../configclass";
@@ -41,7 +41,7 @@ class HomerouterClass {
       let Dirname: string  = __dirname;
       let CWD: string  = process.cwd();
 
-      this.homerouter.get('/', (req: Request, res: Response) => {
+      this.homerouter.get('/', (req: Request, res: Response, next: NextFunction) => {
 
         html =
           `<body style="font-family: Tahoma"><b>Cockpit Server</b><br><br>
@@ -97,7 +97,10 @@ class HomerouterClass {
           </table>
         </body>`;
 
-        res.status(200).send({Status: 'Text muss im Homerouter geändert werden.'});
+        this.Auth.authenticate(req, res, next);
+
+        // res.status(200).send({Status: 'Text muss im Homerouter geändert werden.'});
+        res.status(200).send(html);
       });
     } catch (error) {
 
