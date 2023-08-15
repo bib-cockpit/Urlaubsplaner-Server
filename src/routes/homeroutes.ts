@@ -3,6 +3,7 @@ import {VersionsinfoClass} from '../versionsinfoclass';
 import {DebugClass} from "../debug";
 import {ConfigClass} from "../configclass";
 import {AuthenticationClass} from "../middleware/authentication";
+import {ConnectionClass} from "../connectionclass";
 
 class HomerouterClass {
 
@@ -11,6 +12,7 @@ class HomerouterClass {
   private Config: ConfigClass;
   private Auth: AuthenticationClass;
   private Info: VersionsinfoClass;
+  private Connection: ConnectionClass;
 
   constructor() {
 
@@ -18,6 +20,7 @@ class HomerouterClass {
     this.Auth       = new AuthenticationClass();
     this.Info       = new VersionsinfoClass();
     this.Debug      = new DebugClass();
+    this.Connection = new ConnectionClass();
   }
 
   Init(config: ConfigClass) {
@@ -40,11 +43,24 @@ class HomerouterClass {
       let Filename: string = __filename;
       let Dirname: string  = __dirname;
       let CWD: string  = process.cwd();
+      let Status: string;
 
       this.homerouter.get('/', (req: Request, res: Response, next: NextFunction) => {
 
-        html =
-          `<body style="font-family: Tahoma"><b>Cockpit Server</b><br><br>
+        this.Connection.Init(this.Config);
+
+        this.Connection.ConnectOnline().then((reslut) => {
+
+          Status = 'ok';
+
+        }).catch((error) => {
+
+           Status = error.message;
+
+        }).finally(() => {
+
+          html =
+            `<body style="font-family: Tahoma"><b>Cockpit Server</b><br><br>
            <table>
            <tr>
               <td>Versionsnummer:</td><td>${this.Info.Verion}</td>
@@ -94,10 +110,15 @@ class HomerouterClass {
           <tr>
               <td>SERVER APPLICATION ID:</td><td>${this.Config.SERVER_APPLICATION_ID}</td>
           </tr>
+          <tr>
+            <td>DB Connection Status:</td><td>${Status}</td>
+          </tr>
           </table>
-        </body>`;
+          </body>`;
 
-        res.status(200).send(html);
+          res.status(200).send(html);
+        });
+
       });
     } catch (error) {
 

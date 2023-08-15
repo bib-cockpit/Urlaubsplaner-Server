@@ -69,6 +69,14 @@ export class ConnectionClass {
         let Parameter: string = "?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@cockbit-cosmos-db@"
         let Uri: string = "mongodb://" + this.Config.COSMOSDB_HOST + ":"+this.Config.COSMOSDB_PORT + "/" + this.Config.COSMOSDB_DBNAME + Parameter;
 
+        /*
+
+        var mongoClient = require("mongodb").MongoClient;
+mongoClient.connect("mongodb://cockpit-cosmos-db:t0ubgLQHQsFtsI9pzm1feNvJC72h6k0haZV5W5kWJOi0XCMmdoViASHA1PH77qLq2D1nhV7VewrTACDbeXMzaQ%3D%3D@cockpit-cosmos-db.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false&maxIdleTimeMS=120000&appName=@cockpit-cosmos-db@", function (err, client) {
+  client.close();
+});
+         */
+
         this.Debug.ShowInfoMessage('Connection String Online: ' + Uri, 'ConnectionClass', 'ConnectOnline');
 
         this.Connection = connect(Uri, {
