@@ -122,6 +122,8 @@ const options: IBearerStrategyOptionWithRequest =  {
   scope: ['database_access']
 };
 
+/*
+
 let Strategy = new BearerStrategy(options, function(token: ITokenPayload, done: VerifyCallback) {
 
   let user: any;
@@ -140,6 +142,8 @@ let Strategy = new BearerStrategy(options, function(token: ITokenPayload, done: 
 
   done(error, user, token);
 });
+
+ */
 
 
 

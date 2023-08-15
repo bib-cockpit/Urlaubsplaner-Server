@@ -105,6 +105,8 @@ export class ChangelogDBClass {
 
         }).catch((error) => {
 
+
+
           reject(error);
         });
       });
