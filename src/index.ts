@@ -144,8 +144,8 @@ let Strategy = new BearerStrategy(options, function(token: ITokenPayload, done: 
 
 
 app.use(Auth.cors);
-app.use(passport.initialize());
-passport.use(Strategy);
+// app.use(passport.initialize());
+// passport.use(Strategy);
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
