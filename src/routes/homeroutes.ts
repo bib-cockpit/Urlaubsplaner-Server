@@ -97,9 +97,6 @@ class HomerouterClass {
           </table>
         </body>`;
 
-        this.Auth.authenticate(req, res, next);
-
-        // res.status(200).send({Status: 'Text muss im Homerouter geändert werden.'});
         res.status(200).send(html);
       });
     } catch (error) {
