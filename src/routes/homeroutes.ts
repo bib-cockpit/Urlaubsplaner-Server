@@ -51,7 +51,7 @@ class HomerouterClass {
 
         this.Connection.ConnectOnline().then((reslut) => {
 
-          Status = 'ok';
+          Status = 'OK';
 
         }).catch((error) => {
 

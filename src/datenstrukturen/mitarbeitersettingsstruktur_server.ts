@@ -6,6 +6,7 @@ interface IMitarbeitersettingsstruktur  {
   MitarbeiterID:         string;
   FavoritenID:           string;
   ProjektID:             string;
+  Zoomfaktor:            number;
   Favoritprojektindex:   number;
   StandortFilter:        string;
   LeistungsphaseFilter:  string;
@@ -55,6 +56,7 @@ const Mitarbeitersettingsshema = new mongoose.Schema({
   Favoritprojektindex:   {type: Number,  default: null},
   StandortFilter:        {type: String, required: false},
   LeistungsphaseFilter:  {type: String, required: false},
+  Zoomfaktor:            {type: Number, required: false},
 
   AufgabenShowOffen:           {type: Boolean, default: false},
   AufgabenShowGeschlossen:     {type: Boolean, default: false},
