@@ -16,7 +16,7 @@ interface IProjektestruktur  {
   PLZ:                  string;
   Ort:                  string;
   Projektname:          string;
-  Projektfarbe:         string;
+  OutlookkategorieID:   string;
   Projektkurzname:      string;
   Projektnummer:        string;
   Leistungsphase:       string;
@@ -24,6 +24,7 @@ interface IProjektestruktur  {
   Verfasser:            IVerfasserstruktur;
   Beteiligtenliste:     IProjektbeteiligtestruktur[];
   Bauteilliste:         IBauteilstruktur[];
+  MitarbeiterIDListe:   string[];
   ProjektIsReal:        boolean;
 
   TeamsID:          string;
@@ -43,7 +44,7 @@ const Projekteshema = new mongoose.Schema({
   StandortID:       {type: String,  required: false},
   Projektkey:       {type: String,  required: false},
   Projektkurzname:  {type: String,  required: false},
-  Projektfarbe:     {type: String,  required: false},
+  OutlookkategorieID: {type: String,  required: false},
   Projektnummer:    {type: String,  required: false},
   Leistungsphase:   {type: String,  required: false},
   Status:           {type: String,  required: false},
@@ -54,10 +55,11 @@ const Projekteshema = new mongoose.Schema({
   ProjektIsReal:    {type: Boolean, required: false, default: true},
   Zeitstempel:      {type: Number, required: false},
   Zeitpunkt:        {type: String, required: false},
-  Verfasser:        Verfassershema,
-  Beteiligtenliste: [Projektbeteiligteeshema],
-  Bauteilliste:     [Bauteilshema],
 
+  Verfasser:          Verfassershema,
+  Beteiligtenliste:   [Projektbeteiligteeshema],
+  Bauteilliste:       [Bauteilshema],
+  MitarbeiterIDListe: [{type: String}],
 
   TeamsID:          {type: String,  required: false},
   TeamsDescription: {type: String,  required: false},

@@ -47,6 +47,8 @@ import {LOPListeroutsClass} from "./routes/loplisterouts";
 import {EmailrouterClass} from "./routes/emailrouts";
 import {SendFestlegungenroutsClass} from "./routes/sendfestlegungenrouts";
 import {SaveFestlegungenroutsClass} from "./routes/savefestlegungenrouts";
+import {AddsubscriptionroutsClass} from "./routes/addsubscriptionrouts";
+
 
 const app: Application = express();
 const Connection: ConnectionClass = new ConnectionClass();
@@ -75,6 +77,7 @@ const LOPListerouter: LOPListeroutsClass = new LOPListeroutsClass();
 const Emailrouter: EmailrouterClass = new EmailrouterClass();
 const SendFestlegungenrouts: SendFestlegungenroutsClass = new SendFestlegungenroutsClass();
 const SaveFestlegungenrouts: SaveFestlegungenroutsClass = new SaveFestlegungenroutsClass();
+const Addsubscriptionrouts: AddsubscriptionroutsClass = new AddsubscriptionroutsClass();
 
 let Port: string              = 'none';
 let NODE_ENV: string          = config.has('node_env')          ? config.get('node_env')              : 'nicht definiert';
@@ -158,6 +161,7 @@ Userteamsrouter.Init(Config);
 AddTeamsmembersrouter.Init(Config);
 SendFestlegungenrouts.Init(Config);
 SaveFestlegungenrouts.Init(Config);
+Addsubscriptionrouts.Init(Config);
 
 Homerouter.SetRoutes();
 Errorrouter.SetRoutes();
@@ -181,6 +185,7 @@ LOPListerouter.SetRoutes();
 Emailrouter.SetRoutes();
 SendFestlegungenrouts.SetRoutes();
 SaveFestlegungenrouts.SetRoutes();
+Addsubscriptionrouts.SetRoutes();
 
 app.use('/',               Homerouter.homerouter);
 app.use('/.auth/login/aad/callback', Homerouter.homerouter);
@@ -205,6 +210,9 @@ app.use('/addteamsmember', AddTeamsmembersrouter.teamsmemberrouter);
 app.use('/bautagebuch',    Bautagebuchrouter.bautagebuchouter);
 app.use('/lopliste',       LOPListerouter.loplisterouter);
 app.use('/email',          Emailrouter.emailrouter);
+app.use('/subscription',   Addsubscriptionrouts.subscriptionrouter);
+
+// eventcallback
 
 let server = app.listen(8080, () =>  {
 
@@ -216,7 +224,6 @@ let server = app.listen(8080, () =>  {
   Debug.ShowInfoMessage('Address: ' + address['address'], 'index.ts', 'Server');
   Debug.ShowInfoMessage('Family:  ' + address['family'],  'index.ts', 'Server');
   Debug.ShowInfoMessage(`Startup time ${moment().format('HH:mm:ss')}`, 'index.ts', 'Server');
-
 
 
   if(Config.NODE_ENV === 'production') {

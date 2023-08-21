@@ -17,7 +17,7 @@ interface IProjektpunktestruktur {
   Listenposition:      number;
   Nummer:              string;
   Aufgabe:             string;
-  Outlookkatgorie:     string;
+  OutlookkatgorieID:   string;
   Thematik:            string;
   Startzeitsptempel:   number;
   Startzeitstring:     string;
@@ -83,7 +83,7 @@ const Projektpunktshema = new mongoose.Schema({
   Listenposition:         {type: Number,  required: false},
   Nummer:                 {type: String,  required: false},
   Aufgabe:                {type: String,  required: false},
-  Outlookkatgorie:        {type: String,  required: false},
+  OutlookkatgorieID:      {type: String,  required: false},
   Thematik:               {type: String,  required: false},
   Startzeitsptempel:      {type: Number,  required: false},
   Startzeitstring:        {type: String,  required: false},
