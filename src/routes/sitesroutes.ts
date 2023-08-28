@@ -40,25 +40,33 @@ class SitesrouterClass {
 
     try {
 
-      let token; //       = req.headers.authorization.split(' ')[1];
-      let tenantId   = this.Config.TENANT_ID;
-      let clientId   = this.Config.SERVER_APPLICATION_ID;
-      let endpoint   = this.Config.MICROSOFT_LOGIN_ENDPOINT;
-      let Secret     = this.Config.SERVER_APPLICATION_SECRET;
+      let token;
+      let tenantId     = this.Config.TENANT_ID;
+      let clientId     = this.Config.CLIENT_APPLICATION_ID;
+      let endpoint     = this.Config.MICROSOFT_LOGIN_ENDPOINT;
+      let AppSecret    = this.Config.CLIENT_APPLICATION_SECRET;
       let data: any;
-      let Valueliste: any[] = [];
-      let Sitesliste: Sitesstruktur[] = [];
+      let Valueliste: any[];
+      let Sitesliste: Sitesstruktur[];
       let count;
       let nexturl;
       let Eintrag: Sitesstruktur;
+      let Liste: any[];
+      let IDListe: string[];
+      let Site: any;
 
        this.sitesrouter.get('/', async (req: Request, res: Response) => {
+
+         Valueliste = [];
+         Sitesliste = [];
+         Liste      = [];
+         IDListe    = [];
 
           const msalConfig = {
             auth: {
               clientId:     clientId,
               authority:    endpoint + '/' + tenantId,
-              clientSecret: Secret,
+              clientSecret: AppSecret,
             }
           };
 
@@ -68,7 +76,14 @@ class SitesrouterClass {
             scopes: ['https://graph.microsoft.com/.default'],
           };
 
-          token = await msalClient.acquireTokenByClientCredential(tokenRequest);
+          try {
+
+            token = await msalClient.acquireTokenByClientCredential(tokenRequest);
+          }
+          catch(error)  {
+
+            res.status(400).send(error);
+         }
 
           const graphClient = Client.init({
 
@@ -78,14 +93,12 @@ class SitesrouterClass {
             }
           });
 
+         let SiteID = 'baeeu.sharepoint.com,1b93d6ea-3f8b-4416-9ff1-a50aaba6f8ca,134790cc-e062-4882-ae5e-18813809cc87'; // Projekte Seite
+         let ListID = '1a2c3717-1f1d-42a3-9c91-bcce4731abce'; // Dokumente Liste
 
+         data = await graphClient.api('/sites/' + SiteID + '/drive/items/root/children').get();
 
-          // Filtertext = "startsWith(webUrl,'https://burnicklgroup.sharepoint.com/sites')";
-          // .filter(Filtertext)
-
-          data = await graphClient.api('/sites').get();
-
-         if(data['@odata.count']) count = data['@odata.count'];
+         // if(data['@odata.count']) count = data['@odata.count'];
 
          if(data.value) {
 
@@ -109,45 +122,88 @@ class SitesrouterClass {
 
          for(let i = 0; i < Valueliste.length; i++) {
 
-           let Liste = Valueliste[i];
+           Liste = Valueliste[i];
 
            for(let j = 0; j < Liste.length; j++) {
 
              Eintrag = Liste[j];
 
-             if(Eintrag.id) {
+             if(Eintrag.displayName === 'Projekte') {
 
-                if(Eintrag.id.indexOf('ea457111-b3f1-4c73-a8ae-cb1cbaf6d244') !== -1) {
+               if(IDListe.indexOf(Eintrag.id) === -1) {
 
-                  // debugger;
-               }
-             }
-             else {
-
-             }
-
-             if(Eintrag.displayName) {
-
-               if(Eintrag.displayName.indexOf('18-100') !== -1) {
-
-               }
-             }
-             else {
-
-               // debugger;
-             }
-
-             if(Eintrag.webUrl) {
-
-               if(Eintrag.webUrl.indexOf('https://burnicklgroup.sharepoint.com/sites') !== -1) {
-
+                 IDListe.push(Eintrag.id);
                  Sitesliste.push(Eintrag);
                }
              }
            }
          }
 
-         debugger;
+         if(Sitesliste.length > 0) {
+
+           Site = Sitesliste[0];
+           Valueliste = [];
+
+           console.log(Site);
+
+
+           try {
+
+             //  + ListID + '/items'
+
+            data = await graphClient.api('/me/drive'); // /sites/' + SiteID + '/drive'); // lists/' + ListID).get();
+           }
+           catch(error) {
+
+             debugger;
+           }
+
+
+           if(data.value) {
+
+             Valueliste.push(data.value);
+
+             if(data['@odata.nextLink']) {
+
+               do {
+
+                 nexturl = data['@odata.nextLink'];
+                 data    = await graphClient.api(nexturl).get();
+
+                 if(data.value) Valueliste.push(data.value);
+
+               }
+               while(data['@odata.nextLink']);
+
+               if(data.value) Valueliste.push(data.value);
+             }
+           }
+
+           for(let i = 0; i < Valueliste.length; i++) {
+
+             Liste = Valueliste[i];
+
+             for(let j = 0; j < Liste.length; j++) {
+
+               Eintrag = Liste[j];
+               Sitesliste.push(Eintrag);
+
+               /*
+               if(Eintrag.displayName === 'Projekte') {
+
+                 if(IDListe.indexOf(Eintrag.id) === -1) {
+
+                   IDListe.push(Eintrag.id);
+                 }
+               }
+
+                */
+             }
+           }
+         }
+
+
+
 
          res.status(200).send(Sitesliste);
 

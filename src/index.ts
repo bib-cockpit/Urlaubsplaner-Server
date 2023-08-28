@@ -89,7 +89,9 @@ let DBHost: string            = config.has('COSMOSDB_HOST')     ? config.get('CO
 let DBPort: string            = config.has('COSMOSDB_PORT')     ? config.get('COSMOSDB_PORT')         : 'nicht definiert';
 let Tenant_ID: string         = config.has('tenant_id')         ? config.get('tenant_id')             : 'nicht definiert';
 let Server_App_ID: string     = config.has('server_app_id')     ? config.get('server_app_id')         : 'nicht definiert';
+let Client_App_ID: string     = config.has('client_app_id')     ? config.get('client_app_id')         : 'nicht definiert';
 let Server_App_Secret: string = config.has('server_app_secret') ? config.get('server_app_secret')     : 'nicht definiert';
+let Client_App_Secret: string = config.has('client_app_secret') ? config.get('client_app_secret')     : 'nicht definiert';
 
 Config.Init(
   NODE_ENV,
@@ -102,7 +104,9 @@ Config.Init(
   DBPort,
   Tenant_ID,
   Server_App_ID,
-  Server_App_Secret
+  Server_App_Secret,
+  Client_App_ID,
+  Client_App_Secret
 );
 
 const version = 'v2.0';

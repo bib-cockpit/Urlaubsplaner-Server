@@ -13,7 +13,11 @@ interface IProjektpunktestruktur {
   Prioritaet:          string;
   Projektkey:          string;
   NotizenID:           string;
+  PlanungsmatrixID:       string;
+  AufgabenbereichID:      string;
+  AufgabenteilbereichID:  string;
   FestlegungskategorieID: string;
+  Matrixanwendung:     boolean;
   Listenposition:      number;
   Nummer:              string;
   Aufgabe:             string;
@@ -75,6 +79,9 @@ const Projektpunktshema = new mongoose.Schema({
   ProtokollID:            {type: String,  required: false},
   LOPListeID:             {type: String,  required: false},
   EmailID:                {type: String,  required: false},
+  PlanungsmatrixID:       {type: String,  required: false},
+  AufgabenbereichID:      {type: String,  required: false},
+  AufgabenteilbereichID:  {type: String,  required: false},
   Leistungsphase:         {type: String,  required: false},
   Prioritaet:             {type: String,  required: false},
   Projektkey:             {type: String,  required: false},
@@ -96,6 +103,7 @@ const Projektpunktshema = new mongoose.Schema({
   ProtokollOnly:          {type: Boolean, required: false, default: false},
   ProtokollPublic:        {type: Boolean, required: false, default: true},
   Meilenstein:            {type: Boolean, required: false, default: false},
+  Matrixanwendung:        {type: Boolean, required: false, default: true},
   Meilensteinstatus:      {type: String,  required: false},
   FileDownloadURL:        {type: String,  required: false},
   Filename:               {type: String,  required: false},

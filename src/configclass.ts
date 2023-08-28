@@ -13,7 +13,9 @@ export class ConfigClass {
   public PORT;
   public Statusmessage;
   public SERVER_APPLICATION_ID;
+  public CLIENT_APPLICATION_ID;
   public SERVER_APPLICATION_SECRET;
+  public CLIENT_APPLICATION_SECRET;
   public TENANT_ID;
   public MICROSOFT_LOGIN_ENDPOINT
 
@@ -52,7 +54,9 @@ export class ConfigClass {
               dbport: string,
               tenantid: string,
               server_app_id: string,
-              server_app_secret: string) {
+              server_app_secret: string,
+              client_app_id: string,
+              client_app_secret) {
 
     try {
 
@@ -70,6 +74,9 @@ export class ConfigClass {
 
       this.SERVER_APPLICATION_ID     = server_app_id;
       this.SERVER_APPLICATION_SECRET = server_app_secret;
+
+      this.CLIENT_APPLICATION_ID     = client_app_id;
+      this.CLIENT_APPLICATION_SECRET = client_app_secret;
     }
     catch (error) {
 

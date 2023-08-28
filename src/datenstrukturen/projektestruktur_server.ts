@@ -27,6 +27,16 @@ interface IProjektestruktur  {
   MitarbeiterIDListe:   string[];
   ProjektIsReal:        boolean;
 
+  DisplayKG410: boolean;
+  DisplayKG420: boolean;
+  DisplayKG430: boolean;
+  DisplayKG434: boolean;
+  DisplayKG440: boolean;
+  DisplayKG450: boolean;
+  DisplayKG460: boolean;
+  DisplayKG475: boolean;
+  DisplayKG480: boolean;
+
   TeamsID:          string;
   TeamsDescription: string;
   TeamsName:        string;
@@ -53,6 +63,17 @@ const Projekteshema = new mongoose.Schema({
   Ort:              {type: String,  required: false},
   Deleted:          {type: Boolean, required: false, default: false},
   ProjektIsReal:    {type: Boolean, required: false, default: true},
+
+  DisplayKG410:    {type: Boolean, required: false, default: false},
+  DisplayKG420:    {type: Boolean, required: false, default: false},
+  DisplayKG430:    {type: Boolean, required: false, default: false},
+  DisplayKG434:    {type: Boolean, required: false, default: false},
+  DisplayKG440:    {type: Boolean, required: false, default: false},
+  DisplayKG450:    {type: Boolean, required: false, default: false},
+  DisplayKG460:    {type: Boolean, required: false, default: false},
+  DisplayKG475:    {type: Boolean, required: false, default: false},
+  DisplayKG480:    {type: Boolean, required: false, default: false},
+
   Zeitstempel:      {type: Number, required: false},
   Zeitpunkt:        {type: String, required: false},
 
