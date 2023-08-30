@@ -10,6 +10,7 @@ interface IProjektpunktestruktur {
   ProtokollID:         string;
   LOPListeID:          string;
   EmailID:             string;
+  UrsprungID:          string;
   Prioritaet:          string;
   Projektkey:          string;
   NotizenID:           string;
@@ -79,6 +80,7 @@ const Projektpunktshema = new mongoose.Schema({
   ProtokollID:            {type: String,  required: false},
   LOPListeID:             {type: String,  required: false},
   EmailID:                {type: String,  required: false},
+  UrsprungID:             {type: String,  required: false},
   PlanungsmatrixID:       {type: String,  required: false},
   AufgabenbereichID:      {type: String,  required: false},
   AufgabenteilbereichID:  {type: String,  required: false},

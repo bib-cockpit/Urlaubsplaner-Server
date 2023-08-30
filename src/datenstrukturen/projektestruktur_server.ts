@@ -36,6 +36,8 @@ interface IProjektestruktur  {
   DisplayKG460: boolean;
   DisplayKG475: boolean;
   DisplayKG480: boolean;
+  DisplayBeschreibungen: boolean;
+  DisplayUngenutzte: boolean;
 
   TeamsID:          string;
   TeamsDescription: string;
@@ -73,6 +75,9 @@ const Projekteshema = new mongoose.Schema({
   DisplayKG460:    {type: Boolean, required: false, default: false},
   DisplayKG475:    {type: Boolean, required: false, default: false},
   DisplayKG480:    {type: Boolean, required: false, default: false},
+
+  DisplayBeschreibungen:    {type: Boolean, required: false, default: false},
+  DisplayUngenutzte:        {type: Boolean, required: false, default: false},
 
   Zeitstempel:      {type: Number, required: false},
   Zeitpunkt:        {type: String, required: false},
