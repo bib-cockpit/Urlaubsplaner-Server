@@ -48,6 +48,7 @@ import {EmailrouterClass} from "./routes/emailrouts";
 import {SendFestlegungenroutsClass} from "./routes/sendfestlegungenrouts";
 import {SaveFestlegungenroutsClass} from "./routes/savefestlegungenrouts";
 import {AddsubscriptionroutsClass} from "./routes/addsubscriptionrouts";
+import {NotizenkapitelroutsClass} from "./routes/notizenkapitelrouts";
 
 
 const app: Application = express();
@@ -75,6 +76,7 @@ const AddTeamsmembersrouter: AddTeamsmemberroutsClass = new AddTeamsmemberroutsC
 const Bautagebuchrouter: BautagebuchouterClass = new BautagebuchouterClass();
 const LOPListerouter: LOPListeroutsClass = new LOPListeroutsClass();
 const Emailrouter: EmailrouterClass = new EmailrouterClass();
+const Notizenkapitelroutes: NotizenkapitelroutsClass = new NotizenkapitelroutsClass();
 const SendFestlegungenrouts: SendFestlegungenroutsClass = new SendFestlegungenroutsClass();
 const SaveFestlegungenrouts: SaveFestlegungenroutsClass = new SaveFestlegungenroutsClass();
 const Addsubscriptionrouts: AddsubscriptionroutsClass = new AddsubscriptionroutsClass();
@@ -124,8 +126,6 @@ const options: IBearerStrategyOptionWithRequest =  {
   loggingNoPII: true, // true === no personal informtions like token is logged
   scope: ['database_access']
 };
-
-
 
 let Strategy = new BearerStrategy(options, function(token: ITokenPayload, done: VerifyCallback) {
 
@@ -190,6 +190,7 @@ Emailrouter.SetRoutes();
 SendFestlegungenrouts.SetRoutes();
 SaveFestlegungenrouts.SetRoutes();
 Addsubscriptionrouts.SetRoutes();
+Notizenkapitelroutes.SetRoutes();
 
 app.use('/',               Homerouter.homerouter);
 app.use('/.auth/login/aad/callback', Homerouter.homerouter);
@@ -215,6 +216,7 @@ app.use('/bautagebuch',    Bautagebuchrouter.bautagebuchouter);
 app.use('/lopliste',       LOPListerouter.loplisterouter);
 app.use('/email',          Emailrouter.emailrouter);
 app.use('/subscription',   Addsubscriptionrouts.subscriptionrouter);
+app.use('/notizenkapitel', Notizenkapitelroutes.notizenkapitelrouter);
 
 // eventcallback
 
