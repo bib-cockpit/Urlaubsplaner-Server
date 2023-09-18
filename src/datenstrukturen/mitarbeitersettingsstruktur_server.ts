@@ -19,6 +19,7 @@ interface IMitarbeitersettingsstruktur  {
   AufgabenShowGeschlossen:  boolean;
   AufgabenShowBearbeitung:  boolean;
   AufgabenShowRuecklauf:    boolean;
+  AufgabenShowBilder:       boolean;
   AufgabenShowMeilensteinOnly: boolean;
 
   AufgabenTerminfiltervariante:  string;
@@ -65,6 +66,7 @@ const Mitarbeitersettingsshema = new mongoose.Schema({
   AufgabenShowBearbeitung:     {type: Boolean, default: false},
   AufgabenShowRuecklauf:       {type: Boolean, default: false},
   AufgabenShowMeilensteinOnly: {type: Boolean, default: false},
+  AufgabenShowBilder:          {type: Boolean, default: false},
 
   Deleted:                  {type: Boolean, default: false},
   HeadermenueMaxFavoriten:  {type: Number,  default: 6},

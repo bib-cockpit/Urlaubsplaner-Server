@@ -1,6 +1,7 @@
 import {IVerfasserstruktur, Verfassershema} from "./verfasserstruktur_server";
 import {IProjektpunktanmerkungstruktur, Projektpunktanmerkungshema} from "./projektpunktanmerkungstruktur_server";
 import mongoose from "mongoose";
+import {IProjektpunktimagestruktur, Projektpunktimageshema} from "./projektpunktimagestruktur_server";
 
 interface IProjektpunktestruktur {
 
@@ -56,6 +57,7 @@ interface IProjektpunktestruktur {
   Fachbereich:         string;
   Deleted:             boolean;
   Leistungsphase:      string;
+  Bilderliste:         IProjektpunktimagestruktur[];
 
   Verfasser: IVerfasserstruktur;
 
@@ -128,6 +130,7 @@ const Projektpunktshema = new mongoose.Schema({
   Unterkostengruppe:      {type: Number,  required: false},
   ZustaendigeExternIDListe: [{type: String}],
   ZustaendigeInternIDListe: [{type: String}],
+  Bilderliste:              [Projektpunktimageshema],
   Deleted:                  {type: Boolean, required: false, default: false},
 });
 

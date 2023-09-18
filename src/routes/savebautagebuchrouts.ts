@@ -15,6 +15,7 @@ import moment, {Moment} from "moment";
 import {IProjektestruktur} from "../datenstrukturen/projektestruktur_server";
 import {IBautagebuchstruktur} from "../datenstrukturen/bautagebuchstruktur_server";
 import {Toolsclass} from "../toolsclass";
+import {Constclass} from "../constclass";
 
 export class SaveBautagebuchroutsClass {
 
@@ -23,6 +24,7 @@ export class SaveBautagebuchroutsClass {
   private Authentication: AuthenticationClass;
   private Config: ConfigClass;
   private Tools: Toolsclass;
+  private Const: Constclass;
 
   constructor() {
 
@@ -30,6 +32,7 @@ export class SaveBautagebuchroutsClass {
     this.savebautagebuchrouter = Router();
     this.Authentication        = new AuthenticationClass();
     this.Tools                 = new Toolsclass();
+    this.Const                 = new Constclass();
   }
 
   Init(config: ConfigClass) {
@@ -50,9 +53,9 @@ export class SaveBautagebuchroutsClass {
 
       let token;
       let tenantId   = this.Config.TENANT_ID;
-      let clientId   = this.Config.SERVER_APPLICATION_ID;
+      let clientId   = this.Config.CLIENT_APPLICATION_ID;
       let endpoint   = this.Config.MICROSOFT_LOGIN_ENDPOINT;
-      let Secret     = this.Config.SERVER_APPLICATION_SECRET;
+      let Secret     = this.Config.CLIENT_APPLICATION_SECRET;
       let putdata: any;
 
 
@@ -61,7 +64,6 @@ export class SaveBautagebuchroutsClass {
         console.log('Save Bautagebuch');
 
         const data: any   = req.body;
-        const TeamsID: string     = data.TeamsID;
         const DirectoryID: string = data.DirectoryID;
         const Filename: string    = data.Filename;
         const Bautagebuch: IBautagebuchstruktur = data.Bautagebuch;
@@ -325,7 +327,9 @@ export class SaveBautagebuchroutsClass {
           }
         });
 
-        let Url = '/groups/' + TeamsID + '/drive/items/' + DirectoryID + ':/' + Filename + ':/content';
+        // let Url = '/groups/' + TeamsID + '/drive/items/' + DirectoryID + ':/' + Filename + ':/content';
+        let Url = '/sites/' + this.Const.BAESiteID + '/drive/items/' + DirectoryID + ':/' + Filename + ':/content';
+
 
         try {
 
@@ -358,7 +362,7 @@ export class SaveBautagebuchroutsClass {
 
     return new Promise((resolve, reject) => {
 
-      fs.readFile('images/bi_logo.png', (error, buffer: Buffer) => {
+      fs.readFile('images/bae_logo.png', (error, buffer: Buffer) => {
 
         if(error) {
 

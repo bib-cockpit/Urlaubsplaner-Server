@@ -43,6 +43,7 @@ interface IProjektestruktur  {
   TeamsDescription: string;
   TeamsName:        string;
 
+  ProjektFolderID:       string;
   ProtokolleFolderID:    string;
   BautagebuchFolderID:   string;
   BaustellenLOPFolderID: string;
@@ -91,6 +92,7 @@ const Projekteshema = new mongoose.Schema({
   TeamsDescription: {type: String,  required: false},
   TeamsName:        {type: String,  required: false},
 
+  ProjektFolderID:       {type: String,  required: false},
   ProtokolleFolderID:    {type: String,  required: false},
   BautagebuchFolderID:   {type: String,  required: false},
   BaustellenLOPFolderID: {type: String,  required: false},

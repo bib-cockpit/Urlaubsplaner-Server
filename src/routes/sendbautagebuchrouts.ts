@@ -10,6 +10,7 @@ import {Sitesstruktur} from "../datenstrukturen/sitesstruktur_server";
 import {ConfigClass} from "../configclass";
 import {Mailmessagestruktur} from "../datenstrukturen/mailmessagestruktur";
 import {Toolsclass} from "../toolsclass";
+import {Constclass} from "../constclass";
 
 export class SendBautagebuchroutsClass {
 
@@ -19,6 +20,7 @@ export class SendBautagebuchroutsClass {
   private Authentication: AuthenticationClass;
   private Tools: Toolsclass;
   private Config: ConfigClass;
+  private Const: Constclass;
 
   constructor() {
 
@@ -27,6 +29,7 @@ export class SendBautagebuchroutsClass {
     this.sendbautagebuchrouter  = Router();
     this.Authentication         = new AuthenticationClass();
     this.Tools                  = new Toolsclass();
+    this.Const                  = new Constclass();
   }
 
   BufferToArray(buffer: Buffer) {
@@ -56,9 +59,9 @@ export class SendBautagebuchroutsClass {
 
       let token;
       let tenantId   = this.Config.TENANT_ID;
-      let clientId   = this.Config.SERVER_APPLICATION_ID;
+      let clientId   = this.Config.CLIENT_APPLICATION_ID;
       let endpoint   = this.Config.MICROSOFT_LOGIN_ENDPOINT;
-      let Secret     = this.Config.SERVER_APPLICATION_SECRET;
+      let Secret     = this.Config.CLIENT_APPLICATION_SECRET;
       let getdata: any;
       let chunk: any;
       let filebuffer;
@@ -79,7 +82,6 @@ export class SendBautagebuchroutsClass {
         const data: any   = req.body;
         const Betreff     = data.Betreff;
         const Nachricht   = data.Nachricht;
-        const TeamsID     = data.TeamsID;
         const FileID      = data.FileID;
         const Filename    = data.Filename;
         const UserID      = data.UserID;
@@ -122,7 +124,9 @@ export class SendBautagebuchroutsClass {
 
         // Datei laden aus Teams
 
-        let Url = '/groups/' + TeamsID + '/drive/items/' + FileID + '/content';
+        // let Url = '/groups/' + TeamsID + '/drive/items/' + FileID + '/content';
+        let Url = '/sites/' + this.Const.BAESiteID + '/drive/items/' + FileID + '/content';
+
 
         try {
 

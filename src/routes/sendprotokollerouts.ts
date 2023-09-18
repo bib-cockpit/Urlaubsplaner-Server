@@ -1,14 +1,12 @@
 import {Request, Response, Router} from 'express';
 import {DebugClass} from "../debug";
 import {AuthenticationClass} from "../middleware/authentication";
-import {IProtokollstruktur} from "../datenstrukturen/protokollstruktur_server";
 import {ProtokollDBClass} from "../database/protokolledbclass";
-import {Dir} from "fs";
 import {ConfidentialClientApplication} from "@azure/msal-node";
 import {Client} from "@microsoft/microsoft-graph-client";
-import {Sitesstruktur} from "../datenstrukturen/sitesstruktur_server";
 import {ConfigClass} from "../configclass";
 import {Mailmessagestruktur} from "../datenstrukturen/mailmessagestruktur";
+import {Constclass} from "../constclass";
 
 export class SendProtokolleroutsClass {
 
@@ -17,6 +15,8 @@ export class SendProtokolleroutsClass {
   private Database: ProtokollDBClass;
   private Authentication: AuthenticationClass;
   private Config: ConfigClass;
+  private Const: Constclass;
+
 
   constructor() {
 
@@ -24,6 +24,7 @@ export class SendProtokolleroutsClass {
     this.Database               = new ProtokollDBClass();
     this.sendprotokolllerouter  = Router();
     this.Authentication         = new AuthenticationClass();
+    this.Const                  = new Constclass();
   }
 
   BufferToArray(buffer: Buffer) {
@@ -53,9 +54,9 @@ export class SendProtokolleroutsClass {
 
       let token;
       let tenantId   = this.Config.TENANT_ID;
-      let clientId   = this.Config.SERVER_APPLICATION_ID;
+      let clientId   = this.Config.CLIENT_APPLICATION_ID;
       let endpoint   = this.Config.MICROSOFT_LOGIN_ENDPOINT;
-      let Secret     = this.Config.SERVER_APPLICATION_SECRET;
+      let Secret     = this.Config.CLIENT_APPLICATION_SECRET;
       let getdata: any;
       let chunk: any;
       let filebuffer;
@@ -76,7 +77,6 @@ export class SendProtokolleroutsClass {
         const data: any   = req.body;
         const Betreff     = data.Betreff;
         const Nachricht   = data.Nachricht;
-        const TeamsID     = data.TeamsID;
         const FileID      = data.FileID;
         const Filename    = data.Filename;
         const UserID      = data.UserID;
@@ -119,7 +119,10 @@ export class SendProtokolleroutsClass {
 
         // Datei laden aus Teams
 
-        let Url = '/groups/' + TeamsID + '/drive/items/' + FileID + '/content';
+        let Url = '/sites/' + this.Const.BAESiteID + '/drive/items/' + FileID + '/content';
+
+        // let Url = '/groups/' + TeamsID + '/drive/items/' + FileID + '/content';
+        // let Url = '/sites/' + this.Const.BAESiteID + '/drive/items/' + DirectoryID + ':/' + Filename + ':/content';
 
         try {
 

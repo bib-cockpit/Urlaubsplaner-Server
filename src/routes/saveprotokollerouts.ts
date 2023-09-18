@@ -10,9 +10,11 @@ import * as puppeteer from 'puppeteer';
 import * as fs from 'fs';
 import {IStandortestruktur} from "../datenstrukturen/standortestruktur_server";
 import {IMitarbeiterstruktur} from "../datenstrukturen/mitarbeiterstruktur_server";
-import * as Buffer from "buffer";
 import moment, {Moment} from "moment";
 import {IProjektestruktur} from "../datenstrukturen/projektestruktur_server";
+import {Constclass} from "../constclass";
+import {Thumbnailstruktur} from "../datenstrukturen/thumbnailstrucktur_server";
+import {Mailmessagestruktur} from "../datenstrukturen/mailmessagestruktur";
 
 export class SaveProtokolleroutsClass {
 
@@ -21,6 +23,7 @@ export class SaveProtokolleroutsClass {
   private Database: ProtokollDBClass;
   private Authentication: AuthenticationClass;
   private Config: ConfigClass;
+  private Const: Constclass;
 
   constructor() {
 
@@ -28,6 +31,7 @@ export class SaveProtokolleroutsClass {
     this.Database               = new ProtokollDBClass();
     this.saveprotokolllerouter = Router();
     this.Authentication         = new AuthenticationClass();
+    this.Const                  = new Constclass();
   }
 
   Init(config: ConfigClass) {
@@ -48,9 +52,9 @@ export class SaveProtokolleroutsClass {
 
       let token;
       let tenantId   = this.Config.TENANT_ID;
-      let clientId   = this.Config.SERVER_APPLICATION_ID;
+      let clientId   = this.Config.CLIENT_APPLICATION_ID;
       let endpoint   = this.Config.MICROSOFT_LOGIN_ENDPOINT;
-      let Secret     = this.Config.SERVER_APPLICATION_SECRET;
+      let Secret     = this.Config.CLIENT_APPLICATION_SECRET;
       let putdata: any;
 
 
@@ -59,7 +63,6 @@ export class SaveProtokolleroutsClass {
         console.log('Save Protokoll');
 
         const data: any   = req.body;
-        const TeamsID: string     = data.TeamsID;
         const DirectoryID: string = data.DirectoryID;
         const Filename: string    = data.Filename;
         const Protokoll: IProtokollstruktur = data.Protokoll;
@@ -67,10 +70,11 @@ export class SaveProtokolleroutsClass {
         const Mitarbeiter: IMitarbeiterstruktur = data.Mitarbeiter;
         const Projekt: IProjektestruktur = data.Projekt;
         const ShowMailinformations: boolean = data.ShowMailinformations;
-
-        const imageblob   = await this.ReadLogo();
-        const browser     = await puppeteer.launch();
-        const page        = await browser.newPage();
+        let Thumbnailiste: Thumbnailstruktur[][];
+        let Thumb: Thumbnailstruktur;
+        const logoimageblob = await this.ReadLogo();
+        const browser       = await puppeteer.launch();
+        const page          = await browser.newPage();
 
         let html = '';
         let Nummer: number;
@@ -78,6 +82,9 @@ export class SaveProtokolleroutsClass {
         let Footer: string;
         let Punkteindex: number;
         let SendeZeitpunkt: Moment;
+        let Index: number;
+        let Content: Blob;
+
 
         Header = '<div id="header-template" style="-webkit-print-color-adjust: exact; width: 100%; height: 24px; font-size:10px !important; background: #7b6a58 !important; color:white; padding-left:10px"></div>';
         Footer = '<div id="header-template" style="-webkit-print-color-adjust: exact; display: flex; align-items: center; justify-content: center; width: 100%; height: 24px; font-size:10px !important; background: #7b6a58 !important; color:white; padding-left:10px"><span class="pageNumber"></span> / <span class="totalPages"></span></div>';
@@ -100,7 +107,7 @@ export class SaveProtokolleroutsClass {
 
         html += '<table style="width: 100%; border-collapse: collapse;">';
         html += '<tr>';
-        html += '<td colspan="2" align="right"><img src="data:image/png;base64,' + imageblob + '" style="width: 198px; height: 68px"/></td>';
+        html += '<td colspan="2" align="right"><img src="data:image/png;base64,' + logoimageblob + '" style="width: 198px; height: 68px"/></td>';
         html += '</tr>';
         html += '<tr>';
         html += '<td style="width: 50%">';
@@ -177,8 +184,39 @@ export class SaveProtokolleroutsClass {
         html += '<td style="font-weight: bold; width: 70px; text-align: center;">Zuständig</td>';
         html += '</tr>';
 
-        Punkteindex = 0;
-        Nummer      = 1;
+        Punkteindex    = 0;
+        Nummer         = 1;
+        Index          = 0;
+        Thumbnailiste  = [];
+
+        for(let Eintrag of Protokoll.Projektpunkteliste) {
+
+          Thumbnailiste[Index] = [];
+
+          for(let Bild of Eintrag.Bilderliste) {
+
+            Thumb = await this.ReadThumbnailinfo(Bild.FileID, Bild.WebUrl);
+
+            Thumbnailiste[Index].push(Thumb);
+          }
+
+          Index++
+        }
+
+        Index = 0;
+
+        for(let Zeile of Thumbnailiste) {
+
+          for(let Thumbeintrag of Zeile) {
+
+            Content              = await this.ReadThumbnailcontent(Thumbeintrag);
+            let Imagebuffuer     = await Content.arrayBuffer(); // URL.createObjectURL(Content);
+            let Image            = Buffer.from(Imagebuffuer).toString('base64');
+            Thumbeintrag.Content = Image;
+          }
+        }
+
+        Index = 0;
 
         for(let Eintrag of Protokoll.Projektpunkteliste) {
 
@@ -198,8 +236,27 @@ export class SaveProtokolleroutsClass {
           html += '<tr>';
           html += '<td>'  + Eintrag.Aufgabe + '</td>';
           html += '</tr>';
-          html += '</table>'
+          html += '<tr>';
+          html += '<td>';
 
+            html += '<table>';
+            html += '<tr>';
+
+            for(let thumb of Thumbnailiste[Index]) {
+
+              html += '<td style="padding: 2px">';
+              html += '<a href="' + thumb.weburl + '">';
+              html += '<img src="data:image/png;base64,' + thumb.Content + '" style="width: 96px">';
+              html += '</a>';
+              html += '</td>';
+            }
+
+            html += '</tr>';
+            html += '</table>'
+
+          html += '</td>';
+          html += '</tr>';
+          html += '</table>'
           html += '</td>';
 
           html += '<td style="width:  70px; text-align: center;">';
@@ -239,6 +296,7 @@ export class SaveProtokolleroutsClass {
 
           Punkteindex++;
           Nummer++;
+          Index++;
         }
 
         html += '</table>';
@@ -318,7 +376,8 @@ export class SaveProtokolleroutsClass {
           }
         });
 
-        let Url = '/groups/' + TeamsID + '/drive/items/' + DirectoryID + ':/' + Filename + ':/content';
+        // let Url = '/groups/' + TeamsID + '/drive/items/' + DirectoryID + ':/' + Filename + ':/content';
+        let Url = '/sites/' + this.Const.BAESiteID + '/drive/items/' + DirectoryID + ':/' + Filename + ':/content';
 
         try {
 
@@ -347,11 +406,162 @@ export class SaveProtokolleroutsClass {
     }
   }
 
+  private async ReadThumbnailinfo(fileid: string, weburl: string): Promise<Thumbnailstruktur> {
+
+    try {
+
+      let tenantId   = this.Config.TENANT_ID;
+      let clientId   = this.Config.CLIENT_APPLICATION_ID;
+      let endpoint   = this.Config.MICROSOFT_LOGIN_ENDPOINT;
+      let Secret     = this.Config.CLIENT_APPLICATION_SECRET;
+      let getdata: any;
+      let chunk: any;
+      let filebuffer = [];
+      let filedata;
+      let graphClient;
+      let msalClient;
+      let tokenRequest;
+      let token;
+
+      const msalConfig = {
+        auth: {
+          clientId:     clientId,
+          authority:    endpoint + '/' + tenantId,
+          clientSecret: Secret,
+        }
+      };
+
+      msalClient = new ConfidentialClientApplication(msalConfig);
+
+      tokenRequest = {
+        scopes: ['https://graph.microsoft.com/.default'],
+      };
+
+      token = await msalClient.acquireTokenByClientCredential(tokenRequest);
+
+      graphClient = Client.init({
+
+        authProvider: done => {
+
+          done(null, token.accessToken);
+        }
+      });
+
+      let Url = '/sites/' + this.Const.BAESiteID + '/drive/items/' + fileid + '/thumbnails';
+
+      try {
+
+        getdata = await graphClient.api(Url).get();
+      }
+      catch(error: any) {
+
+        console.error('Bild konnte nicht geladen werden: ' + error.message);
+
+        return Promise.reject(null);
+      }
+
+      if(getdata) {
+
+        return {
+
+          Content:   '',
+          id:        getdata.value[0].id,
+          fileid:    fileid,
+          filename:  '',
+          weburl:    weburl,
+          mediumurl: getdata.value[0].medium.url,
+          largeurl:  getdata.value[0].large.url,
+          smallurl:  getdata.value[0].small.url,
+          height: {
+
+            small:  getdata.value[0].small.height,
+            medium: getdata.value[0].medium.height,
+            large:  getdata.value[0].medium.large,
+          },
+          width: {
+
+            small:  getdata.value[0].small.width,
+            medium: getdata.value[0].medium.width,
+            large:  getdata.value[0].large.width,
+          }
+        };
+      }
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error.message, error,  'SaveProtokolleroutsClass', 'ReadThumbnailinfo');
+    }
+  }
+
+  private async ReadThumbnailcontent(thumb: Thumbnailstruktur): Promise<any> {
+
+    try {
+
+      let tenantId   = this.Config.TENANT_ID;
+      let clientId   = this.Config.CLIENT_APPLICATION_ID;
+      let endpoint   = this.Config.MICROSOFT_LOGIN_ENDPOINT;
+      let Secret     = this.Config.CLIENT_APPLICATION_SECRET;
+      let getdata: Blob;
+      let chunk: any;
+      let filebuffer = [];
+      let filedata;
+      let graphClient;
+      let msalClient;
+      let tokenRequest;
+      let token;
+
+      const msalConfig = {
+        auth: {
+          clientId:     clientId,
+          authority:    endpoint + '/' + tenantId,
+          clientSecret: Secret,
+        }
+      };
+
+      msalClient = new ConfidentialClientApplication(msalConfig);
+
+      tokenRequest = {
+        scopes: ['https://graph.microsoft.com/.default'],
+      };
+
+      token = await msalClient.acquireTokenByClientCredential(tokenRequest);
+
+      graphClient = Client.init({
+
+        authProvider: done => {
+
+          done(null, token.accessToken);
+        }
+      });
+
+      let Url = '/sites/' + this.Const.BAESiteID + '/drive/items/' + thumb.fileid + '/thumbnails/0/small/content';
+
+      try {
+
+        getdata = await graphClient.api(Url).get();
+      }
+      catch(error: any) {
+
+        console.error('Bild konnte nicht geladen werden: ' + error.message);
+
+        return Promise.reject(null);
+      }
+
+      if(getdata) {
+
+        return Promise.resolve(getdata);
+      }
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error.message, error,  'SaveProtokolleroutsClass', 'ReadThumbnailcontent');
+    }
+  }
+
   private async ReadLogo(): Promise<any> {
 
     return new Promise((resolve, reject) => {
 
-      fs.readFile('images/bi_logo.png', (error, buffer: Buffer) => {
+      fs.readFile('images/bae_logo.png', (error, buffer: Buffer) => {
 
         if(error) {
 
