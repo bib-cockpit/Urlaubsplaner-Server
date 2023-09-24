@@ -71,6 +71,7 @@ interface IProjektpunktestruktur {
   ZustaendigeExternIDListe: string[];
   ZustaendigeInternIDListe: string[];
   Zustaendigkeitsliste?:    string[];
+  Bauteilname?: string;
 
   Kostengruppenname?: string;
 };

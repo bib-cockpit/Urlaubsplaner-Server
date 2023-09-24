@@ -47,6 +47,7 @@ interface IProjektestruktur  {
   ProtokolleFolderID:    string;
   BautagebuchFolderID:   string;
   BaustellenLOPFolderID: string;
+  LastLOPEintragnummer:   number;
 };
 
 const Projekteshema = new mongoose.Schema({
@@ -88,9 +89,10 @@ const Projekteshema = new mongoose.Schema({
   Bauteilliste:       [Bauteilshema],
   MitarbeiterIDListe: [{type: String}],
 
-  TeamsID:          {type: String,  required: false},
-  TeamsDescription: {type: String,  required: false},
-  TeamsName:        {type: String,  required: false},
+  LastLOPEintragnummer: {type: Number, required: false},
+  TeamsID:              {type: String,  required: false},
+  TeamsDescription:     {type: String,  required: false},
+  TeamsName:            {type: String,  required: false},
 
   ProjektFolderID:       {type: String,  required: false},
   ProtokolleFolderID:    {type: String,  required: false},

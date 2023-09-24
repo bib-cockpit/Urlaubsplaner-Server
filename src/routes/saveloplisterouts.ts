@@ -9,28 +9,31 @@ import {ConfigClass} from "../configclass";
 import * as puppeteer from 'puppeteer';
 import * as fs from 'fs';
 import {IStandortestruktur} from "../datenstrukturen/standortestruktur_server";
-import {IMitarbeiterstruktur} from "../datenstrukturen/mitarbeiterstruktur_server";
 import moment, {Moment} from "moment";
 import {IProjektestruktur} from "../datenstrukturen/projektestruktur_server";
+import {Toolsclass} from "../toolsclass";
 import {Constclass} from "../constclass";
+import {ILOPListestruktur} from "../datenstrukturen/loplistestruktur_server";
+import {IProjektpunktestruktur} from "../datenstrukturen/projektpunktestruktur_server";
 import {Thumbnailstruktur} from "../datenstrukturen/thumbnailstrucktur_server";
+import {IMitarbeiterstruktur} from "../datenstrukturen/mitarbeiterstruktur_server";
 
-export class SaveProtokolleroutsClass {
+export class SaveLOPListeroutsClass {
 
-  public  saveprotokolllerouter: any;
+  public  saveloplisterouter: any;
   private Debug: DebugClass;
-  private Database: ProtokollDBClass;
   private Authentication: AuthenticationClass;
   private Config: ConfigClass;
+  private Tools: Toolsclass;
   private Const: Constclass;
 
   constructor() {
 
-    this.Debug                  = new DebugClass();
-    this.Database               = new ProtokollDBClass();
-    this.saveprotokolllerouter = Router();
-    this.Authentication         = new AuthenticationClass();
-    this.Const                  = new Constclass();
+    this.Debug                 = new DebugClass();
+    this.saveloplisterouter    = Router();
+    this.Authentication        = new AuthenticationClass();
+    this.Tools                 = new Toolsclass();
+    this.Const                 = new Constclass();
   }
 
   Init(config: ConfigClass) {
@@ -41,7 +44,7 @@ export class SaveProtokolleroutsClass {
 
     } catch (error) {
 
-      this.Debug.ShowErrorMessage(error, 'SaveProtokolleroutsClass', 'Init', this.Debug.Typen.Class);
+      this.Debug.ShowErrorMessage(error, 'SaveLOPListeroutsClass', 'Init', this.Debug.Typen.Class);
     }
   }
 
@@ -57,33 +60,66 @@ export class SaveProtokolleroutsClass {
       let putdata: any;
 
 
-      this.saveprotokolllerouter.put('/', async (req: Request, res: Response) => {
+      this.saveloplisterouter.put('/', async (req: Request, res: Response) => {
 
-        console.log('Save Protokoll');
+        console.log('Save LOP Liste');
 
         const data: any   = req.body;
         const DirectoryID: string = data.DirectoryID;
         const Filename: string    = data.Filename;
-        const Protokoll: IProtokollstruktur = data.Protokoll;
+        const LOPListe: ILOPListestruktur = data.LOPListe;
         const Standort: IStandortestruktur = data.Standort;
         const Mitarbeiter: IMitarbeiterstruktur = data.Mitarbeiter;
         const Projekt: IProjektestruktur = data.Projekt;
         const ShowMailinformations: boolean = data.ShowMailinformations;
         let Thumbnailiste: Thumbnailstruktur[][];
         let Thumb: Thumbnailstruktur;
-        const logoimageblob = await this.ReadLogo();
-        const browser       = await puppeteer.launch();
-        const page          = await browser.newPage();
 
+        const imageblob   = await this.ReadLogo();
+        const browser     = await puppeteer.launch();
+        const page        = await browser.newPage();
+        let Index: number;
         let html = '';
+        let Content: Blob;
+        let Punkteindex: number;
         let Nummer: number;
         let Header: string;
         let Footer: string;
-        let Punkteindex: number;
         let SendeZeitpunkt: Moment;
-        let Index: number;
-        let Content: Blob;
+        let Zeitpunkt: Moment = moment(LOPListe.Zeitstempel).locale('de');
+        let KW: string = Zeitpunkt.isoWeeks().toString();
 
+        // Bilder
+
+        Index          = 0;
+        Thumbnailiste  = [];
+
+        for(let Eintrag of LOPListe.Projektpunkteliste) {
+
+          Thumbnailiste[Index] = [];
+
+          for(let Bild of Eintrag.Bilderliste) {
+
+            Thumb = await this.ReadThumbnailinfo(Bild.FileID, Bild.WebUrl);
+
+            Thumbnailiste[Index].push(Thumb);
+          }
+
+          Index++
+        }
+
+        Index = 0;
+
+        for(let Zeile of Thumbnailiste) {
+
+          for(let Thumbeintrag of Zeile) {
+
+            Content              = await this.ReadThumbnailcontent(Thumbeintrag);
+            let Imagebuffuer     = await Content.arrayBuffer(); // URL.createObjectURL(Content);
+            let Image            = Buffer.from(Imagebuffuer).toString('base64');
+            Thumbeintrag.Content = Image;
+          }
+        }
 
         Header = '<div id="header-template" style="-webkit-print-color-adjust: exact; width: 100%; height: 24px; font-size:10px !important; background: #7b6a58 !important; color:white; padding-left:10px"></div>';
         Footer = '<div id="header-template" style="-webkit-print-color-adjust: exact; display: flex; align-items: center; justify-content: center; width: 100%; height: 24px; font-size:10px !important; background: #7b6a58 !important; color:white; padding-left:10px"><span class="pageNumber"></span> / <span class="totalPages"></span></div>';
@@ -91,10 +127,10 @@ export class SaveProtokolleroutsClass {
         html += '<!DOCTYPE html>';
         html += '<html>';
         html += '<head>';
-        html += '<title>` + Protokoll.Titel + `</title>';
+        html += '<title>` + LOPListe.Titel + `</title>';
 
         html += '<style>';
-        html += 'body { font-family: tahoma; font-size: 14px; }';
+        html += 'body { font-family: tahoma; font-size: 10px; }';
         html += '.docinnertable { border:  1px solid #000000; border-collapse: collapse; }';
         html += '.docinnertable td { padding: 4px; border:  1px solid black; }';
         html += '.nobordersmalltable { border-collapse: collapse; }';
@@ -106,19 +142,19 @@ export class SaveProtokolleroutsClass {
 
         html += '<table style="width: 100%; border-collapse: collapse;">';
         html += '<tr>';
-        html += '<td colspan="2" align="right"><img src="data:image/png;base64,' + logoimageblob + '" style="width: 198px; height: 68px"/></td>';
+        html += '<td colspan="2" align="right"><img src="data:image/png;base64,' + imageblob + '" style="width: 198px; height: 68px"/></td>';
         html += '</tr>';
         html += '<tr>';
-        html += '<td style="width: 50%">';
+        html += '<td style="width: 50%" valign="top">';
 
-        // Protokoll Infos
+        // Bericht Infos
 
         html += '<table class="docinnertable">';
-        html += '<tr><td style="font-weight: bold">Thema</td><td>' + Protokoll.Titel + '</td></tr>';
-        html += '<tr><td style="font-weight: bold">Besprechungsort</td><td>' + Protokoll.Besprechungsort + '</td></tr>';
-        html += '<tr><td style="font-weight: bold">Datum</td><td>' + Protokoll.Zeitstring + '</td></tr>';
+        html += '<tr><td style="font-weight: bold">Berichtbezeichnung</td><td>' + LOPListe.Titel + '</td></tr>';
+        html += '<tr><td style="font-weight: bold">Berichtnummer</td><td>' + LOPListe.LOPListenummer + '</td></tr>';
+        html += '<tr><td style="font-weight: bold">Datum</td><td>' + LOPListe.Zeitstring + '</td></tr>';
+        html += '<tr><td style="font-weight: bold">Projektname</td><td>' + Projekt.Projektname + '</td></tr>';
         html += '<tr><td style="font-weight: bold">Projektnummer</td><td>' + Projekt.Projektnummer + '</td></tr>';
-        html += '<tr><td style="font-weight: bold">Protokollnummer</td><td>' + Protokoll.Protokollnummer + '</td></tr>';
         html += '</table>';
 
         html += '</td>';
@@ -149,10 +185,10 @@ export class SaveProtokolleroutsClass {
         html += '<td rowspan="2" style="width: 90px"><b>Teilnehmer</b></td>';
         html += '<td>';
 
-        for(let i = 0; i < Protokoll.ExterneTeilnehmerliste.length; i++) {
+        for(let i = 0; i < LOPListe.ExterneTeilnehmerliste.length; i++) {
 
-          html += Protokoll.ExterneTeilnehmerliste[i];
-          if(i < Protokoll.ExterneTeilnehmerliste.length - 1) html += ', ';
+          html += LOPListe.ExterneTeilnehmerliste[i];
+          if(i < LOPListe.ExterneTeilnehmerliste.length - 1) html += ', ';
         }
 
         html += '</td>';
@@ -160,10 +196,10 @@ export class SaveProtokolleroutsClass {
         html += '<tr>';
         html += '<td>';
 
-        for(let i = 0; i < Protokoll.InterneTeilnehmerliste.length; i++) {
+        for(let i = 0; i < LOPListe.InterneTeilnehmerliste.length; i++) {
 
-          html += Protokoll.InterneTeilnehmerliste[i];
-          if(i < Protokoll.InterneTeilnehmerliste.length - 1) html += ', ';
+          html += LOPListe.InterneTeilnehmerliste[i];
+          if(i <  LOPListe.InterneTeilnehmerliste.length - 1) html += ', ';
         }
 
         html += '</td>';
@@ -172,119 +208,125 @@ export class SaveProtokolleroutsClass {
 
         html += '<br><br>';
 
-        // Prtokollpunkte
+        // Info Punkte
 
-        html += '<table class="docinnertable" style="width: 100%">';
-        html += '<tr>';
-        html += '<td style="font-weight: bold; width: 30px">Nr.</td>';
-        html += '<td style="font-weight: bold; width: auto">Beschreibung</td>';
-        html += '<td style="font-weight: bold; width: 70px; text-align: center;">Termin</td>';
-        html += '<td style="font-weight: bold; width: 70px; text-align: center;">Status</td>';
-        html += '<td style="font-weight: bold; width: 70px; text-align: center;">Zuständig</td>';
-        html += '</tr>';
+        if(LOPListe.Infopunkteliste.length > 0) {
 
-        Punkteindex    = 0;
-        Nummer         = 1;
-        Index          = 0;
-        Thumbnailiste  = [];
+          html += '<table class="docinnertable" style="width: 100%">';
+          html += '<tr>';
+          html += '<td colspan="3" style="font-weight: bold; font-size: 120%; color: #307ac1;">Allgemein</td>';
+          html += '</tr>';
+          html += '<tr>';
+          html += '<td style="font-weight: bold; width: 20px; text-align: center">Nr.</td>';
+          html += '<td style="font-weight: bold; width: 60px; text-align: center">Datum</td>';
+          html += '<td style="font-weight: bold; width: auto">Beschreibung</td>';
+          html += '</tr>';
 
-        for(let Eintrag of Protokoll.Projektpunkteliste) {
-
-          Thumbnailiste[Index] = [];
-
-          for(let Bild of Eintrag.Bilderliste) {
-
-            Thumb = await this.ReadThumbnailinfo(Bild.FileID, Bild.WebUrl);
-
-            Thumbnailiste[Index].push(Thumb);
-          }
-
-          Index++
-        }
-
-        Index = 0;
-
-        for(let Zeile of Thumbnailiste) {
-
-          for(let Thumbeintrag of Zeile) {
-
-            Content              = await this.ReadThumbnailcontent(Thumbeintrag);
-            let Imagebuffuer     = await Content.arrayBuffer(); // URL.createObjectURL(Content);
-            let Image            = Buffer.from(Imagebuffuer).toString('base64');
-            Thumbeintrag.Content = Image;
-          }
-        }
-
-        Index = 0;
-
-        for(let Eintrag of Protokoll.Projektpunkteliste) {
-
-          html += '<tr valign="top">';
-          html += '<td style="width: 30px">'  + Nummer.toString() + '</td>';
-          html += '<td style="width: 400px">';
-
-          html += '<table class="nobordersmalltable">';
-
-          if(Protokoll.Kostengruppenliste[Punkteindex] !== 'none') {
+          for(let Info of LOPListe.Infopunkteliste) {
 
             html += '<tr>';
-            html += '<td style="color: #FF9333 !important; font-weight: bold;">' + Protokoll.Kostengruppenliste[Punkteindex] + '</td>';
+            html += '<td style=" background: #307ac1; color: white; text-align: center;">' + Info.Nummer + '</td>';
+            html += '<td style="text-align: center;">' + Info.Startzeitstring + '</td>';
+            html += '<td>' + Info.Aufgabe + '</td>';
             html += '</tr>';
           }
 
+          html += '</table>';
+        }
+
+        html += '<br><br>';
+
+        // Themnliste
+
+        html += '<table class="docinnertable" style="width: 100%">';
+        html += '<tr>';
+        html += '<td colspan="8" style="font-weight: bold; font-size: 120%; color: #307ac1;">Themenliste</td>';
+        html += '</tr>';
+        html += '<tr>';
+        html += '<td style="font-weight: bold; width: 20px; text-align: center">Nr.</td>';
+        html += '<td style="font-weight: bold; width: 60px; text-align: center">Datum</td>';
+        html += '<td style="font-weight: bold; width: 100px">Bauteil</td>';
+        html += '<td style="font-weight: bold; width: 100px">Thematik</td>';
+        html += '<td style="font-weight: bold; width: auto">Beschreibung</td>';
+        html += '<td style="font-weight: bold; width: 60px; text-align: center;">Termin</td>';
+        html += '<td style="font-weight: bold; width: 70px; text-align: center;">Status</td>';
+        html += '<td style="font-weight: bold; width: 70px; text-align: center;">Priorität</td>';
+        html += '<td style="font-weight: bold; width: 70px; text-align: center;">Zuständig</td>';
+        html += '</tr>';
+
+
+        Punkteindex = 0;
+
+        for(let Thema of LOPListe.Projektpunkteliste) {
+
           html += '<tr>';
-          html += '<td>'  + Eintrag.Aufgabe + '</td>';
+          html += '<td style="text-align: center;">' + Thema.Nummer + '</td>';
+          html += '<td style="text-align: center;">' + Thema.Startzeitstring + '</td>';
+          html += '<td>' + Thema.Bauteilname + '</td>';
+          html += '<td>' + Thema.Thematik + '</td>';
+          html += '<td>';
+
+          html += '<table class="nobordersmalltable">';
+
+          html += '<tr>';
+          html += '<td>'  + Thema.Aufgabe + '</td>';
           html += '</tr>';
           html += '<tr>';
           html += '<td>';
 
-            html += '<table>';
-            html += '<tr>';
+          html += '<table>';
+          html += '<tr>';
 
-            for(let thumb of Thumbnailiste[Index]) {
+          for(let thumb of Thumbnailiste[Punkteindex]) {
 
-              html += '<td style="padding: 2px">';
-              // html += '<a href="' + thumb.weburl + '">';
-              html += '<img src="data:image/png;base64,' + thumb.Content + '" style="width: 96px">';
-              // html += '</a>';
-              html += '</td>';
-            }
+            html += '<td style="padding: 2px">';
+            // html += '<a href="' + thumb.weburl + '">';
+            html += '<img src="data:image/png;base64,' + thumb.Content + '" style="width: 96px">';
+            // html += '</a>';
+            html += '</td>';
+          }
 
-            html += '</tr>';
-            html += '</table>'
+          html += '</tr>';
+          html += '</table>'
 
           html += '</td>';
           html += '</tr>';
           html += '</table>'
 
-          html += '</td>';
-
-          html += '<td style="width:  70px; text-align: center;">';
-
-          if(Eintrag.Status !== 'Festlegung' && Eintrag.Status !== 'Protokollpunkt') {
-
-            html += Eintrag.Endezeitstring;
-          }
 
           html += '</td>';
-          html += '<td style="width: 100px; text-align: center; color: white !important; background: ' + this.GetStatuscolor(Eintrag.Status) + ' !important;">'  + this.GetStatustext(Eintrag.Status) + '</td>';
-          html += '<td style="width:  70px; text-align: center;">';
+          html += '<td style="text-align: center;">' + Thema.Endezeitstring + '</td>';
+          html += '<td style="text-align: center; color: white !important; background: ' + this.GetStatuscolor(Thema.Status) + ' !important;">';
 
-          // Prtokollpunkte Zuständigkeiten
+          // Status
+
+          html += this.GetStatustext(Thema.Status);
+
+          html += '</td>';
+          html += '<td style="background: ' + this.GetPrioritaetcolor(Thema) + '; color: white; text-align: center;">';
+
+          // Priorität
+
+          html += Thema.Prioritaet;
+
+          html += '</td>';
+          html += '<td style="text-align: center">';
+
+          // Zuständig
 
           html += '<table class="nobordersmalltable" style="width: 100%">';
 
-          for(let Intern of Protokoll.InternZustaendigListe[Punkteindex]) {
+          for(let Intern of LOPListe.InternZustaendigListe[Punkteindex]) {
 
             html += '<tr><td style="text-align: center; font-size: 90%">' + Intern + '</td></tr>';
           }
 
-          if(Protokoll.ExternZustaendigListe[Punkteindex].length > 0) {
+          if(LOPListe.ExternZustaendigListe[Punkteindex].length > 0) {
 
             html += '<tr><td style="text-align: center; font-size: 110%; font-weight: bold">&bull;</td></tr>';
           }
 
-          for(let Extern of Protokoll.ExternZustaendigListe[Punkteindex]) {
+          for(let Extern of LOPListe.ExternZustaendigListe[Punkteindex]) {
 
             html += '<tr><td style="text-align: center; font-size: 90%">' + Extern + '</td></tr>';
           }
@@ -295,17 +337,17 @@ export class SaveProtokolleroutsClass {
           html += '</tr>';
 
           Punkteindex++;
-          Nummer++;
-          Index++;
         }
 
         html += '</table>';
 
+        // Versandinformationen
+
         if(ShowMailinformations === true) {
 
           SendeZeitpunkt = moment();
-          Protokoll.GesendetZeitstempel = SendeZeitpunkt.valueOf();
-          Protokoll.GesendetZeitstring  = SendeZeitpunkt.format('DD.MM.YYYY HH:mm');
+          LOPListe.GesendetZeitstempel = SendeZeitpunkt.valueOf();
+          LOPListe.GesendetZeitstring  = SendeZeitpunkt.format('DD.MM.YYYY HH:mm');
 
           html += '<br><br><br>';
 
@@ -317,24 +359,24 @@ export class SaveProtokolleroutsClass {
           html += '<tr>';
           html += '<td style="vertical-align: top">';
 
-          for(let i = 0; i < Protokoll.Empfaengerliste.length; i++) {
+          for(let i = 0; i < LOPListe.Empfaengerliste.length; i++) {
 
-            html += Protokoll.Empfaengerliste[i].Email;
-            if (i < Protokoll.Empfaengerliste.length - 1) html += '<br>';
+            html += LOPListe.Empfaengerliste[i].Email;
+            if (i < LOPListe.Empfaengerliste.length - 1) html += '<br>';
           }
 
           html += '</td>';
           html += '<td style="vertical-align: top">';
 
-          for(let i = 0; i < Protokoll.CcEmpfaengerliste.length; i++) {
+          for(let i = 0; i < LOPListe.CcEmpfaengerliste.length; i++) {
 
-            html += Protokoll.CcEmpfaengerliste[i].Email;
-            if (i < Protokoll.CcEmpfaengerliste.length - 1) html += '<br>';
+            html += LOPListe.CcEmpfaengerliste[i].Email;
+            if (i < LOPListe.CcEmpfaengerliste.length - 1) html += '<br>';
           }
 
           html += '</td>';
           html += '</tr>';
-          html += '<tr><td colspan="2">Gesendet: ' + Protokoll.GesendetZeitstring + '</td></tr>';
+          html += '<tr><td colspan="2">Gesendet: ' + LOPListe.GesendetZeitstring + '</td></tr>';
           html += '</table>';
 
           html += '</body>';
@@ -347,6 +389,7 @@ export class SaveProtokolleroutsClass {
           margin: { top: '50px', right: '30px', bottom: '50px', left: '30px' },
           printBackground: true,
           format: 'A4',
+          landscape: true,
           displayHeaderFooter: true,
           headerTemplate: Header,
           footerTemplate: Footer
@@ -379,14 +422,15 @@ export class SaveProtokolleroutsClass {
         // let Url = '/groups/' + TeamsID + '/drive/items/' + DirectoryID + ':/' + Filename + ':/content';
         let Url = '/sites/' + this.Const.BAESiteID + '/drive/items/' + DirectoryID + ':/' + Filename + ':/content';
 
+
         try {
 
           putdata = await graphClient.api(Url).put(pdf);
 
-          console.log('Protokoll ' + Filename + ' wurde erstellt.');
+          console.log('LOP Liste ' + Filename + ' wurde erstellt.');
 
-          putdata.GesendetZeitstempel = Protokoll.GesendetZeitstempel;
-          putdata.GesendetZeitstring  = Protokoll.GesendetZeitstring;
+          putdata.GesendetZeitstempel = LOPListe.GesendetZeitstempel;
+          putdata.GesendetZeitstring  = LOPListe.GesendetZeitstring;
 
           res.status(200).send(putdata);
         }
@@ -394,7 +438,7 @@ export class SaveProtokolleroutsClass {
 
           debugger;
 
-          console.error('Protokoll ' + Filename + ' erstellen fehlgeschlagen: ' + error.message);
+          console.error('LOP Liste ' + Filename + ' erstellen fehlgeschlagen: ' + error.message);
 
           res.status(error.statusCode).send({ Error: error.message });
         }
@@ -402,7 +446,120 @@ export class SaveProtokolleroutsClass {
 
     } catch (error) {
 
-      this.Debug.ShowErrorMessage(error.message, error,  'SaveProtokolleroutsClass', 'SetRoutes');
+      this.Debug.ShowErrorMessage(error.message, error,  'SaveLOPListeroutsClass', 'SetRoutes');
+    }
+  }
+
+  private async ReadLogo(): Promise<any> {
+
+    return new Promise((resolve, reject) => {
+
+      fs.readFile('images/bae_logo.png', (error, buffer: Buffer) => {
+
+        if(error) {
+
+          resolve(null);
+        }
+        else {
+
+          resolve( buffer.toString('base64'));
+        }
+      });
+    });
+  }
+
+  private GetStatustext(status): string {
+
+    switch (status) {
+
+      case 'Protokollpunkt':
+
+        return 'Info';
+
+        break;
+
+      case 'Ruecklauf':
+
+        return 'Rücklauf';
+
+        break;
+
+      default:
+
+        return status;
+
+        break;
+    }
+  }
+
+  GetPrioritaetcolor(punkt: IProjektpunktestruktur): string {
+
+      if(punkt !== null && punkt.Prioritaet !== null) {
+
+        if(punkt.Status === '"Protokollpunkt"') {
+
+          return 'none';
+        }
+        else {
+
+          switch (punkt.Prioritaet) {
+
+            case 'Niedrig':
+
+              return '#008000';
+
+              break;
+
+            case 'Mittel':
+
+              return 'orange';
+
+              break;
+
+            case 'Hoch':
+
+              return 'red';
+
+              break;
+          }
+        }
+      }
+      else return 'green';
+  }
+
+  private GetStatuscolor(status): string {
+
+    switch (status) {
+
+      case 'Offen':
+
+        return 'red';
+
+        break;
+
+      case 'Protokollpunkt':
+
+        return '#34495E';
+
+        break;
+
+      case 'Geschlossen':
+
+        return '#008000';
+
+        break;
+
+      case 'Ruecklauf':
+
+        return '#0020C2';
+
+        break;
+
+      case 'Festlegung':
+
+        return '#FF9333';
+
+        break;
     }
   }
 
@@ -489,7 +646,7 @@ export class SaveProtokolleroutsClass {
 
     } catch (error) {
 
-      this.Debug.ShowErrorMessage(error.message, error,  'SaveProtokolleroutsClass', 'ReadThumbnailinfo');
+      this.Debug.ShowErrorMessage(error.message, error,  'SaveLOPListeroutsClass', 'ReadThumbnailinfo');
     }
   }
 
@@ -553,85 +710,7 @@ export class SaveProtokolleroutsClass {
       }
     } catch (error) {
 
-      this.Debug.ShowErrorMessage(error.message, error,  'SaveProtokolleroutsClass', 'ReadThumbnailcontent');
-    }
-  }
-
-  private async ReadLogo(): Promise<any> {
-
-    return new Promise((resolve, reject) => {
-
-      fs.readFile('images/bae_logo.png', (error, buffer: Buffer) => {
-
-        if(error) {
-
-          resolve(null);
-        }
-        else {
-
-          resolve( buffer.toString('base64'));
-        }
-      });
-    });
-  }
-
-  private GetStatustext(status): string {
-
-    switch (status) {
-
-      case 'Protokollpunkt':
-
-        return 'Info';
-
-        break;
-
-      case 'Ruecklauf':
-
-        return 'Rücklauf';
-
-        break;
-
-      default:
-
-        return status;
-
-        break;
-    }
-  }
-
-  private GetStatuscolor(status): string {
-
-    switch (status) {
-
-      case 'Offen':
-
-        return '#008080';
-
-        break;
-
-      case 'Protokollpunkt':
-
-        return '#34495E';
-
-        break;
-
-      case 'Geschlossen':
-
-        return '#008000';
-
-        break;
-
-      case 'Ruecklauf':
-
-        return '#0020C2';
-
-        break;
-
-      case 'Festlegung':
-
-        return '#FF9333';
-
-        break;
+      this.Debug.ShowErrorMessage(error.message, error,  'SaveLOPListeroutsClass', 'ReadThumbnailcontent');
     }
   }
 }

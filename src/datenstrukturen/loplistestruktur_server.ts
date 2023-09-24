@@ -39,6 +39,7 @@ interface ILOPListestruktur  {
   Punkteanzahl?: number;
   Kostengruppenliste?: string[];
   Projektpunkteliste?: IProjektpunktestruktur[];
+  Infopunkteliste?: IProjektpunktestruktur[];
   ExternZustaendigListe?: string[][];
   InternZustaendigListe?: string[][];
   ExterneTeilnehmerliste?: string[];
@@ -79,6 +80,7 @@ const LOPListeshema = new mongoose.Schema({
   EmpfaengerExternIDListe:   {type: [String], required: false},
   EmpfaengerInternIDListe:   {type: [String], required: false},
   Filename:                  {type: String,   required: false},
+  FileID:                    {type: String,   required: false},
   GesendetZeitstempel:       {type: Number,   required: false},
   GesendetZeitstring:        {type: String,   required: false},
 });
