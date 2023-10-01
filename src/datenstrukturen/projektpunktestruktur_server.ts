@@ -12,6 +12,7 @@ interface IProjektpunktestruktur {
   LOPListeID:          string;
   EmailID:             string;
   UrsprungID:          string;
+  ProtokollShowBilder: boolean;
   Prioritaet:          string;
   Projektkey:          string;
   NotizenID:           string;
@@ -117,6 +118,7 @@ const Projektpunktshema = new mongoose.Schema({
   Bildhoehe:              {type: Number,  required: false, default: false},
   Querdarstellung:        {type: Boolean, required: false, default: false},
   OpenFestlegung:         {type: Boolean, required: false, default: false},
+  ProtokollShowBilder:    {type: Boolean, required: false, default: false},
   Anmerkungenliste:       [Projektpunktanmerkungshema],
   Fortschritt:            {type: Number,  required: false, default: false},
   Fachbereich:            {type: String,  required: false},

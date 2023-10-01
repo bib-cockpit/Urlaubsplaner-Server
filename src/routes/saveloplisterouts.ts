@@ -98,17 +98,18 @@ export class SaveLOPListeroutsClass {
 
           Thumbnailiste[Index] = [];
 
-          for(let Bild of Eintrag.Bilderliste) {
+          if(Eintrag.ProtokollShowBilder) {
 
-            Thumb = await this.ReadThumbnailinfo(Bild.FileID, Bild.WebUrl);
+            for(let Bild of Eintrag.Bilderliste) {
 
-            Thumbnailiste[Index].push(Thumb);
+              Thumb = await this.ReadThumbnailinfo(Bild.FileID, Bild.WebUrl);
+
+              if(Thumb !== null) Thumbnailiste[Index].push(Thumb);
+            }
           }
 
           Index++
         }
-
-        Index = 0;
 
         for(let Zeile of Thumbnailiste) {
 
@@ -614,8 +615,10 @@ export class SaveLOPListeroutsClass {
 
         console.error('Bild konnte nicht geladen werden: ' + error.message);
 
-        return Promise.reject(null);
+        return null;
       }
+
+
 
       if(getdata) {
 
