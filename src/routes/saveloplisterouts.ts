@@ -17,6 +17,7 @@ import {ILOPListestruktur} from "../datenstrukturen/loplistestruktur_server";
 import {IProjektpunktestruktur} from "../datenstrukturen/projektpunktestruktur_server";
 import {Thumbnailstruktur} from "../datenstrukturen/thumbnailstrucktur_server";
 import {IMitarbeiterstruktur} from "../datenstrukturen/mitarbeiterstruktur_server";
+import Jimp from "jimp";
 
 export class SaveLOPListeroutsClass {
 
@@ -72,13 +73,21 @@ export class SaveLOPListeroutsClass {
         const Mitarbeiter: IMitarbeiterstruktur = data.Mitarbeiter;
         const Projekt: IProjektestruktur = data.Projekt;
         const ShowMailinformations: boolean = data.ShowMailinformations;
-        let Thumbnailiste: Thumbnailstruktur[][];
         let Thumb: Thumbnailstruktur;
+        let Zeilenanzahlliste: number[];
+        let Anzahl: number;
+        let Spaltenanzahl: number;
+        let Thumbindex: number;
+        let Thumbnail: Thumbnailstruktur;
+        let Thumbnailliste: Thumbnailstruktur[][][];
+        let BigThumbnailliste: Thumbnailstruktur[];
+        let BigThumbnailnummern: string[];
+        let Thumbnailbreite: number;
+        let Thumbnailbreiteliste: number[];
 
         const imageblob   = await this.ReadLogo();
         const browser     = await puppeteer.launch();
         const page        = await browser.newPage();
-        let Index: number;
         let html = '';
         let Content: Blob;
         let Punkteindex: number;
@@ -91,25 +100,109 @@ export class SaveLOPListeroutsClass {
 
         // Bilder
 
-        Index          = 0;
-        Thumbnailiste  = [];
+        Punkteindex          = 0;
+        Nummer               = 1;
+        Thumbnailliste       = [];
+        Zeilenanzahlliste    = [];
+        Thumbnailbreiteliste = [];
+        BigThumbnailnummern  = [];
+        BigThumbnailliste    = [];
 
         for(let Eintrag of LOPListe.Projektpunkteliste) {
 
-          Thumbnailiste[Index] = [];
+          Thumbnailliste[Punkteindex] = [];
+
+          switch (Eintrag.Thumbnailsize) {
+
+            case 'small':
+
+              Spaltenanzahl   = 4;
+              Thumbnailbreite = 100;
+
+              break;
+            case 'medium':
+
+              Spaltenanzahl   = 2;
+              Thumbnailbreite = 200;
+
+              break;
+
+            case 'large':
+
+              Spaltenanzahl   = 1;
+              Thumbnailbreite = 400;
+
+              break;
+          }
+
+          Thumbnailbreiteliste[Punkteindex] = Thumbnailbreite;
 
           if(Eintrag.ProtokollShowBilder) {
 
-            for(let Bild of Eintrag.Bilderliste) {
+            Anzahl                         = Eintrag.Bilderliste.length;
+            Zeilenanzahlliste[Punkteindex] = Math.ceil(Anzahl / Spaltenanzahl);
+            Thumbindex                     = 0;
+            Thumbnailliste[Punkteindex]    = [];
 
-              Thumb = await this.ReadThumbnailinfo(Bild.FileID, Bild.WebUrl);
+            for(let Zeilenindex = 0; Zeilenindex < Zeilenanzahlliste[Punkteindex]; Zeilenindex++) {
 
-              if(Thumb !== null) Thumbnailiste[Index].push(Thumb);
+              Thumbnailliste[Punkteindex][Zeilenindex] = [];
+
+              for(let Spaltenindex = 0; Spaltenindex < Spaltenanzahl; Spaltenindex++) {
+
+                if(Eintrag.Bilderliste[Thumbindex]) {
+
+                  Thumbnail        = this.GetEmptyThumbnail();
+                  Thumbnail.id     = Eintrag.Bilderliste[Thumbindex].FileID;
+                  Thumbnail.weburl = Eintrag.Bilderliste[Thumbindex].WebUrl;
+                  Thumb            = await this.ReadThumbnailinfo(Eintrag.Bilderliste[Thumbindex].FileID, Eintrag.Bilderliste[Thumbindex].WebUrl);
+
+                  if(Thumb !== null) {
+
+                    Thumbnail.fileid        = Thumb.fileid;
+                    Thumbnail.smallurl      = Thumb.smallurl;
+                    Thumbnail.mediumurl     = Thumb.mediumurl;
+                    Thumbnail.largeurl      = Thumb.largeurl;
+                    Thumbnail.height.large  = Thumb.height.large;
+                    Thumbnail.height.medium = Thumb.height.medium;
+                    Thumbnail.height.small  = Thumb.height.small;
+                    Thumbnail.width.large   = Thumb.width.large;
+                    Thumbnail.width.medium  = Thumb.width.medium;
+                    Thumbnail.width.small   = Thumb.width.small;
+
+                    Content              = await this.ReadThumbnailcontent(Thumbnail, Eintrag.Thumbnailsize);
+                    let Imagebuffuer     = await Content.arrayBuffer();
+                    let Image            = Buffer.from(Imagebuffuer).toString('base64');
+                    Thumbnail.Content    = Image;
+                  }
+                  else {
+
+                    Thumbnail.weburl = null;
+                  }
+
+                  if(Eintrag.Thumbnailsize !== 'large') Thumbnailliste[Punkteindex][Zeilenindex][Spaltenindex] = Thumbnail;
+                  else {
+
+                    Thumbnailliste[Punkteindex][Zeilenindex][Spaltenindex] = null;
+
+                    BigThumbnailliste.push(Thumbnail);
+                    BigThumbnailnummern.push(Eintrag.Nummer);
+                  }
+                }
+                else {
+
+                  Thumbnailliste[Punkteindex][Zeilenindex][Spaltenindex] = null;
+                }
+
+                Thumbindex++;
+              }
             }
           }
 
-          Index++
+          Punkteindex++
         }
+
+        /*
 
         for(let Zeile of Thumbnailiste) {
 
@@ -121,6 +214,8 @@ export class SaveLOPListeroutsClass {
             Thumbeintrag.Content = Image;
           }
         }
+
+         */
 
         Header = '<div id="header-template" style="-webkit-print-color-adjust: exact; width: 100%; height: 24px; font-size:10px !important; background: #7b6a58 !important; color:white; padding-left:10px"></div>';
         Footer = '<div id="header-template" style="-webkit-print-color-adjust: exact; display: flex; align-items: center; justify-content: center; width: 100%; height: 24px; font-size:10px !important; background: #7b6a58 !important; color:white; padding-left:10px"><span class="pageNumber"></span> / <span class="totalPages"></span></div>';
@@ -136,10 +231,14 @@ export class SaveLOPListeroutsClass {
         html += '.docinnertable td { padding: 4px; border:  1px solid black; }';
         html += '.nobordersmalltable { border-collapse: collapse; }';
         html += '.nobordersmalltable td { padding: 0px; border: none; }';
+        html += '@media print { .pagebreak { page-break-before: always; padding: 4px;  } }';
+        html += '@media print { .pagebreakafter { page-break-after: always;  } }';
         html += '</style>';
 
         html += '</head>';
         html += '<body>';
+
+        html += '<div class="pagebreakafter">';
 
         html += '<table style="width: 100%; border-collapse: collapse;">';
         html += '<tr>';
@@ -209,7 +308,49 @@ export class SaveLOPListeroutsClass {
 
         html += '<br><br>';
 
+        // Versandinformationen
+
+        if(ShowMailinformations === true) {
+
+          SendeZeitpunkt = moment();
+          LOPListe.GesendetZeitstempel = SendeZeitpunkt.valueOf();
+          LOPListe.GesendetZeitstring  = SendeZeitpunkt.format('DD.MM.YYYY HH:mm');
+
+          html += '<br><br>';
+
+          html += '<table class="docinnertable" style="width: 100%">';
+          html += '<tr>';
+          html += '<td style="font-weight: bold; width: 50%">Empfänger</td>';
+          html += '<td style="font-weight: bold; width: 50%">Kopienempfänger</td>';
+          html += '</tr>';
+          html += '<tr>';
+          html += '<td style="vertical-align: top">';
+
+          for(let i = 0; i < LOPListe.Empfaengerliste.length; i++) {
+
+            html += LOPListe.Empfaengerliste[i].Email;
+            if (i < LOPListe.Empfaengerliste.length - 1) html += '<br>';
+          }
+
+          html += '</td>';
+          html += '<td style="vertical-align: top">';
+
+          for(let i = 0; i < LOPListe.CcEmpfaengerliste.length; i++) {
+
+            html += LOPListe.CcEmpfaengerliste[i].Email;
+            if (i < LOPListe.CcEmpfaengerliste.length - 1) html += '<br>';
+          }
+
+          html += '</td>';
+          html += '</tr>';
+          html += '<tr><td colspan="2">Gesendet: ' + LOPListe.GesendetZeitstring + '</td></tr>';
+          html += '</table>';
+
+          html += '</div>';
+
         // Info Punkte
+
+        html += '<br><br>';
 
         if(LOPListe.Infopunkteliste.length > 0) {
 
@@ -275,19 +416,32 @@ export class SaveLOPListeroutsClass {
           html += '<tr>';
           html += '<td>';
 
-          html += '<table>';
-          html += '<tr>';
+          if(Thema.ProtokollShowBilder && Thema.Bilderliste.length > 0 && Thema.Thumbnailsize === 'large') {
 
-          for(let thumb of Thumbnailiste[Punkteindex]) {
-
-            html += '<td style="padding: 2px">';
-            // html += '<a href="' + thumb.weburl + '">';
-            html += '<img src="data:image/png;base64,' + thumb.Content + '" style="width: 96px">';
-            // html += '</a>';
-            html += '</td>';
+            html += '<span style="color: #307ac1">Siehe Bilder im Anhang</span>';
           }
 
-          html += '</tr>';
+          html += '<table>';
+
+          for(let Zeile of Thumbnailliste[Punkteindex]) {
+
+            html += '<tr>';
+
+            for(let Thumbeintrag of Zeile) {
+
+              html += '<td>';
+
+              if(Thumbeintrag !== null && Thumbeintrag.weburl !== null) {
+
+                html += '<img src="data:image/png;base64,' + Thumbeintrag.Content + '" style="width: ' + Thumbnailbreiteliste[Punkteindex] + 'px">';
+              }
+
+              html += '</td>';
+            }
+
+            html += '</tr>';
+          }
+
           html += '</table>'
 
           html += '</td>';
@@ -342,49 +496,72 @@ export class SaveLOPListeroutsClass {
 
         html += '</table>';
 
-        // Versandinformationen
 
-        if(ShowMailinformations === true) {
 
-          SendeZeitpunkt = moment();
-          LOPListe.GesendetZeitstempel = SendeZeitpunkt.valueOf();
-          LOPListe.GesendetZeitstring  = SendeZeitpunkt.format('DD.MM.YYYY HH:mm');
+          // Bilder im Anhang
 
-          html += '<br><br><br>';
+          Punkteindex = 0;
 
-          html += '<table class="docinnertable" style="width: 100%">';
-          html += '<tr>';
-          html += '<td style="font-weight: bold; width: 50%">Empfänger</td>';
-          html += '<td style="font-weight: bold; width: 50%">Kopienempfänger</td>';
-          html += '</tr>';
-          html += '<tr>';
-          html += '<td style="vertical-align: top">';
+          for(let BigThumb of BigThumbnailliste) {
 
-          for(let i = 0; i < LOPListe.Empfaengerliste.length; i++) {
+            if(BigThumb.height.small > BigThumb.width.small) {
 
-            html += LOPListe.Empfaengerliste[i].Email;
-            if (i < LOPListe.Empfaengerliste.length - 1) html += '<br>';
+              const buf   = Buffer.from(BigThumb.Content, 'base64');
+              const image = await Jimp.read(buf);
+
+              image.rotate(90).getBase64(Jimp.MIME_JPEG, (err, src) => {
+
+                BigThumb.Content = src;
+
+                html += '<div class="pagebreak">';
+
+                html += '<table class="docinnertable" style="width: 100%">';
+                html += '<tr>';
+                html += '<td style="width: 40px; text-align: center"><b>Nr.</b></td>';
+                html += '<td style="width: auto;"><b>Abbildung</b></td>';
+                html += '<tr>';
+                html += '<td align="center">' + BigThumbnailnummern[Punkteindex] + '</td>';
+                html += '<td>';
+                html += '<img src="' + BigThumb.Content + '" style="height: 640px;">';
+                html += '</td>';
+                html += '</tr>';
+                html += '</table>';
+
+                html += '</div>';
+
+                Punkteindex++;
+
+              });
+            }
+            else {
+
+              html += '<div class="pagebreak">';
+
+              html += '<table class="docinnertable" style="width: 100%">';
+              html += '<tr>';
+              html += '<td style="width: 40px; text-align: center"><b>Nr.</b></td>';
+              html += '<td style="width: auto;"><b>Abbildung</b></td>';
+              html += '<tr>';
+              html += '<td align="center">' + BigThumbnailnummern[Punkteindex] + '</td>';
+              html += '<td>';
+              html += '<img src="data:image/png;base64,' + BigThumb.Content + '" style="height: 640px;">';
+              html += '</td>';
+              html += '</tr>';
+              html += '</table>';
+
+              html += '</div>';
+
+              Punkteindex++;
+            }
           }
 
-          html += '</td>';
-          html += '<td style="vertical-align: top">';
-
-          for(let i = 0; i < LOPListe.CcEmpfaengerliste.length; i++) {
-
-            html += LOPListe.CcEmpfaengerliste[i].Email;
-            if (i < LOPListe.CcEmpfaengerliste.length - 1) html += '<br>';
-          }
-
-          html += '</td>';
-          html += '</tr>';
-          html += '<tr><td colspan="2">Gesendet: ' + LOPListe.GesendetZeitstring + '</td></tr>';
-          html += '</table>';
 
           html += '</body>';
           html += '</html>';
         }
 
         await page.setContent(html, { waitUntil: 'domcontentloaded' });
+
 
         const pdf = await page.pdf({
           margin: { top: '50px', right: '30px', bottom: '50px', left: '30px' },
@@ -653,7 +830,7 @@ export class SaveLOPListeroutsClass {
     }
   }
 
-  private async ReadThumbnailcontent(thumb: Thumbnailstruktur): Promise<any> {
+  private async ReadThumbnailcontent(thumb: Thumbnailstruktur, size: string): Promise<any> {
 
     try {
 
@@ -694,7 +871,7 @@ export class SaveLOPListeroutsClass {
         }
       });
 
-      let Url = '/sites/' + this.Const.BAESiteID + '/drive/items/' + thumb.fileid + '/thumbnails/0/small/content';
+      let Url = '/sites/' + this.Const.BAESiteID + '/drive/items/' + thumb.fileid + '/thumbnails/0/' + size + '/content';
 
       try {
 
@@ -715,6 +892,22 @@ export class SaveLOPListeroutsClass {
 
       this.Debug.ShowErrorMessage(error.message, error,  'SaveLOPListeroutsClass', 'ReadThumbnailcontent');
     }
+  }
+
+  private GetEmptyThumbnail(): Thumbnailstruktur {
+
+    return {
+      Content: "",
+      fileid: "",
+      filename: "",
+      height: {large: 0, medium: 0, small: 0},
+      id: "",
+      largeurl: "",
+      mediumurl: "",
+      smallurl: "",
+      weburl: "",
+      width: {large: 0, medium: 0, small: 0}
+    };
   }
 }
 

@@ -69,7 +69,8 @@ export class SaveProtokolleroutsClass {
         const Mitarbeiter: IMitarbeiterstruktur = data.Mitarbeiter;
         const Projekt: IProjektestruktur = data.Projekt;
         const ShowMailinformations: boolean = data.ShowMailinformations;
-        let Thumbnailiste: Thumbnailstruktur[][];
+        let Thumbnailliste: Thumbnailstruktur[][][];
+        let Thumbnailbreite: number;
         let Thumb: Thumbnailstruktur;
         const logoimageblob = await this.ReadLogo();
         const browser       = await puppeteer.launch();
@@ -81,9 +82,13 @@ export class SaveProtokolleroutsClass {
         let Footer: string;
         let Punkteindex: number;
         let SendeZeitpunkt: Moment;
-        let Index: number;
         let Content: Blob;
-
+        let Zeilenanzahlliste: number[];
+        let Anzahl: number;
+        let Spaltenanzahl: number;
+        let Thumbindex: number;
+        let Thumbnail: Thumbnailstruktur;
+        let Thumbnailbreiteliste: number[];
 
         Header = '<div id="header-template" style="-webkit-print-color-adjust: exact; width: 100%; height: 24px; font-size:10px !important; background: #7b6a58 !important; color:white; padding-left:10px"></div>';
         Footer = '<div id="header-template" style="-webkit-print-color-adjust: exact; display: flex; align-items: center; justify-content: center; width: 100%; height: 24px; font-size:10px !important; background: #7b6a58 !important; color:white; padding-left:10px"><span class="pageNumber"></span> / <span class="totalPages"></span></div>';
@@ -183,40 +188,94 @@ export class SaveProtokolleroutsClass {
         html += '<td style="font-weight: bold; width: 70px; text-align: center;">Zuständig</td>';
         html += '</tr>';
 
-        Punkteindex    = 0;
-        Nummer         = 1;
-        Index          = 0;
-        Thumbnailiste  = [];
+        Punkteindex          = 0;
+        Nummer               = 1;
+        Thumbnailliste       = [];
+        Zeilenanzahlliste    = [];
+        Thumbnailbreiteliste = [];
 
         for(let Eintrag of Protokoll.Projektpunkteliste) {
 
-          Thumbnailiste[Index] = [];
+          Thumbnailliste[Punkteindex] = [];
+
+          switch (Eintrag.Thumbnailsize) {
+
+            case 'small':
+
+              Spaltenanzahl   = 4;
+              Thumbnailbreite = 100;
+
+              break;
+            case 'medium':
+
+              Spaltenanzahl   = 2;
+              Thumbnailbreite = 200;
+
+              break;
+
+            case 'large':
+
+              Spaltenanzahl   = 1;
+              Thumbnailbreite = 400;
+
+              break;
+          }
+
+          Thumbnailbreiteliste[Punkteindex] = Thumbnailbreite;
 
           if(Eintrag.ProtokollShowBilder) {
 
-            for(let Bild of Eintrag.Bilderliste) {
+            Anzahl                         = Eintrag.Bilderliste.length;
+            Zeilenanzahlliste[Punkteindex] = Math.ceil(Anzahl / Spaltenanzahl);
+            Thumbindex                     = 0;
+            Thumbnailliste[Punkteindex]    = [];
 
-              Thumb = await this.ReadThumbnailinfo(Bild.FileID, Bild.WebUrl);
+            for(let Zeilenindex = 0; Zeilenindex < Zeilenanzahlliste[Punkteindex]; Zeilenindex++) {
 
-              if(Thumb !== null) Thumbnailiste[Index].push(Thumb);
+              Thumbnailliste[Punkteindex][Zeilenindex] = [];
+
+              for(let Spaltenindex = 0; Spaltenindex < Spaltenanzahl; Spaltenindex++) {
+
+                if(Eintrag.Bilderliste[Thumbindex]) {
+
+                  Thumbnail        = this.GetEmptyThumbnail();
+                  Thumbnail.id     = Eintrag.Bilderliste[Thumbindex].FileID;
+                  Thumbnail.weburl = Eintrag.Bilderliste[Thumbindex].WebUrl;
+                  Thumb            = await this.ReadThumbnailinfo(Eintrag.Bilderliste[Thumbindex].FileID, Eintrag.Bilderliste[Thumbindex].WebUrl);
+
+                  if(Thumb !== null) {
+
+                    Thumbnail.fileid    = Thumb.fileid;
+                    Thumbnail.smallurl  = Thumb.smallurl;
+                    Thumbnail.mediumurl = Thumb.mediumurl;
+                    Thumbnail.largeurl  = Thumb.largeurl;
+
+                    Content              = await this.ReadThumbnailcontent(Thumbnail, Eintrag.Thumbnailsize);
+                    let Imagebuffuer     = await Content.arrayBuffer(); // URL.createObjectURL(Content);
+                    let Image            = Buffer.from(Imagebuffuer).toString('base64');
+                    Thumbnail.Content    = Image;
+                  }
+                  else {
+
+                    Thumbnail.weburl = null;
+                  }
+
+                  Thumbnailliste[Punkteindex][Zeilenindex][Spaltenindex] = Thumbnail;
+                }
+                else {
+
+                  Thumbnailliste[Punkteindex][Zeilenindex][Spaltenindex] = null;
+                }
+
+                Thumbindex++;
+              }
             }
           }
 
-          Index++
+          Punkteindex++
         }
 
-        for(let Zeile of Thumbnailiste) {
-
-          for(let Thumbeintrag of Zeile) {
-
-            Content              = await this.ReadThumbnailcontent(Thumbeintrag);
-            let Imagebuffuer     = await Content.arrayBuffer(); // URL.createObjectURL(Content);
-            let Image            = Buffer.from(Imagebuffuer).toString('base64');
-            Thumbeintrag.Content = Image;
-          }
-        }
-
-        Index = 0;
+        Punkteindex = 0;
 
         for(let Eintrag of Protokoll.Projektpunkteliste) {
 
@@ -239,20 +298,28 @@ export class SaveProtokolleroutsClass {
           html += '<tr>';
           html += '<td>';
 
-            html += '<table>';
+          html += '<table>';
+
+          for(let Zeile of Thumbnailliste[Punkteindex]) {
+
             html += '<tr>';
 
-            for(let thumb of Thumbnailiste[Index]) {
+            for(let Thumbeintrag of Zeile) {
 
-              html += '<td style="padding: 2px">';
-              // html += '<a href="' + thumb.weburl + '">';
-              html += '<img src="data:image/png;base64,' + thumb.Content + '" style="width: 96px">';
-              // html += '</a>';
+              html += '<td>';
+
+              if(Thumbeintrag !== null && Thumbeintrag.weburl !== null) {
+
+                html += '<img src="data:image/png;base64,' + Thumbeintrag.Content + '" style="width: ' + Thumbnailbreiteliste[Punkteindex] + 'px">';
+              }
+
               html += '</td>';
             }
 
             html += '</tr>';
-            html += '</table>'
+          }
+
+          html += '</table>'
 
           html += '</td>';
           html += '</tr>';
@@ -297,7 +364,6 @@ export class SaveProtokolleroutsClass {
 
           Punkteindex++;
           Nummer++;
-          Index++;
         }
 
         html += '</table>';
@@ -494,7 +560,23 @@ export class SaveProtokolleroutsClass {
     }
   }
 
-  private async ReadThumbnailcontent(thumb: Thumbnailstruktur): Promise<any> {
+  private GetEmptyThumbnail(): Thumbnailstruktur {
+
+    return {
+      Content: "",
+      fileid: "",
+      filename: "",
+      height: {large: 0, medium: 0, small: 0},
+      id: "",
+      largeurl: "",
+      mediumurl: "",
+      smallurl: "",
+      weburl: "",
+      width: {large: 0, medium: 0, small: 0}
+    };
+  }
+
+  private async ReadThumbnailcontent(thumb: Thumbnailstruktur, size: string): Promise<any> {
 
     try {
 
@@ -535,7 +617,7 @@ export class SaveProtokolleroutsClass {
         }
       });
 
-      let Url = '/sites/' + this.Const.BAESiteID + '/drive/items/' + thumb.fileid + '/thumbnails/0/small/content';
+      let Url = '/sites/' + this.Const.BAESiteID + '/drive/items/' + thumb.fileid + '/thumbnails/0/' + size + '/content';
 
       try {
 

@@ -59,6 +59,7 @@ interface IProjektpunktestruktur {
   Deleted:             boolean;
   Leistungsphase:      string;
   Bilderliste:         IProjektpunktimagestruktur[];
+  Thumbnailsize:       string;
 
   Verfasser: IVerfasserstruktur;
 
@@ -126,6 +127,7 @@ const Projektpunktshema = new mongoose.Schema({
   BauteilID:              {type: String,  required: false},
   GeschossID:             {type: String,  required: false},
   RaumID:                 {type: String,  required: false},
+  Thumbnailsize:          {type: String,  required: false},
   Zeitansatz:             {type: Number,  required: false, default: false},
   Zeitansatzeinheit:      {type: String,  required: false},
   Oberkostengruppe:       {type: Number,  required: false},
