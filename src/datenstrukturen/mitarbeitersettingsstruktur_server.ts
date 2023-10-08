@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import {Aufgabenansichtshema, IAufgabenansichtstruktur} from "./aufgabenansichtstruktur_server";
 
 interface IMitarbeitersettingsstruktur  {
 
@@ -15,12 +16,18 @@ interface IMitarbeitersettingsstruktur  {
   HauptkostengruppeFilter: number;
   UnterkostengruppeFilter: number;
 
+  /*
   AufgabenShowOffen:        boolean;
   AufgabenShowGeschlossen:  boolean;
   AufgabenShowBearbeitung:  boolean;
   AufgabenShowRuecklauf:    boolean;
   AufgabenShowBilder:       boolean;
   AufgabenShowMeilensteinOnly: boolean;
+   AufgabenShowMeilensteine:  boolean;
+
+   */
+
+  Aufgabenansicht: IAufgabenansichtstruktur[];
 
   AufgabenTerminfiltervariante:  string;
   AufgabenTerminfilterStartwert: number;
@@ -33,7 +40,7 @@ interface IMitarbeitersettingsstruktur  {
   Deleted:                  boolean;
   HeadermenueMaxFavoriten:  number;
 
-  AufgabenShowMeilensteine:  boolean;
+
   AufgabenShowNummer:        boolean;
   AufgabenShowStartdatum:    boolean;
   AufgabenShowAufgabe:       boolean;
@@ -96,7 +103,7 @@ const Mitarbeitersettingsshema = new mongoose.Schema({
   AufgabenShowZustaendig:    {type: Boolean, default: false},
   AufgabenShowZeitansatz:    {type: Boolean, default: false},
   AufgabenShowMeinewoche:    {type: Boolean, default: false},
-
+  Aufgabenansicht:           [Aufgabenansichtshema],
   LOPListeGeschlossenZeitfilter:    {type: Number, default: false},
 });
 
