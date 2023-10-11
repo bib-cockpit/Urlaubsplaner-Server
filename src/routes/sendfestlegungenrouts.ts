@@ -46,9 +46,9 @@ export class SendFestlegungenroutsClass {
 
       let token;
       let tenantId   = this.Config.TENANT_ID;
-      let clientId   = this.Config.SERVER_APPLICATION_ID;
+      let clientId   = this.Config.CLIENT_APPLICATION_ID;
       let endpoint   = this.Config.MICROSOFT_LOGIN_ENDPOINT;
-      let Secret     = this.Config.SERVER_APPLICATION_SECRET;
+      let Secret     = this.Config.CLIENT_APPLICATION_SECRET;
       let getdata: any;
       let chunk: any;
       let filebuffer;

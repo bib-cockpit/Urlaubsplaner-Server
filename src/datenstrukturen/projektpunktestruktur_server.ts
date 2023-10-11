@@ -2,6 +2,7 @@ import {IVerfasserstruktur, Verfassershema} from "./verfasserstruktur_server";
 import {IProjektpunktanmerkungstruktur, Projektpunktanmerkungshema} from "./projektpunktanmerkungstruktur_server";
 import mongoose from "mongoose";
 import {IProjektpunktimagestruktur, Projektpunktimageshema} from "./projektpunktimagestruktur_server";
+import {IRuecklaufreminderstruktur, Ruecklaufremindershema} from "./ruecklaufreminderstruktur_server";
 
 interface IProjektpunktestruktur {
 
@@ -70,10 +71,13 @@ interface IProjektpunktestruktur {
   Hauptkostengruppe: number;
   Unterkostengruppe: number;
 
+
   ZustaendigeExternIDListe: string[];
   ZustaendigeInternIDListe: string[];
   Zustaendigkeitsliste?:    string[];
   Bauteilname?: string;
+
+  Ruecklaufreminderliste: IRuecklaufreminderstruktur[];
 
   Kostengruppenname?: string;
 };
@@ -135,6 +139,7 @@ const Projektpunktshema = new mongoose.Schema({
   Unterkostengruppe:      {type: Number,  required: false},
   ZustaendigeExternIDListe: [{type: String}],
   ZustaendigeInternIDListe: [{type: String}],
+  Ruecklaufreminderliste:   [Ruecklaufremindershema],
   Bilderliste:              [Projektpunktimageshema],
   Deleted:                  {type: Boolean, required: false, default: false},
 });

@@ -1,46 +1,25 @@
 import {Request, Response, Router} from 'express';
 import {DebugClass} from "../debug";
 import {AuthenticationClass} from "../middleware/authentication";
-import {IProtokollstruktur} from "../datenstrukturen/protokollstruktur_server";
-import {ProtokollDBClass} from "../database/protokolledbclass";
-import {Dir} from "fs";
 import {ConfidentialClientApplication} from "@azure/msal-node";
 import {Client} from "@microsoft/microsoft-graph-client";
-import {Sitesstruktur} from "../datenstrukturen/sitesstruktur_server";
 import {ConfigClass} from "../configclass";
 import {Mailmessagestruktur} from "../datenstrukturen/mailmessagestruktur";
-import {Toolsclass} from "../toolsclass";
-import {Constclass} from "../constclass";
 import fs from "fs";
 
-export class SendLOPListeroutsClass {
+export class SendReminderroutsClass {
 
-  public  sendloplisterouter: any;
+  public  sendreminderrouter: any;
   private Debug: DebugClass;
-  private Database: ProtokollDBClass;
   private Authentication: AuthenticationClass;
-  private Tools: Toolsclass;
   private Config: ConfigClass;
-  private Const: Constclass;
 
   constructor() {
 
     this.Debug                  = new DebugClass();
-    this.Database               = new ProtokollDBClass();
-    this.sendloplisterouter     = Router();
+    this.sendreminderrouter     = Router();
     this.Authentication         = new AuthenticationClass();
-    this.Tools                  = new Toolsclass();
-    this.Const                  = new Constclass();
   }
-
-  BufferToArray(buffer: Buffer) {
-
-    let array = new Array();
-
-    for (let data of buffer.values()) array.push(data);
-    return array;
-  }
-
 
   Init(config: ConfigClass) {
 
@@ -50,7 +29,7 @@ export class SendLOPListeroutsClass {
 
     } catch (error) {
 
-      this.Debug.ShowErrorMessage(error, 'SendLOPListeroutsClass', 'Init', this.Debug.Typen.Class);
+      this.Debug.ShowErrorMessage(error, 'SendReminderroutsClass', 'Init', this.Debug.Typen.Class);
     }
   }
 
@@ -72,23 +51,24 @@ export class SendLOPListeroutsClass {
       let tokenRequest;
       let html;
 
-
-      this.sendloplisterouter.put('/', async (req: Request, res: Response) => {
-
+      this.sendreminderrouter.put('/', async (req: Request, res: Response) => {
 
         filebuffer = [];
 
-        console.log('Send LOP Liste');
+        console.log('Send Reminder');
 
         const data: any   = req.body;
         const Betreff     = data.Betreff;
         const Nachricht   = data.Nachricht;
-        const FileID      = data.FileID;
-        const Filename    = data.Filename;
+        let   Signatur    = data.Signatur;
         const UserID      = data.UserID;
         const Token       = data.Token;
-        let   Signatur    = data.Signatur;
         const logoimageblob = await this.ReadLogo();
+        /*
+        const TeamsID     = data.TeamsID;
+        const FileID      = data.FileID;
+        const Filename    = data.Filename;
+         */
 
         const Empfaengerliste:   { Name: string, Email: string }[] = data.Empfaengerliste;
         const CcEmpfaengerliste: { Name: string, Email: string }[] = data.CcEmpfaengerliste;
@@ -127,9 +107,9 @@ export class SendLOPListeroutsClass {
 
         // Datei laden aus Teams
 
-        // let Url = '/groups/' + TeamsID + '/drive/items/' + FileID + '/content';
-        let Url = '/sites/' + this.Const.BAESiteID + '/drive/items/' + FileID + '/content';
+        /*
 
+        let Url = '/groups/' + TeamsID + '/drive/items/' + FileID + '/content';
 
         try {
 
@@ -137,7 +117,7 @@ export class SendLOPListeroutsClass {
         }
         catch(error: any) {
 
-          console.error('LOP Liste senden fehlgeschlagen. Datei exisiert nicht.: ' + error.message);
+          console.error('Erinnerung senden fehlgeschlagen. Datei exisiert nicht.: ' + error.message);
 
           res.status(error.statusCode).send({Error: error.message});
         }
@@ -151,27 +131,33 @@ export class SendLOPListeroutsClass {
               filebuffer.push(chunk);
             }
           });
+        };
 
-          Signatur = Signatur.replace('[Image]', 'data:image/png;base64,' + logoimageblob);
+         */
+
+        Signatur = Signatur.replace('[Image]', 'data:image/png;base64,' + logoimageblob);
 
           html  = '<html>';
           html += '<head>';
           html += '<title></title>';
           html += '<style>';
-          html += 'body { font-family: Courier New; font-size: 15px; }';
+          html += 'body { font-family: Courier New; font-size: 14px; background: white; }';
           html += '</style>';
 
           html += '</head>';
           html += '<body>';
-          html += this.Tools.FormatLinebreaks(Nachricht);
+          html += this.FormatLinebreaks(Nachricht);
           html += '<br><br>';
           html += Signatur;
           html += '</body>';
           html += '</html>';
 
+          /*
           getdata.on('end', () => {
 
             filedata = Buffer.concat(filebuffer).toString('base64');
+
+           */
 
             const sendMail: Mailmessagestruktur = {
               message: {
@@ -181,7 +167,7 @@ export class SendLOPListeroutsClass {
                   content: html
                 },
                 toRecipients: ToRecipients,
-                attachments: [
+                /*attachments: [
                   {
                     "@odata.type": "#microsoft.graph.fileAttachment",
                     contentBytes:  filedata,
@@ -189,6 +175,8 @@ export class SendLOPListeroutsClass {
                     contentType:  "application/pdf"
                   }
                 ]
+
+                 */
               },
               saveToSentItems: true
             };
@@ -211,22 +199,41 @@ export class SendLOPListeroutsClass {
 
             }).catch((mailerror: any) => {
 
-              console.error('LOP Liste senden fehlgeschlagen. Sendevorgang fehlerhaft: ' + mailerror.message);
+              console.error('Erinnerung senden fehlgeschlagen. Sendevorgang fehlerhaft: ' + mailerror.message);
 
               res.status(400).send({ Message: mailerror.message });
             });
           });
 
-        }
+        // }
 
-      });
+      // });
     } catch (error) {
 
-      this.Debug.ShowErrorMessage(error.message, error,  'SendLOPListeroutsClass', 'SetRoutes');
+      this.Debug.ShowErrorMessage(error.message, error,  'SendReminderroutsClass', 'SetRoutes');
     }
   }
 
-    private async ReadLogo(): Promise<any> {
+  public FormatLinebreaks(text: string): string {
+
+    try {
+
+      if(typeof text !== 'undefined') {
+
+        return text.replace(/(?:\r\n|\r|\n)/g, '<br>');
+      }
+      else {
+
+        return '';
+      }
+    }
+    catch (error) {
+
+      this.Debug.ShowErrorMessage(error.message, error, 'SendReminderroutsClass', 'FormatLinebreaks');
+    }
+  }
+
+  private async ReadLogo(): Promise<any> {
 
     return new Promise((resolve, reject) => {
 

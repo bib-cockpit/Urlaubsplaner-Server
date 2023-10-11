@@ -7,6 +7,7 @@ import {Client} from "@microsoft/microsoft-graph-client";
 import {ConfigClass} from "../configclass";
 import {Mailmessagestruktur} from "../datenstrukturen/mailmessagestruktur";
 import {Constclass} from "../constclass";
+import fs from "fs";
 
 export class SendProtokolleroutsClass {
 
@@ -77,10 +78,12 @@ export class SendProtokolleroutsClass {
         const data: any   = req.body;
         const Betreff     = data.Betreff;
         const Nachricht   = data.Nachricht;
+        let   Signatur    = data.Signatur;
         const FileID      = data.FileID;
         const Filename    = data.Filename;
         const UserID      = data.UserID;
         const Token       = data.Token;
+        const logoimageblob = await this.ReadLogo();
 
         const Empfaengerliste:   { Name: string, Email: string }[] = data.Empfaengerliste;
         const CcEmpfaengerliste: { Name: string, Email: string }[] = data.CcEmpfaengerliste;
@@ -145,16 +148,20 @@ export class SendProtokolleroutsClass {
             }
           });
 
+          Signatur = Signatur.replace('[Image]', 'data:image/png;base64,' + logoimageblob);
+
           html  = '<html>';
           html += '<head>';
           html += '<title></title>';
           html += '<style>';
-          html += 'body { font-family: Calibri; font-size: 15px; }';
+          html += 'body { font-family: Courier New; font-size: 15px; }';
           html += '</style>';
 
           html += '</head>';
           html += '<body>';
           html += this.FormatLinebreaks(Nachricht);
+          html += '<br><br>';
+          html += Signatur;
           html += '</body>';
           html += '</html>';
 
@@ -232,6 +239,24 @@ export class SendProtokolleroutsClass {
 
       this.Debug.ShowErrorMessage(error.message, error, 'SendProtokolleroutsClass', 'FormatLinebreaks');
     }
+  }
+
+  private async ReadLogo(): Promise<any> {
+
+    return new Promise((resolve, reject) => {
+
+      fs.readFile('images/bae_logo.png', (error, buffer: Buffer) => {
+
+        if(error) {
+
+          resolve(null);
+        }
+        else {
+
+          resolve( buffer.toString('base64'));
+        }
+      });
+    });
   }
 }
 
