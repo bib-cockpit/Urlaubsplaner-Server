@@ -52,6 +52,7 @@ import {NotizenkapitelroutsClass} from "./routes/notizenkapitelrouts";
 import {SendLOPListeroutsClass} from "./routes/sendloplisterouts";
 import {SaveLOPListeroutsClass} from "./routes/saveloplisterouts";
 import {SendReminderroutsClass} from "./routes/sendreminderrouts";
+import {FestlegungskategorieouterClass} from "./routes/festlegungskategorierouts";
 
 
 const app: Application = express();
@@ -81,6 +82,7 @@ const Bautagebuchrouter: BautagebuchouterClass = new BautagebuchouterClass();
 const LOPListerouter: LOPListeroutsClass = new LOPListeroutsClass();
 const Emailrouter: EmailrouterClass = new EmailrouterClass();
 const Notizenkapitelroutes: NotizenkapitelroutsClass = new NotizenkapitelroutsClass();
+const Festlegungskategorieroutes: FestlegungskategorieouterClass = new FestlegungskategorieouterClass();
 const SendFestlegungenrouts: SendFestlegungenroutsClass = new SendFestlegungenroutsClass();
 const SendReminderrouts: SendReminderroutsClass = new SendReminderroutsClass();
 const SendLOPListerouter: SendLOPListeroutsClass = new SendLOPListeroutsClass();
@@ -203,6 +205,7 @@ LOPListerouter.SetRoutes();
 Emailrouter.SetRoutes();
 Addsubscriptionrouts.SetRoutes();
 Notizenkapitelroutes.SetRoutes();
+Festlegungskategorieroutes.SetRoutes();
 
 app.use('/',               Homerouter.homerouter);
 app.use('/.auth/login/aad/callback', Homerouter.homerouter);
@@ -232,6 +235,7 @@ app.use('/lopliste',       LOPListerouter.loplisterouter);
 app.use('/email',          Emailrouter.emailrouter);
 app.use('/subscription',   Addsubscriptionrouts.subscriptionrouter);
 app.use('/notizenkapitel', Notizenkapitelroutes.notizenkapitelrouter);
+app.use('/festlegungskategorie', Festlegungskategorieroutes.festlegungskategorierouter);
 
 // eventcallback
 
