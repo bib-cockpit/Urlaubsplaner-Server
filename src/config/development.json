@@ -1,0 +1,6 @@
+{
+  "Statusmessage":   "Hello development world!",
+  "COSMOSDB_DBNAME": "cockpitdb",
+  "COSMOSDB_HOST":   "localhost",
+  "COSMOSDB_PORT":   "27017"
+}
