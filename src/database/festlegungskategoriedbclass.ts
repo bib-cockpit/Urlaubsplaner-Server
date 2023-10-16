@@ -1,8 +1,8 @@
 import {Document, DocumentQuery, model, Model} from "mongoose";
-import {IFestlegungskategoriestruktur, Festlegungskategorieshema } from "../datenstrukturen/Festlegungskategoriestruktur_server";
 import {DebugClass} from "../debug";
 import {Constclass} from "../constclass";
 import * as mongoose from "mongoose";
+import {Festlegungskategorieshema, IFestlegungskategoriestruktur} from "../datenstrukturen/festlegungskategoriestruktur_server";
 
 export class FestlegungskategorieDBClass {
 
