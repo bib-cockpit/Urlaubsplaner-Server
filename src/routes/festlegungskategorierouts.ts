@@ -21,8 +21,6 @@ export class FestlegungskategorieouterClass {
     this.Authentication  = new AuthenticationClass();
   }
 
-  // Test
-
   public SetRoutes() {
 
     try {

@@ -16,8 +16,6 @@ interface IFestlegungskategoriestruktur  {
   Deleted: boolean;
 };
 
-// hello 2
-
 const Festlegungskategorieshema = new mongoose.Schema({
 
   Projektkey:        {type: String,   required: false},

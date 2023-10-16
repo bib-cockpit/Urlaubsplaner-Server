@@ -15,8 +15,6 @@ export class FestlegungskategorieDBClass {
     this.Const = new Constclass();
   }
 
-  // HEllo
-
   public ReadFestlegungskategorieliste(projektkey: string): Promise<any> {
 
     try {
