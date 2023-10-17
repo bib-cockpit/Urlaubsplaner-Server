@@ -17,6 +17,7 @@ export class SendProtokolleroutsClass {
   private Authentication: AuthenticationClass;
   private Config: ConfigClass;
   private Const: Constclass;
+  private Testvar: any;
 
 
   constructor() {

@@ -30,3 +30,5 @@ const Festlegungskategorieshema = new mongoose.Schema({
 });
 
 export { IFestlegungskategoriestruktur, Festlegungskategorieshema };
+
+// Hello Wolrd

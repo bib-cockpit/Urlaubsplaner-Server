@@ -42,3 +42,6 @@ const Projektbeteiligteeshema = new mongoose.Schema({
 });
 
 export { IProjektbeteiligtestruktur, Projektbeteiligteeshema };
+
+
+// Hello Wolrd

@@ -13,6 +13,7 @@ export class SendReminderroutsClass {
   private Debug: DebugClass;
   private Authentication: AuthenticationClass;
   private Config: ConfigClass;
+  private Testvar: any;
 
   constructor() {
 

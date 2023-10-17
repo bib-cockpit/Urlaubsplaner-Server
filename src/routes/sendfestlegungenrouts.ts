@@ -17,6 +17,7 @@ export class SendFestlegungenroutsClass {
   private Database: ProtokollDBClass;
   private Authentication: AuthenticationClass;
   private Config: ConfigClass;
+  private Testvar: any;
 
   constructor() {
 

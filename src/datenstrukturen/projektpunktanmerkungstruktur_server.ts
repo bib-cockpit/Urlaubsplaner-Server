@@ -23,3 +23,5 @@ const Projektpunktanmerkungshema = new mongoose.Schema({
 });
 
 export { IProjektpunktanmerkungstruktur, Projektpunktanmerkungshema };
+
+// Hello Wolrd

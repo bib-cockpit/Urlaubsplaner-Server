@@ -22,6 +22,7 @@ export class SendLOPListeroutsClass {
   private Tools: Toolsclass;
   private Config: ConfigClass;
   private Const: Constclass;
+  private Testvar: any;
 
   constructor() {
 

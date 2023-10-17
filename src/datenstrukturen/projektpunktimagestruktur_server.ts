@@ -14,3 +14,6 @@ const Projektpunktimageshema = new mongoose.Schema({
 });
 
 export { IProjektpunktimagestruktur, Projektpunktimageshema };
+
+
+// Hello World

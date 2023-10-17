@@ -10,6 +10,7 @@ export class ProjektpunkteroutsClass {
   private Debug: DebugClass;
   private Database: ProjektpunkteDBClass;
   private Authentication: AuthenticationClass;
+  private Testvar: any;
 
   constructor() {
 

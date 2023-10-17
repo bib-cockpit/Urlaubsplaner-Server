@@ -1,8 +1,6 @@
 import {IVerfasserstruktur, Verfassershema} from "./verfasserstruktur_server";
 import mongoose from "mongoose";
 import {IProjektpunktestruktur} from "./projektpunktestruktur_server";
-import {IProjektbeteiligtestruktur} from "./projektbeteiligtestruktur_server";
-import {IMitarbeiterstruktur} from "./mitarbeiterstruktur_server";
 
 interface IProtokollstruktur  {
 

@@ -12,6 +12,7 @@ export class FestlegungskategorieouterClass {
   private Debug: DebugClass;
   private Database: FestlegungskategorieDBClass;
   private Authentication: AuthenticationClass;
+  private Testvar: any;
 
   constructor() {
 

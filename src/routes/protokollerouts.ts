@@ -10,6 +10,7 @@ export class ProtokolleroutsClass {
   private Debug: DebugClass;
   private Database: ProtokollDBClass;
   private Authentication: AuthenticationClass;
+  private Testvar: any;
 
   constructor() {
 

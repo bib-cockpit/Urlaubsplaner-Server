@@ -27,6 +27,7 @@ export class SaveLOPListeroutsClass {
   private Config: ConfigClass;
   private Tools: Toolsclass;
   private Const: Constclass;
+  private Testvar: any;
 
   constructor() {
 

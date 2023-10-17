@@ -15,6 +15,8 @@ export class ProtokollDBClass {
     this.Const = new Constclass();
   }
 
+  // HEllo World
+
   public ReadProtkollliste(projektkey: string): Promise<any> {
 
     try {

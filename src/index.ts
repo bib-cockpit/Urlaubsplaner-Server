@@ -88,6 +88,7 @@ const SendReminderrouts: SendReminderroutsClass = new SendReminderroutsClass();
 const SendLOPListerouter: SendLOPListeroutsClass = new SendLOPListeroutsClass();
 const SaveFestlegungenrouts: SaveFestlegungenroutsClass = new SaveFestlegungenroutsClass();
 const Addsubscriptionrouts: AddsubscriptionroutsClass = new AddsubscriptionroutsClass();
+const NONE = 'NONE';
 
 let Port: string              = 'none';
 let NODE_ENV: string          = config.has('node_env')          ? config.get('node_env')              : 'nicht definiert';
