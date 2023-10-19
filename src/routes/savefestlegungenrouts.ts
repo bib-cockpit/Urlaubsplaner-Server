@@ -1,12 +1,11 @@
 import {Request, Response, Router} from 'express';
 import {DebugClass} from "../debug";
 import {AuthenticationClass} from "../middleware/authentication";
-import {IProtokollstruktur} from "../datenstrukturen/protokollstruktur_server";
 import {ProtokollDBClass} from "../database/protokolledbclass";
 import {ConfidentialClientApplication} from "@azure/msal-node";
 import {Client} from "@microsoft/microsoft-graph-client";
 import {ConfigClass} from "../configclass";
-import * as puppeteer from 'puppeteer';
+import * as playwright from 'playwright';
 import * as fs from 'fs';
 import {IStandortestruktur} from "../datenstrukturen/standortestruktur_server";
 import {IMitarbeiterstruktur} from "../datenstrukturen/mitarbeiterstruktur_server";
@@ -87,7 +86,7 @@ export class SaveFestlegungenroutsClass {
         }[] = data.Empfaengerliste;
 
         const imageblob   = await this.ReadLogo();
-        const browser     = await puppeteer.launch();
+        const browser     = await playwright.chromium.launch();
         const page        = await browser.newPage();
 
         let html = '';

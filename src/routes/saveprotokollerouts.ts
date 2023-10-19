@@ -6,7 +6,7 @@ import {ProtokollDBClass} from "../database/protokolledbclass";
 import {ConfidentialClientApplication} from "@azure/msal-node";
 import {Client} from "@microsoft/microsoft-graph-client";
 import {ConfigClass} from "../configclass";
-import * as puppeteer from 'puppeteer';
+import * as playwright from 'playwright';
 import * as fs from 'fs';
 import {IStandortestruktur} from "../datenstrukturen/standortestruktur_server";
 import {IMitarbeiterstruktur} from "../datenstrukturen/mitarbeiterstruktur_server";
@@ -23,7 +23,6 @@ export class SaveProtokolleroutsClass {
   private Authentication: AuthenticationClass;
   private Config: ConfigClass;
   private Const: Constclass;
-  private Testvar: any;
 
   constructor() {
 
@@ -76,7 +75,7 @@ export class SaveProtokolleroutsClass {
         let pdfdoc: any;
         let Imagebuffuer: any;
         const logoimageblob = await this.ReadLogo();
-        const browser       = await puppeteer.launch({ headless: 'new', args: ['--no-sandbox'] });
+        const browser       = await playwright.chromium.launch();
         const page          = await browser.newPage();
 
         let html = '';

@@ -6,7 +6,7 @@ import {ProtokollDBClass} from "../database/protokolledbclass";
 import {ConfidentialClientApplication} from "@azure/msal-node";
 import {Client} from "@microsoft/microsoft-graph-client";
 import {ConfigClass} from "../configclass";
-import * as puppeteer from 'puppeteer';
+import * as playwright from 'playwright';
 import * as fs from 'fs';
 import {IStandortestruktur} from "../datenstrukturen/standortestruktur_server";
 import moment, {Moment} from "moment";
@@ -87,7 +87,7 @@ export class SaveLOPListeroutsClass {
         let Thumbnailbreiteliste: number[];
 
         const imageblob   = await this.ReadLogo();
-        const browser     = await puppeteer.launch();
+        const browser     = await playwright.chromium.launch();
         const page        = await browser.newPage();
         let html = '';
         let Content: Blob;
