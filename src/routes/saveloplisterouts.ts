@@ -1,12 +1,10 @@
 import {Request, Response, Router} from 'express';
 import {DebugClass} from "../debug";
 import {AuthenticationClass} from "../middleware/authentication";
-import {IProtokollstruktur} from "../datenstrukturen/protokollstruktur_server";
-import {ProtokollDBClass} from "../database/protokolledbclass";
 import {ConfidentialClientApplication} from "@azure/msal-node";
 import {Client} from "@microsoft/microsoft-graph-client";
 import {ConfigClass} from "../configclass";
-import * as playwright from 'playwright';
+import * as playwright from 'playwright-chromium';
 import * as fs from 'fs';
 import {IStandortestruktur} from "../datenstrukturen/standortestruktur_server";
 import moment, {Moment} from "moment";

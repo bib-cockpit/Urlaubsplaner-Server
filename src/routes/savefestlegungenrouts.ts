@@ -5,7 +5,7 @@ import {ProtokollDBClass} from "../database/protokolledbclass";
 import {ConfidentialClientApplication} from "@azure/msal-node";
 import {Client} from "@microsoft/microsoft-graph-client";
 import {ConfigClass} from "../configclass";
-import * as playwright from 'playwright';
+import * as playwright from 'playwright-chromium';
 import * as fs from 'fs';
 import {IStandortestruktur} from "../datenstrukturen/standortestruktur_server";
 import {IMitarbeiterstruktur} from "../datenstrukturen/mitarbeiterstruktur_server";
