@@ -76,7 +76,7 @@ export class SaveProtokolleroutsClass {
         let pdfdoc: any;
         let Imagebuffuer: any;
         const logoimageblob = await this.ReadLogo();
-        const browser       = await puppeteer.launch();
+        const browser       = await puppeteer.launch({ headless: 'new', args: ['--no-sandbox'] });
         const page          = await browser.newPage();
 
         let html = '';
