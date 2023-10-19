@@ -73,6 +73,8 @@ export class SaveProtokolleroutsClass {
         let Thumbnailliste: Thumbnailstruktur[][][];
         let Thumbnailbreite: number;
         let Thumb: Thumbnailstruktur;
+        let pdfdoc: any;
+        let Imagebuffuer: any;
         const logoimageblob = await this.ReadLogo();
         const browser       = await puppeteer.launch();
         const page          = await browser.newPage();
@@ -242,7 +244,19 @@ export class SaveProtokolleroutsClass {
                   Thumbnail        = this.GetEmptyThumbnail();
                   Thumbnail.id     = Eintrag.Bilderliste[Thumbindex].FileID;
                   Thumbnail.weburl = Eintrag.Bilderliste[Thumbindex].WebUrl;
-                  Thumb            = await this.ReadThumbnailinfo(Eintrag.Bilderliste[Thumbindex].FileID, Eintrag.Bilderliste[Thumbindex].WebUrl);
+
+                  try {
+
+                    Thumb = await this.ReadThumbnailinfo(Eintrag.Bilderliste[Thumbindex].FileID, Eintrag.Bilderliste[Thumbindex].WebUrl);
+
+                    console.log('Thumnbnailinfos wurde gelesen: ' + Thumbnail.weburl);
+
+                  }
+                  catch (error) {
+
+                    res.status(500).send({ Error: error.message });
+                  }
+
 
                   if(Thumb !== null) {
 
@@ -251,8 +265,22 @@ export class SaveProtokolleroutsClass {
                     Thumbnail.mediumurl = Thumb.mediumurl;
                     Thumbnail.largeurl  = Thumb.largeurl;
 
-                    Content              = await this.ReadThumbnailcontent(Thumbnail, Eintrag.Thumbnailsize);
-                    let Imagebuffuer     = await Content.arrayBuffer(); // URL.createObjectURL(Content);
+                    try {
+
+
+                      Content      = await this.ReadThumbnailcontent(Thumbnail, Eintrag.Thumbnailsize);
+                      Imagebuffuer = await Content.arrayBuffer(); // URL.createObjectURL(Content);
+
+                      console.log('Thumnbnail wurde geladen.');
+
+                    }
+                    catch (error) {
+
+                      res.status(500).send({ Error: error.message });
+                    }
+
+
+
                     let Image            = Buffer.from(Imagebuffuer).toString('base64');
                     Thumbnail.Content    = Image;
                   }
@@ -409,16 +437,34 @@ export class SaveProtokolleroutsClass {
           html += '</html>';
         }
 
-        await page.setContent(html, { waitUntil: 'domcontentloaded' });
+        try {
 
-        const pdf = await page.pdf({
-          margin: { top: '50px', right: '30px', bottom: '50px', left: '30px' },
-          printBackground: true,
-          format: 'A4',
-          displayHeaderFooter: true,
-          headerTemplate: Header,
-          footerTemplate: Footer
-        });
+          await page.setContent(html, { waitUntil: 'domcontentloaded' });
+
+          console.log('PDF Page wurde erstellt.');
+        }
+        catch (error: any) {
+
+          res.status(500).send({ Error: error.message });
+        }
+
+        try {
+
+          pdfdoc = await page.pdf({
+            margin: { top: '50px', right: '30px', bottom: '50px', left: '30px' },
+            printBackground: true,
+            format: 'A4',
+            displayHeaderFooter: true,
+            headerTemplate: Header,
+            footerTemplate: Footer
+          });
+
+          console.log('PDF Dokuemnt wurde erzeugt.');
+        }
+        catch (error: any) {
+
+          res.status(500).send({ Error: error.message });
+        }
 
         const msalConfig = {
           auth: {
@@ -434,7 +480,17 @@ export class SaveProtokolleroutsClass {
           scopes: ['https://graph.microsoft.com/.default'],
         };
 
-        token = await msalClient.acquireTokenByClientCredential(tokenRequest);
+        try {
+
+          token = await msalClient.acquireTokenByClientCredential(tokenRequest);
+
+          console.log('Token wurde erstellt.');
+        }
+        catch (error: any) {
+
+          res.status(500).send({ Error: error.message });
+        }
+
 
         const graphClient = Client.init({
 
@@ -444,12 +500,11 @@ export class SaveProtokolleroutsClass {
           }
         });
 
-        // let Url = '/groups/' + TeamsID + '/drive/items/' + DirectoryID + ':/' + Filename + ':/content';
         let Url = '/sites/' + this.Const.BAESiteID + '/drive/items/' + DirectoryID + ':/' + Filename + ':/content';
 
         try {
 
-          putdata = await graphClient.api(Url).put(pdf);
+          putdata = await graphClient.api(Url).put(pdfdoc);
 
           console.log('Protokoll ' + Filename + ' wurde erstellt.');
 
