@@ -49,6 +49,8 @@ export class SaveProtokolleroutsClass {
 
     try {
 
+      //           npx playwright install --with-deps chromium
+
       let token;
       let tenantId   = this.Config.TENANT_ID;
       let clientId   = this.Config.CLIENT_APPLICATION_ID;

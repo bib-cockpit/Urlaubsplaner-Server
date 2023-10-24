@@ -55,10 +55,10 @@ export class SendProtokolleroutsClass {
     try {
 
       let token;
-      let tenantId   = this.Config.TENANT_ID;
-      let clientId   = this.Config.CLIENT_APPLICATION_ID;
-      let endpoint   = this.Config.MICROSOFT_LOGIN_ENDPOINT;
-      let Secret     = this.Config.CLIENT_APPLICATION_SECRET;
+      let tenantId: string;
+      let clientId: string;
+      let endpoint: string;
+      let Secret: string;
       let getdata: any;
       let chunk: any;
       let filebuffer;
@@ -71,7 +71,10 @@ export class SendProtokolleroutsClass {
 
       this.sendprotokolllerouter.put('/', async (req: Request, res: Response) => {
 
-
+        tenantId   = this.Config.TENANT_ID;
+        clientId   = this.Config.CLIENT_APPLICATION_ID;
+        endpoint   = this.Config.MICROSOFT_LOGIN_ENDPOINT;
+        Secret     = this.Config.CLIENT_APPLICATION_SECRET;
         filebuffer = [];
 
         console.log('Send Protokoll');
@@ -111,22 +114,28 @@ export class SendProtokolleroutsClass {
           scopes: ['https://graph.microsoft.com/.default'],
         };
 
-        token = await msalClient.acquireTokenByClientCredential(tokenRequest);
+        try {
 
-        graphClient = Client.init({
+          token = await msalClient.acquireTokenByClientCredential(tokenRequest);
 
-          authProvider: done => {
+          graphClient = Client.init({
 
-            done(null, token.accessToken);
-          }
-        });
+            authProvider: done => {
+
+              done(null, token.accessToken);
+            }
+          });
+        }
+        catch(error) {
+
+          console.error('Tokenerror' + error.message);
+
+          res.status(error.statusCode).send({Error: error.message});
+        }
 
         // Datei laden aus Teams
 
         let Url = '/sites/' + this.Const.BAESiteID + '/drive/items/' + FileID + '/content';
-
-        // let Url = '/groups/' + TeamsID + '/drive/items/' + FileID + '/content';
-        // let Url = '/sites/' + this.Const.BAESiteID + '/drive/items/' + DirectoryID + ':/' + Filename + ':/content';
 
         try {
 
@@ -139,7 +148,7 @@ export class SendProtokolleroutsClass {
           res.status(error.statusCode).send({Error: error.message});
         }
 
-        if(getdata) {
+        if(getdata && getdata !== null) {
 
           getdata.on('readable', () => {
 
@@ -213,7 +222,13 @@ export class SendProtokolleroutsClass {
               res.status(400).send({ Message: mailerror.message });
             });
           });
+        }
+        else {
 
+          console.error('getdata ist nicht bereit.');
+          console.error('Url: ' + Url);
+
+          res.status(400).send({ Message:  'getdata ist nicht bereit.'});
         }
 
       });
