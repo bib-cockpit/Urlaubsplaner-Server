@@ -17,8 +17,6 @@ export class SendProtokolleroutsClass {
   private Authentication: AuthenticationClass;
   private Config: ConfigClass;
   private Const: Constclass;
-  private Testvar: any;
-
 
   constructor() {
 
@@ -28,15 +26,6 @@ export class SendProtokolleroutsClass {
     this.Authentication         = new AuthenticationClass();
     this.Const                  = new Constclass();
   }
-
-  BufferToArray(buffer: Buffer) {
-
-    let array = new Array();
-
-    for (let data of buffer.values()) array.push(data);
-    return array;
-  }
-
 
   Init(config: ConfigClass) {
 
@@ -59,7 +48,7 @@ export class SendProtokolleroutsClass {
       let clientId: string;
       let endpoint: string;
       let Secret: string;
-      let getdata: any;
+      let getdata: any; // ReadableStream;
       let chunk: any;
       let filebuffer;
       let filedata;
@@ -148,14 +137,12 @@ export class SendProtokolleroutsClass {
           res.status(error.statusCode).send({Error: error.message});
         }
 
-        if(getdata && getdata !== null) {
+        if(getdata) {
 
           console.log('getdata ist ok');
           console.log(getdata);
 
           getdata.on('readable', () => {
-
-            console.log('getdata.on(readable)');
 
             while (null !== (chunk = getdata.read())) {
 
@@ -171,8 +158,8 @@ export class SendProtokolleroutsClass {
 
             Signatur = Signatur.replace('[Image]', 'data:image/png;base64,' + logoimageblob);
 
-            html  = '<html>';
-            html += '<head>';
+            html  = '<html lang="de">';
+            html += '<head title="Protokoll">';
             html += '<title></title>';
             html += '<style>';
             html += 'body { font-family: Courier New; font-size: 15px; }';
@@ -218,7 +205,7 @@ export class SendProtokolleroutsClass {
 
             let emailurl = '/users/' + UserID + '/sendMail';
 
-            graphClient.api(emailurl).post(sendMail).then((result) => {
+            graphClient.api(emailurl).post(sendMail).then(() => {
 
               res.status(200).send({Message: 'Ok'});
 
@@ -266,7 +253,7 @@ export class SendProtokolleroutsClass {
 
   private async ReadLogo(): Promise<any> {
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
 
       fs.readFile('images/bae_logo.png', (error, buffer: Buffer) => {
 
