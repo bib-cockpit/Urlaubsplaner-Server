@@ -98,7 +98,7 @@ export class SendProtokolleroutsClass {
         for(let Eintrag of Empfaengerliste)   { ToRecipients.push({ emailAddress: { address: Eintrag.Email }});}
         for(let Eintrag of CcEmpfaengerliste) { CcRecipients.push({ emailAddress: { address: Eintrag.Email }});}
 
-        console.log('Daten: ' + JSON.stringify(data));
+        // console.log('Daten: ' + JSON.stringify(data));
 
         const msalConfig = {
           auth: {
@@ -128,7 +128,7 @@ export class SendProtokolleroutsClass {
         }
         catch(error) {
 
-          console.error('Tokenerror' + error.message);
+          console.log('Tokenerror' + error.message);
 
           res.status(error.statusCode).send({Error: error.message});
         }
@@ -143,14 +143,19 @@ export class SendProtokolleroutsClass {
         }
         catch(error: any) {
 
-          console.error('Protokoll senden fehlgeschlagen. Datei exisiert nicht.: ' + error.message);
+          console.log('Protokoll senden fehlgeschlagen. Datei exisiert nicht.: ' + error.message);
 
           res.status(error.statusCode).send({Error: error.message});
         }
 
         if(getdata && getdata !== null) {
 
+          console.log('getdata ist ok');
+          console.log(getdata);
+
           getdata.on('readable', () => {
+
+            console.log('getdata.on(readable)');
 
             while (null !== (chunk = getdata.read())) {
 
@@ -158,26 +163,28 @@ export class SendProtokolleroutsClass {
             }
           });
 
-          Signatur = Signatur.replace('[Image]', 'data:image/png;base64,' + logoimageblob);
-
-          html  = '<html>';
-          html += '<head>';
-          html += '<title></title>';
-          html += '<style>';
-          html += 'body { font-family: Courier New; font-size: 15px; }';
-          html += '</style>';
-
-          html += '</head>';
-          html += '<body>';
-          html += this.FormatLinebreaks(Nachricht);
-          html += '<br><br>';
-          html += Signatur;
-          html += '</body>';
-          html += '</html>';
-
           getdata.on('end', () => {
 
+            console.log('getdata.on(end)');
+
             filedata = Buffer.concat(filebuffer).toString('base64');
+
+            Signatur = Signatur.replace('[Image]', 'data:image/png;base64,' + logoimageblob);
+
+            html  = '<html>';
+            html += '<head>';
+            html += '<title></title>';
+            html += '<style>';
+            html += 'body { font-family: Courier New; font-size: 15px; }';
+            html += '</style>';
+
+            html += '</head>';
+            html += '<body>';
+            html += this.FormatLinebreaks(Nachricht);
+            html += '<br><br>';
+            html += Signatur;
+            html += '</body>';
+            html += '</html>';
 
             const sendMail: Mailmessagestruktur = {
               message: {
@@ -217,7 +224,7 @@ export class SendProtokolleroutsClass {
 
             }).catch((mailerror: any) => {
 
-              console.error('Protokoll senden fehlgeschlagen. Sendevorgang fehlerhaft: ' + mailerror.message);
+              console.log('Protokoll senden fehlgeschlagen. Sendevorgang fehlerhaft: ' + mailerror.message);
 
               res.status(400).send({ Message: mailerror.message });
             });
@@ -225,8 +232,8 @@ export class SendProtokolleroutsClass {
         }
         else {
 
-          console.error('getdata ist nicht bereit.');
-          console.error('Url: ' + Url);
+          console.log('getdata ist nicht bereit.');
+          console.log('Url: ' + Url);
 
           res.status(400).send({ Message:  'getdata ist nicht bereit.'});
         }
