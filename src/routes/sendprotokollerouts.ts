@@ -57,7 +57,6 @@ export class SendProtokolleroutsClass {
       let tokenRequest;
       let html;
 
-
       this.sendprotokolllerouter.put('/', async (req: Request, res: Response) => {
 
         tenantId   = this.Config.TENANT_ID;
@@ -142,80 +141,91 @@ export class SendProtokolleroutsClass {
           console.log('getdata ist ok');
           console.log(getdata);
 
-          getdata.on('readable', () => {
+          if(typeof getdata.on !== 'undefined') {
 
-            while (null !== (chunk = getdata.read())) {
+            getdata.on('readable', () => {
 
-              filebuffer.push(chunk);
-            }
-          });
+              while (null !== (chunk = getdata.read())) {
 
-          getdata.on('end', () => {
-
-            console.log('getdata.on(end)');
-
-            filedata = Buffer.concat(filebuffer).toString('base64');
-
-            Signatur = Signatur.replace('[Image]', 'data:image/png;base64,' + logoimageblob);
-
-            html  = '<html lang="de">';
-            html += '<head title="Protokoll">';
-            html += '<title></title>';
-            html += '<style>';
-            html += 'body { font-family: Courier New; font-size: 15px; }';
-            html += '</style>';
-
-            html += '</head>';
-            html += '<body>';
-            html += this.FormatLinebreaks(Nachricht);
-            html += '<br><br>';
-            html += Signatur;
-            html += '</body>';
-            html += '</html>';
-
-            const sendMail: Mailmessagestruktur = {
-              message: {
-                subject: Betreff,
-                body: {
-                  contentType: 'html',
-                  content: html
-                },
-                toRecipients: ToRecipients,
-                attachments: [
-                  {
-                    "@odata.type": "#microsoft.graph.fileAttachment",
-                    contentBytes:  filedata,
-                    name:          Filename,
-                    contentType:  "application/pdf"
-                  }
-                ]
-              },
-              saveToSentItems: true
-            };
-
-            if(CcRecipients.length > 0) sendMail.message.ccRecipients = CcRecipients;
-
-            graphClient = Client.init({
-
-              authProvider: done => {
-
-                done(null, Token);
+                filebuffer.push(chunk);
               }
             });
 
-            let emailurl = '/users/' + UserID + '/sendMail';
+            getdata.on('end', () => {
 
-            graphClient.api(emailurl).post(sendMail).then(() => {
+              console.log('getdata.on(end)');
 
-              res.status(200).send({Message: 'Ok'});
+              filedata = Buffer.concat(filebuffer).toString('base64');
 
-            }).catch((mailerror: any) => {
+              Signatur = Signatur.replace('[Image]', 'data:image/png;base64,' + logoimageblob);
 
-              console.log('Protokoll senden fehlgeschlagen. Sendevorgang fehlerhaft: ' + mailerror.message);
+              html  = '<html lang="de">';
+              html += '<head title="Protokoll">';
+              html += '<title></title>';
+              html += '<style>';
+              html += 'body { font-family: Courier New; font-size: 15px; }';
+              html += '</style>';
 
-              res.status(400).send({ Message: mailerror.message });
+              html += '</head>';
+              html += '<body>';
+              html += this.FormatLinebreaks(Nachricht);
+              html += '<br><br>';
+              html += Signatur;
+              html += '</body>';
+              html += '</html>';
+
+              const sendMail: Mailmessagestruktur = {
+                message: {
+                  subject: Betreff,
+                  body: {
+                    contentType: 'html',
+                    content: html
+                  },
+                  toRecipients: ToRecipients,
+                  attachments: [
+                    {
+                      "@odata.type": "#microsoft.graph.fileAttachment",
+                      contentBytes:  filedata,
+                      name:          Filename,
+                      contentType:  "application/pdf"
+                    }
+                  ]
+                },
+                saveToSentItems: true
+              };
+
+              if(CcRecipients.length > 0) sendMail.message.ccRecipients = CcRecipients;
+
+              graphClient = Client.init({
+
+                authProvider: done => {
+
+                  done(null, Token);
+                }
+              });
+
+              let emailurl = '/users/' + UserID + '/sendMail';
+
+              graphClient.api(emailurl).post(sendMail).then(() => {
+
+                res.status(200).send({Message: 'Ok'});
+
+              }).catch((mailerror: any) => {
+
+                console.log('Protokoll senden fehlgeschlagen. Sendevorgang fehlerhaft: ' + mailerror.message);
+
+                res.status(400).send({ Message: mailerror.message });
+              });
             });
-          });
+
+          }
+          else {
+
+            console.log('getdata.on is undefined');
+
+            res.status(400).send({ Message: 'Object On Error' });
+          }
+
         }
         else {
 
