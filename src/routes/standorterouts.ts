@@ -1,7 +1,5 @@
 import {Request, Response, Router} from 'express';
-import * as lodash from 'lodash-es';
 import {StandorteDBClass} from "../database/standortedbclass";
-import moment, {Moment} from "moment";
 import {DebugClass} from "../debug";
 import {AuthenticationClass} from "../middleware/authentication";
 import {IStandortestruktur} from "../datenstrukturen/standortestruktur_server";
@@ -93,68 +91,4 @@ export class StandorterouterClass {
   }
 }
 
-/*
-const Database: StandorteDBClass = new StandorteDBClass();
-
-
-
-standorterouter.get('/:id', (req: Request, res: Response) => {
-
-  Standorteliste = [];
-
-  const id     = req.params.id;
-  const course = lodash.find(Standorteliste, {id: parseInt(id)});
-
-  if(lodash.isUndefined(course) === false) {
-
-    // 200 OK
-
-    res.status(200).send(course);
-  }
-  else {
-
-    // 404 not found
-
-    res.status(404).send({message: 'Kurs nicht gefunden'});
-  }
-});
-
-standorterouter.post('/', (req: Request, res: Response) => {
-
-  let Standort: any = req.body;
-
-    Standorteliste.push(Standort);
-
-    res.status(201).send(Standort);
-});
-
-standorterouter.put('/:id', (req: Request, res) => {
-
-  const id = req.params.id;
-  let Standort: any = <any>lodash.find(Standorteliste, {id: parseInt(id)});
-
-  if(lodash.isUndefined(Standort) === false) {
-
-    res.status(200).send(Standort);
-
-  }
-  else {
-
-    // 404 not found
-
-    res.status(404).send({ message: 'Standort nicht gefunden'});
-  }
-});
-
-standorterouter.delete('/:id', (req: Request, res: Response) => {
-
-  const     id = req.params.id;
-  const Standort: any = <any>lodash.find(Standorteliste, {id: parseInt(id)});
-
-  if(lodash.isUndefined(Standort) === false) return res.status(200).send(Standort);
-  else                                       return res.status(404).send({ message: 'Standort nicht gefunden' });
-
-});
-
- */
 

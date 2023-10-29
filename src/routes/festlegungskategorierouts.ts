@@ -1,6 +1,4 @@
 import {Request, Response, Router} from 'express';
-import * as lodash from 'lodash-es';
-import moment, {Moment} from "moment";
 import {DebugClass} from "../debug";
 import {AuthenticationClass} from "../middleware/authentication";
 import {FestlegungskategorieDBClass} from "../database/festlegungskategoriedbclass";

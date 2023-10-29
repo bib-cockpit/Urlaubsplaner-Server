@@ -2,6 +2,7 @@ import {Document, DocumentQuery, model, Model} from "mongoose";
 import {DebugClass} from "../debug";
 import {Constclass} from "../constclass";
 import * as mongoose from "mongoose";
+import lodash from 'lodash';
 import {IMitarbeiterstruktur, Mitarbeitershema} from "../datenstrukturen/mitarbeiterstruktur_server";
 
 export class MitarbeiterDBClass {
@@ -21,8 +22,6 @@ export class MitarbeiterDBClass {
 
       let MitarbeitermodelClass: mongoose.Model<mongoose.Document>;
       let Liste: IMitarbeiterstruktur[] = [];
-
-
 
       this.Debug.ShowInfoMessage('ReadMitarbeiterliste', 'MitarbeiterDBClass', 'ReadMitarbeiterliste');
 
@@ -89,27 +88,49 @@ export class MitarbeiterDBClass {
     }
   }
 
-  public AddMitarbeiter(data: IMitarbeiterstruktur):Promise<any> {
+  public async AddMitarbeiter(data: IMitarbeiterstruktur):Promise<any> {
 
     try {
 
       let Mitarbeitermodel: mongoose.Document;
+      let Mitarbeiterliste: IMitarbeiterstruktur[];
+      let Check: IMitarbeiterstruktur;
+      let Result: any;
 
-      return new Promise<any>((resolve, reject) => {
+      // return new Promise<any>((resolve, reject) => {
 
         delete data._id;
 
-        Mitarbeitermodel = this.GetMitarbeiterModel(data);
+        try {
 
-        Mitarbeitermodel.save().then((result: Document<any>) => {
+          Mitarbeiterliste = await this.ReadMitarbeiterliste();
 
-          resolve(result);
+        }
+        catch(error: any) {
 
-        }).catch((error) => {
+          return Promise.reject(error);
+        }
 
-          reject(error);
-        });
-      });
+        Check = lodash.find(Mitarbeiterliste, { UserID: data.UserID } );
+
+        if(lodash.isUndefined(Check)) {
+
+          try {
+
+            Mitarbeitermodel = this.GetMitarbeiterModel(data);
+            Result           = Mitarbeitermodel.save();
+
+            return Promise.resolve(Result);
+
+          } catch (error: any) {
+
+            return Promise.reject(error);
+          }
+        }
+        else {
+
+          return Promise.resolve(Check);
+        }
 
     } catch (error) {
 

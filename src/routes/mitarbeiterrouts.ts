@@ -25,7 +25,6 @@ class MitarbeiterrouterClass {
 
       // Mitarbeiterliste lesen
 
-
       this.mitarbeiterrouter.get('/', this.Authentication.authenticate, (req: Request, res: Response) => {
 
         this.Database.ReadMitarbeiterliste().then((liste: IMitarbeiterstruktur[]) => {
