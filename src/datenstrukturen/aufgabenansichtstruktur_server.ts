@@ -12,6 +12,7 @@ interface IAufgabenansichtstruktur  {
   AufgabenShowPlanung:         boolean;
   AufgabenShowAusfuehrung:     boolean;
   AufgabenShowMeilensteine:    boolean;
+  AufgabenShowPlanungsmatrix:  boolean;
 };
 
 const Aufgabenansichtshema = new mongoose.Schema({
@@ -26,6 +27,7 @@ const Aufgabenansichtshema = new mongoose.Schema({
   AufgabenShowPlanung:         {type: Boolean, required: false},
   AufgabenShowAusfuehrung:     {type: Boolean, required: false},
   AufgabenShowMeilensteine:    {type: Boolean, required: false},
+  AufgabenShowPlanungsmatrix:  {type: Boolean, required: false}
 });
 
 export { IAufgabenansichtstruktur, Aufgabenansichtshema };
