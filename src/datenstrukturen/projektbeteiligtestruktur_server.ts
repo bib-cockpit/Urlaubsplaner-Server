@@ -5,11 +5,11 @@ interface IProjektbeteiligtestruktur  {
 
     BeteiligtenID: string;
     Beteiligtentyp: number;
-    Beteiligteneintragtyp: string;
     Name: string;
     Anrede: string;
+    Possition: string,
     Vorname: string;
-    Firma: string;
+    FirmaID: string;
     Kuerzel: string;
     Strasse: string;
     PLZ: string;
@@ -25,12 +25,11 @@ const Projektbeteiligteeshema = new mongoose.Schema({
   _id:                   false,
   BeteiligtenID:         {type: String,  required: false},
   Beteiligtentyp:        {type: Number,  required: false},
-  Beteiligteneintragtyp: {type: String,  required: false},
   Name:                  {type: String,  required: false},
   Vorname:               {type: String,  required: false},
   Anrede:                {type: String,  required: false},
-  Firma:                 {type: String,  required: false},
-  Kuerzel:               {type: String,  required: false},
+  FirmaID:               {type: String,  required: false},
+  Possition:             {type: String,  required: false},
   Strasse:               {type: String,  required: false},
   PLZ:                   {type: String,  required: false},
   Ort:                   {type: String,  required: false},
