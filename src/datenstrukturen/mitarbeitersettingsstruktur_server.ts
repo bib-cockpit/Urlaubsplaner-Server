@@ -54,6 +54,13 @@ interface IMitarbeitersettingsstruktur  {
   AufgabenShowZeitansatz:    boolean;
   AufgabenShowMeinewoche:    boolean;
 
+  UrlaubShowBeantragt:         boolean;
+  UrlaubShowVertreterfreigabe: boolean;
+  UrlaubShowGenehmigt:         boolean;
+  UrlaubShowAbgelehnt:         boolean;
+  UrlaubShowFerien:            boolean;
+  UrlaubShowFeiertage:         boolean;
+
   LOPListeGeschlossenZeitfilter: number;
 };
 
@@ -105,6 +112,13 @@ const Mitarbeitersettingsshema = new mongoose.Schema({
   AufgabenShowMeinewoche:    {type: Boolean, default: false},
   Aufgabenansicht:           [Aufgabenansichtshema],
   LOPListeGeschlossenZeitfilter:    {type: Number, default: false},
+
+  UrlaubShowBeantragt:         {type: Boolean, default: true},
+  UrlaubShowVertreterfreigabe: {type: Boolean, default: true},
+  UrlaubShowGenehmigt:         {type: Boolean, default: true},
+  UrlaubShowAbgelehnt:         {type: Boolean, default: true},
+  UrlaubShowFerien:            {type: Boolean, default: true},
+  UrlaubShowFeiertage:         {type: Boolean, default: true},
 });
 
 export { Mitarbeitersettingsshema, IMitarbeitersettingsstruktur };

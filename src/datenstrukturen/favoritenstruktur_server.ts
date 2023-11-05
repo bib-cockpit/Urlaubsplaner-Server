@@ -9,10 +9,9 @@ interface IFavoritenstruktur {
 
 const Favoritenshema = new mongoose.Schema({
 
-  _id:           false,
   FavoritenID:   {type: String,   required: false},
   Name:          {type: String,   required: false},
   Projekteliste: {type: [String], required: false},
-});
+}, {_id: false});
 
 export { IFavoritenstruktur, Favoritenshema };

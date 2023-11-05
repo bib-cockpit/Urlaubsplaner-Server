@@ -3,6 +3,7 @@ import {Favoritenshema, IFavoritenstruktur} from "./favoritenstruktur_server";
 import mongoose from "mongoose";
 import {IMeintagstruktur, Meintagshema} from "./meintagstruktur_server";
 import {IMeinewochestruktur, Meinewocheshema} from "./meinewochestruktur_server";
+import {Urlaubsshema} from "./urlaubsstruktur_server";
 
 interface IMitarbeiterstruktur  {
 
@@ -53,7 +54,8 @@ const Mitarbeitershema = new mongoose.Schema({
 
   Favoritenliste:  [Favoritenshema],
   Meintagliste:    [Meintagshema],
-  Meinewocheliste: [Meinewocheshema]
+  Meinewocheliste: [Meinewocheshema],
+  Urlaubsliste:    [Urlaubsshema]
 });
 
 export { Mitarbeitershema, IMitarbeiterstruktur };
