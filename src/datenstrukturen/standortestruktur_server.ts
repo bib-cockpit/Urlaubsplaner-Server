@@ -14,6 +14,9 @@ interface IStandortestruktur  {
   Deleted: boolean;
   Zeitstempel: number;
   Zeitpunkt: string;
+  Land: string;
+  Bundesland: string;
+  Konfession: string;
   Filtered?: boolean;
   Text_A?: string;
   Text_B?: string;
@@ -24,6 +27,9 @@ const Standorteshema = new mongoose.Schema({
 
   Standort: {type: String,  required: false, index: true},
   Kuerzel:  {type: String,  required: false},
+  Land:        {type: String,  required: false},
+  Bundesland:  {type: String,  required: false},
+  Konfession:  {type: String,  required: false},
   Strasse:  {type: String,  required: false},
   PLZ:      {type: String,  required: false},
   Ort:      {type: String,  required: false},
