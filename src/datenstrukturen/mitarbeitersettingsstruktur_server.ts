@@ -58,8 +58,10 @@ interface IMitarbeitersettingsstruktur  {
   UrlaubShowVertreterfreigabe: boolean;
   UrlaubShowGenehmigt:         boolean;
   UrlaubShowAbgelehnt:         boolean;
-  UrlaubShowFerien:            boolean;
-  UrlaubShowFeiertage:         boolean;
+  UrlaubShowFerien_DE:            boolean;
+  UrlaubShowFerien_BG:            boolean;
+  UrlaubShowFeiertage_DE:         boolean;
+  UrlaubShowFeiertage_BG:         boolean;
 
   LOPListeGeschlossenZeitfilter: number;
 };
@@ -117,8 +119,10 @@ const Mitarbeitersettingsshema = new mongoose.Schema({
   UrlaubShowVertreterfreigabe: {type: Boolean, default: true},
   UrlaubShowGenehmigt:         {type: Boolean, default: true},
   UrlaubShowAbgelehnt:         {type: Boolean, default: true},
-  UrlaubShowFerien:            {type: Boolean, default: true},
-  UrlaubShowFeiertage:         {type: Boolean, default: true},
+  UrlaubShowFerien_DE:         {type: Boolean, default: true},
+  UrlaubShowFerien_BG:         {type: Boolean, default: true},
+  UrlaubShowFeiertage_DE:      {type: Boolean, default: true},
+  UrlaubShowFeiertage_BG:      {type: Boolean, default: true},
 });
 
 export { Mitarbeitersettingsshema, IMitarbeitersettingsstruktur };
