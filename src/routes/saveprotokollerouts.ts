@@ -280,8 +280,6 @@ export class SaveProtokolleroutsClass {
                       res.status(500).send({ Error: error.message });
                     }
 
-
-
                     let Image            = Buffer.from(Imagebuffuer).toString('base64');
                     Thumbnail.Content    = Image;
                   }
@@ -539,9 +537,6 @@ export class SaveProtokolleroutsClass {
       let endpoint   = this.Config.MICROSOFT_LOGIN_ENDPOINT;
       let Secret     = this.Config.CLIENT_APPLICATION_SECRET;
       let getdata: any;
-      let chunk: any;
-      let filebuffer = [];
-      let filedata;
       let graphClient;
       let msalClient;
       let tokenRequest;
@@ -593,6 +588,7 @@ export class SaveProtokolleroutsClass {
           fileid:    fileid,
           filename:  '',
           weburl:    weburl,
+          size:      0,
           mediumurl: getdata.value[0].medium.url,
           largeurl:  getdata.value[0].large.url,
           smallurl:  getdata.value[0].small.url,
@@ -629,6 +625,7 @@ export class SaveProtokolleroutsClass {
       mediumurl: "",
       smallurl: "",
       weburl: "",
+      size: 0,
       width: {large: 0, medium: 0, small: 0}
     };
   }

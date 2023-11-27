@@ -805,6 +805,7 @@ export class SaveLOPListeroutsClass {
           fileid:    fileid,
           filename:  '',
           weburl:    weburl,
+          size:      0,
           mediumurl: getdata.value[0].medium.url,
           largeurl:  getdata.value[0].large.url,
           smallurl:  getdata.value[0].small.url,
@@ -905,6 +906,7 @@ export class SaveLOPListeroutsClass {
       mediumurl: "",
       smallurl: "",
       weburl: "",
+      size: 0,
       width: {large: 0, medium: 0, small: 0}
     };
   }
