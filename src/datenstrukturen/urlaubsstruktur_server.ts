@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import {IUrlauzeitspannenstruktur, Urlaubszeitspannenshema} from "./urlauzeitspannenstruktur_server";
+import {IUrlaubprojektbeteiligtestruktur, Urlaubprojektbeteiligteshema} from "./urlaubprojektbeteiligtestruktur_server";
 
 interface IUrlaubsstruktur  {
 
@@ -7,8 +8,7 @@ interface IUrlaubsstruktur  {
   Resturlaub:   number;
   FreigeberID:  string;
   Zeitspannen:  IUrlauzeitspannenstruktur[];
-  Mitarbeiterliste: string[];
-  Stellvertreterliste: string[];
+  Projektbeteiligteliste: IUrlaubprojektbeteiligtestruktur[];
   Ferienblockerliste: number[];
   Feiertageblockerliste: number[];
 };
@@ -18,8 +18,7 @@ const Urlaubsshema = new mongoose.Schema({
   Jahr:                  {type: Number,   required: false},
   Resturlaub:            {type: Number,   required: false},
   FreigeberID:           {type: String,   required: false},
-  Mitarbeiterliste:      {type: [String], required: false},
-  Stellvertreterliste:   {type: [String], required: false},
+  Projektbeteiligteliste:{type: [Urlaubprojektbeteiligteshema], required: false},
   Ferienblockerliste:    {type: [Number], required: false},
   Feiertageblockerliste: {type: [Number], required: false},
   Zeitspannen:           [Urlaubszeitspannenshema]
