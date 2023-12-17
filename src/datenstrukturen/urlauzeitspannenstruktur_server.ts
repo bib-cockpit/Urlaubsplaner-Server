@@ -9,7 +9,9 @@ interface IUrlauzeitspannenstruktur {
   Startstring:  string;
   Endestring:   string;
   Status:       string;
-  Statusmeldung: string;
+  Planungmeldung:    string;
+  Vertretungmeldung: string;
+  Freigabemeldung:   string;
   Tageanzahl:   number;
   VertreterantwortSended: boolean;
   FreigabeantwortSended: boolean;
@@ -23,8 +25,10 @@ const Urlaubszeitspannenshema = new mongoose.Schema({
   VertreterID:    {type: String,   required: false},
   Startstring:    {type: String,   required: false},
   Endestring:     {type: String,   required: false},
-  Status:         {type: String,   required: false},
-  Statusmeldung:  {type: String,   required: false},
+  Status:             {type: String,   required: false},
+  Planungmeldung:     {type: String,   required: false},
+  Vertretungmeldung:  {type: String,   required: false},
+  Freigabemeldung:    {type: String,   required: false},
   Tageanzahl:     {type: Number,   required: false},
   VertreterantwortSended: {type: Boolean, required: false},
   FreigabeantwortSended: {type: Boolean, required: false},
