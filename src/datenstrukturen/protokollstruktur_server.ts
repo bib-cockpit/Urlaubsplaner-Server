@@ -30,6 +30,7 @@ interface IProtokollstruktur  {
   EmpfaengerExternIDListe: string[],
   EmpfaengerInternIDListe: string[],
   Filename: string,
+  FileID: string,
   GesendetZeitstempel: number,
   GesendetZeitstring: string,
 
