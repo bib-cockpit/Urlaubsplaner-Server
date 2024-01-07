@@ -12,9 +12,19 @@ interface IUrlauzeitspannenstruktur {
   Planungmeldung:    string;
   Vertretungmeldung: string;
   Freigabemeldung:   string;
-  Tageanzahl:   number;
+
+  Tageanzahl: number;
+
+  VertreteranfrageSended: boolean;
   VertreterantwortSended: boolean;
-  FreigabeantwortSended: boolean;
+  FreigabeanfrageSended:  boolean;
+  FreigabeantwortSended:  boolean;
+  FreigabeantwortOfficeSended: boolean;
+
+  Vertretunganfragezeitstempel: number;
+  Vertretungantwortzeitstempel: number;
+  Freigabeantwortzeitstempel: number;
+  FreigabeantwortOfficezeitstempel: number;
 };
 
 const Urlaubszeitspannenshema = new mongoose.Schema({
@@ -30,8 +40,19 @@ const Urlaubszeitspannenshema = new mongoose.Schema({
   Vertretungmeldung:  {type: String,   required: false},
   Freigabemeldung:    {type: String,   required: false},
   Tageanzahl:     {type: Number,   required: false},
+
+  VertreteranfrageSended: {type: Boolean, required: false},
   VertreterantwortSended: {type: Boolean, required: false},
+
+  FreigabeanfrageSended: {type: Boolean, required: false},
   FreigabeantwortSended: {type: Boolean, required: false},
+  FreigabeantwortOfficeSended: {type: Boolean, required: false},
+
+  Vertretunganfragezeitstempel: {type: Number, required: false},
+  Vertretungantwortzeitstempel: {type: Number, required: false},
+
+  Freigabeantwortzeitstempel: {type: Number, required: false},
+  FreigabeantwortOfficezeitstempel: {type: Number, required: false},
 
 }, {_id: false});
 

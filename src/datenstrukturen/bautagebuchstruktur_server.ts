@@ -28,6 +28,7 @@ interface IBautagebuchstruktur  {
   Temperatur: string;
   Behinderungen: string;
   BeteiligtInternIDListe: string[];
+  BeteiligtExternIDListe: string[];
   Vorkommnisse: string;
   Eintraegeliste: IBautagebucheintragstruktur[];
   Zeitstempel: number;
@@ -63,6 +64,7 @@ const Bautagebuchshema = new mongoose.Schema({
   Nummer:        {type: String,  required: false},
   Auftraggeber:  {type: String,  required: false},
   BeteiligtInternIDListe: {type: [String], required: false},
+  BeteiligtExternIDListe: {type: [String], required: false},
   Verfasser:     Verfassershema,
   Gewerk:        {type: String,  required: false},
   Bezeichnung:   {type: String,  required: false},
