@@ -27,13 +27,15 @@ export class ProjektpunkteroutsClass {
       this.projektpunkterouter.get('/', this.Authentication.authenticate,  (req: Request, res: Response) => {
 
 
-        let query = req.query;
+        let query      = req.query;
         let Projektkey = <string>query.projektkey;
+        let Deleted    = <string>query.deleted === "false" ? false : true;
 
         console.log('Real Projektpunkte: ');
         console.log('Projektkey: ' + Projektkey);
+        console.log('Deleted:    ' + Deleted);
 
-        this.Database.ReadProjektpunkteliste(Projektkey).then((liste: IProjektpunktestruktur[]) => {
+        this.Database.ReadProjektpunkteliste(Projektkey, Deleted).then((liste: IProjektpunktestruktur[]) => {
 
           res.status(200).send(liste);
 
@@ -50,25 +52,55 @@ export class ProjektpunkteroutsClass {
 
         console.log('Projektpunkt PUT');
 
-        const data = <IProjektpunktestruktur>req.body;
+        const data = <any>req.body;
+        let Projektpunkt: IProjektpunktestruktur;
+        let Delete: boolean;
+        let IDListe: string[];
 
         console.log('Daten: ' + JSON.stringify(data));
 
-        this.Database.UpdateProjektpunkt(data).then((result) => {
+        Projektpunkt = <IProjektpunktestruktur>data.Projektpunkt;
+        IDListe      = <string[]>JSON.parse(data.IDListe);
+        Delete       = <boolean>data.Delete;
 
-          if(result !== null) {
+        if(Delete === false) {
 
-            res.status(200).send({ message: 'Saved: ' + data.Aufgabe, Projektpunkt: data });
-          }
-          else {
+          // Projektpunkt aktualisieren
 
-            res.status(404).send({ message: 'Projektpunkt not found.', data: null });
-          }
+          this.Database.UpdateProjektpunkt(Projektpunkt).then((result) => {
 
-        }).catch((error) => {
+            if(result !== null) {
 
-          res.status(400).send({ message: error.message });
-        });
+              res.status(200).send({ message: 'Saved: ' + data.Aufgabe, Projektpunkt: data });
+            }
+            else {
+
+              res.status(404).send({ message: 'Projektpunkt not found.', data: null });
+            }
+
+          }).catch((error) => {
+
+            res.status(400).send({ message: error.message });
+          });
+
+        }
+        else {
+
+          // Projektpunkte entgueltig loeschen
+
+          this.Database.RemovePunkteliste(IDListe).then((result) => {
+
+            if(result !== null) {
+
+              res.status(200).send({ message: 'Projektpunte wurden gelöscht' });
+            }
+
+          }).catch((error) => {
+
+            res.status(400).send({ message: error.message });
+          });
+        }
+
       });
 
       this.projektpunkterouter.post('/', (req: Request, res: Response) => {
@@ -90,6 +122,7 @@ export class ProjektpunkteroutsClass {
           res.status(400).send({ message: error.message });
         });
       });
+
 
     } catch (error) {
 

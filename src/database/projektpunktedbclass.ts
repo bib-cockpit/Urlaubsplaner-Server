@@ -15,7 +15,7 @@ export class ProjektpunkteDBClass {
     this.Const = new Constclass();
   }
 
-  public ReadProjektpunkteliste(projektkey: string): Promise<any> {
+  public ReadProjektpunkteliste(projektkey: string, deleted: boolean): Promise<any> {
 
     try {
 
@@ -26,7 +26,7 @@ export class ProjektpunkteDBClass {
 
         ProjektpunktemodelClass = model(this.Const.ProjektpunktecollectionName, Projektpunktshema);
 
-        ProjektpunktemodelClass.find( { Deleted: false, Projektkey: projektkey } ).then((data: any) => {
+        ProjektpunktemodelClass.find( { Deleted: deleted, Projektkey: projektkey } ).then((data: any) => {
 
           data.forEach((projektpunkt) => {
 
@@ -45,6 +45,33 @@ export class ProjektpunkteDBClass {
     } catch (error) {
 
       this.Debug.ShowErrorMessage(error.message, error,  'ProjektpunkteDBClass', 'ReadProjektpunkteliste');
+    }
+  }
+
+  public RemovePunkteliste(IDListe: string[]): Promise<any> {
+
+    try {
+
+      let ProjektpunktemodelClass: mongoose.Model<mongoose.Document>;
+
+      return new Promise((resolve, reject) => {
+
+        ProjektpunktemodelClass = model(this.Const.ProjektpunktecollectionName, Projektpunktshema);
+
+        ProjektpunktemodelClass.deleteMany({_id: {$in: IDListe}}).then(() => {
+
+          resolve(true);
+
+        }).catch((error) => {
+
+          reject(error);
+        });
+
+      });
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error.message, error,  'ProjektpunkteDBClass', 'RemovePunkteliste');
     }
   }
 

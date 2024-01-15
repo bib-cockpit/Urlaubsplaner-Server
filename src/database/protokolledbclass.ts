@@ -3,6 +3,7 @@ import {DebugClass} from "../debug";
 import {Constclass} from "../constclass";
 import * as mongoose from "mongoose";
 import {IProtokollstruktur, Protokollshema} from "../datenstrukturen/protokollstruktur_server";
+import {Projektpunktshema} from "../datenstrukturen/projektpunktestruktur_server";
 
 export class ProtokollDBClass {
 
@@ -47,6 +48,33 @@ export class ProtokollDBClass {
     } catch (error) {
 
       this.Debug.ShowErrorMessage(error.message, error,  'ProtokollDBClass', 'ReadProtkollliste');
+    }
+  }
+
+  public RemoveProtokoll(protokoll: IProtokollstruktur): Promise<any> {
+
+    try {
+
+      let ProtokollmodelClass: mongoose.Model<mongoose.Document>;
+
+      return new Promise<any>((resolve, reject) => {
+
+        ProtokollmodelClass = model(this.Const.ProtokollcollectionName, Protokollshema);
+
+        ProtokollmodelClass.deleteOne({_id: protokoll._id}).then((result: any) => {
+
+          resolve(true);
+
+        }).catch((error) => {
+
+          reject(error);
+        });
+
+      });
+
+    } catch (error) {
+
+      this.Debug.ShowErrorMessage(error.message, error,  'ProtokollDBClass', 'RemoveProtokoll');
     }
   }
 

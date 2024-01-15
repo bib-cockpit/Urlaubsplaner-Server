@@ -61,6 +61,10 @@ interface IProjektpunktestruktur {
   Leistungsphase:      string;
   Bilderliste:         IProjektpunktimagestruktur[];
   Thumbnailsize:       string;
+  LV_relevant:       boolean;
+  Planung_relevant:  boolean;
+  LV_Eintrag:        boolean;
+  Planung_Eintrag:   boolean;
 
   Verfasser: IVerfasserstruktur;
 
@@ -142,6 +146,10 @@ const Projektpunktshema = new mongoose.Schema({
   Ruecklaufreminderliste:   [Ruecklaufremindershema],
   Bilderliste:              [Projektpunktimageshema],
   Deleted:                  {type: Boolean, required: false, default: false},
+  LV_relevant:              {type: Boolean, required: false, default: true},
+  Planung_relevant:         {type: Boolean, required: false, default: true},
+  LV_Eintrag:               {type: Boolean, required: false, default: false},
+  Planung_Eintrag:          {type: Boolean, required: false, default: false},
 });
 
 export { IProjektpunktestruktur, Projektpunktshema };

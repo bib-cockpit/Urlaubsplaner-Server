@@ -49,25 +49,44 @@ export class ProtokolleroutsClass {
 
         console.log('Protokoll PUT');
 
-        const data = <IProtokollstruktur>req.body;
+        const data = <any>req.body;
+        const Protokoll: IProtokollstruktur = data.Protokoll;
+        const Delete: boolean               = data.Delete;
 
-        console.log('Daten: ' + JSON.stringify(data));
+        console.log('Protokoll: ' + JSON.stringify(Protokoll));
 
-        this.Database.UpdateProtokoll(data).then((result) => {
+        if(Delete === false) {
 
-          if(result !== null) {
+          // Update
 
-            res.status(200).send({ message: 'Saved: ' + data.Titel, Protokoll: data });
-          }
-          else {
+          this.Database.UpdateProtokoll(Protokoll).then((result) => {
 
-            res.status(404).send({ message: 'Protokolle not found.', data: null });
-          }
+            if(result !== null) {
 
-        }).catch((error) => {
+              res.status(200).send({ message: 'Saved: ' + data.Titel, Protokoll: Protokoll });
+            }
+            else {
 
-          res.status(400).send({ message: error.message });
-        });
+              res.status(404).send({ message: 'Protokolle not found.', data: null });
+            }
+
+          }).catch((error) => {
+
+            res.status(400).send({ message: error.message });
+          });
+        }
+        else {
+
+          this.Database.RemoveProtokoll(Protokoll).then(() => {
+
+            res.status(200).send({ message: 'Protokoll wurde gelöscht: ' + Protokoll.Titel, Protokoll: Protokoll });
+
+          }).catch((error) => {
+
+            res.status(400).send({message: error.message});
+          })
+        }
+
       });
 
       this.protokolllerouter.post('/', (req: Request, res: Response) => {
