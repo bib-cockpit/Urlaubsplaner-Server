@@ -71,11 +71,11 @@ export class ProjektpunkteroutsClass {
 
             if(result !== null) {
 
-              res.status(200).send({ message: 'Saved: ' + data.Aufgabe, Projektpunkt: data });
+              res.status(200).send({ message: 'Saved: ' + data.Aufgabe, Projektpunkt: result._doc });
             }
             else {
 
-              res.status(404).send({ message: 'Projektpunkt not found.', data: null });
+              res.status(404).send({ message: 'Projektpunkt not found.', Projektpunkt: null });
             }
 
           }).catch((error) => {
@@ -105,7 +105,7 @@ export class ProjektpunkteroutsClass {
 
       this.projektpunkterouter.post('/', (req: Request, res: Response) => {
 
-        // POST ist für neuen Eintrag
+        // POST ist für neuen Projektpunkt Eintrag
 
         console.log('Projektpunkt POST');
 
