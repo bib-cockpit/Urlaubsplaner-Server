@@ -42,6 +42,7 @@ interface IBautagebuchstruktur  {
   EmpfaengerExternIDListe: string[],
   EmpfaengerInternIDListe: string[],
   Filename: string,
+  FileID: string,
   GesendetZeitstempel: number,
   GesendetZeitstring: string,
 
@@ -95,6 +96,7 @@ const Bautagebuchshema = new mongoose.Schema({
   EmpfaengerExternIDListe:   {type: [String], required: false},
   EmpfaengerInternIDListe:   {type: [String], required: false},
   Filename:                  {type: String,   required: false},
+  FileID:                    {type: String,   required: false},
   GesendetZeitstempel:       {type: Number,   required: false},
   GesendetZeitstring:        {type: String,   required: false},
 });
