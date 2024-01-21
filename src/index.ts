@@ -53,6 +53,7 @@ import {SendLOPListeroutsClass} from "./routes/sendloplisterouts";
 import {SaveLOPListeroutsClass} from "./routes/saveloplisterouts";
 import {SendReminderroutsClass} from "./routes/sendreminderrouts";
 import {FestlegungskategorieouterClass} from "./routes/festlegungskategorierouts";
+import {SimontabelleroutsClass} from "./routes/simontabellerouts";
 
 
 const app: Application = express();
@@ -88,6 +89,7 @@ const SendReminderrouts: SendReminderroutsClass = new SendReminderroutsClass();
 const SendLOPListerouter: SendLOPListeroutsClass = new SendLOPListeroutsClass();
 const SaveFestlegungenrouts: SaveFestlegungenroutsClass = new SaveFestlegungenroutsClass();
 const Addsubscriptionrouts: AddsubscriptionroutsClass = new AddsubscriptionroutsClass();
+const Simontabellenrouts: SimontabelleroutsClass = new SimontabelleroutsClass();
 const NONE = 'NONE';
 
 let Port: string              = 'none';
@@ -178,6 +180,7 @@ SendReminderrouts.Init(Config);
 SaveFestlegungenrouts.Init(Config);
 SaveLOPListerouter.Init(Config);
 Addsubscriptionrouts.Init(Config);
+Simontabellenrouts.Init(Config);
 
 Homerouter.SetRoutes();
 Errorrouter.SetRoutes();
@@ -207,6 +210,7 @@ Emailrouter.SetRoutes();
 Addsubscriptionrouts.SetRoutes();
 Notizenkapitelroutes.SetRoutes();
 Festlegungskategorieroutes.SetRoutes();
+Simontabellenrouts.SetRoutes();
 
 app.use('/',               Homerouter.homerouter);
 app.use('/.auth/login/aad/callback', Homerouter.homerouter);
@@ -237,6 +241,7 @@ app.use('/email',          Emailrouter.emailrouter);
 app.use('/subscription',   Addsubscriptionrouts.subscriptionrouter);
 app.use('/notizenkapitel', Notizenkapitelroutes.notizenkapitelrouter);
 app.use('/festlegungskategorie', Festlegungskategorieroutes.festlegungskategorierouter);
+app.use('/simontabellen',        Simontabellenrouts.simontabellerouter);
 
 // eventcallback
 
