@@ -6,6 +6,7 @@ import {
   ISimontabellebesondereleistungstruktur,
   Simontabellebesondereleistungshema
 } from "./simontabellebesondereleistungstruktur_server";
+import {IRechnungstruktur, Rechnungshema} from "./rechnungstruktur_server";
 
 interface ISimontabellestruktur  {
 
@@ -22,6 +23,7 @@ interface ISimontabellestruktur  {
   Umbauzuschlag: number;
   Nebenkosten: number;
   Besondereleistungenliste: ISimontabellebesondereleistungstruktur[];
+  Rechnungen: IRechnungstruktur[];
 };
 
 const Simontabelleshema = new mongoose.Schema({
@@ -37,6 +39,7 @@ const Simontabelleshema = new mongoose.Schema({
   Deleted:           {type: Boolean, required: false, default: true},
   Verfasser:         Verfassershema,
   Eintraegeliste:    [Simontabelleeintragshema],
+  Rechnungen:        [Rechnungshema],
 });
 
 export { ISimontabellestruktur, Simontabelleshema };

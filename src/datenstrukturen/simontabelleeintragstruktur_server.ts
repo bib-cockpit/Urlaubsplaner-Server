@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import {IRechnungseintragstruktur, Rechnungseintraghema} from "./rechnungseintragstruktur_struktur";
 
 interface ISimontabelleeintragstruktur  {
 
@@ -7,12 +8,14 @@ interface ISimontabelleeintragstruktur  {
   Von: number;
   Bis: number;
   Vertrag: number;
+  Rechnungseintraege: IRechnungseintragstruktur[];
 };
 
 const Simontabelleeintragshema = new mongoose.Schema({
 
   Buchstabe: {type: String,  required: false},
   Vertrag:   {type: String,  required: false},
+  Rechnungseintraege: [Rechnungseintraghema]
 
 }, {_id: false});
 

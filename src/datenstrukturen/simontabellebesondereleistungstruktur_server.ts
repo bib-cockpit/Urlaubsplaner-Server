@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import {IRechnungseintragstruktur, Rechnungseintraghema} from "./rechnungseintragstruktur_struktur";
 
 interface ISimontabellebesondereleistungstruktur  {
 
@@ -7,6 +8,7 @@ interface ISimontabellebesondereleistungstruktur  {
   Titel:        string;
   Beschreibung: string;
   Honorar:      number;
+  Rechnungseintraege: IRechnungseintragstruktur[];
 };
 
 const Simontabellebesondereleistungshema = new mongoose.Schema({
@@ -16,6 +18,7 @@ const Simontabellebesondereleistungshema = new mongoose.Schema({
   Titel:        {type: String,  required: false},
   Beschreibung: {type: String,  required: false},
   Honorar:      {type: Number,  required: false, default: 0},
+  Rechnungseintraege: [Rechnungseintraghema]
 
 }, {_id: false} );
 
