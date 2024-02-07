@@ -21,19 +21,28 @@ interface ISimontabellestruktur  {
   Kosten: number;
   Honorar: number;
   Umbauzuschlag: number;
+  Sicherheitseinbehalt: number;
   Nebenkosten: number;
   Besondereleistungenliste: ISimontabellebesondereleistungstruktur[];
   Rechnungen: IRechnungstruktur[];
+
+  Nettonebenkosten?:    number;
+  Bruttonebenkosten?:   number;
+  Nettozwischensumme?:  number;
+  Bruttozwischensumme?: number;
+  Nettogesamthonorar?:  number;
+  Bruttogesamthonorar?: number;
 };
 
 const Simontabelleshema = new mongoose.Schema({
 
-  Projektkey:          {type: String,  required: false},
-  Leistungsphase:      {type: String,  required: false},
-  Kosten:              {type: Number,  required: false, default: 0},
-  Honorar:             {type: Number,  required: false, default: 0},
-  Umbauzuschlag:       {type: Number,  required: false, default: 0},
-  Nebenkosten:         {type: Number,  required: false, default: 0},
+  Projektkey:           {type: String,  required: false},
+  Leistungsphase:       {type: String,  required: false},
+  Kosten:               {type: Number,  required: false, default: 0},
+  Honorar:              {type: Number,  required: false, default: 0},
+  Umbauzuschlag:        {type: Number,  required: false, default: 0},
+  Sicherheitseinbehalt: {type: Number,  required: false, default: 0},
+  Nebenkosten:          {type: Number,  required: false, default: 0},
   Besondereleistungenliste: [Simontabellebesondereleistungshema],
   Anlagengruppe:       {type: Number,  required: false},
   Deleted:           {type: Boolean, required: false, default: true},

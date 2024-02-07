@@ -4,6 +4,13 @@ interface IRechnungseintragstruktur  {
 
   RechnungID:    string;
   Honoraranteil: number;
+
+  Valid?: boolean;
+  Nettohonorar?: number;
+  Nettonebenkosten?: number;
+  Nettogesamthonorar?: number;
+  Mehrwertsteuer?: number;
+  Bruttogesamthonorar?: number;
 };
 
 const Rechnungseintraghema = new mongoose.Schema({

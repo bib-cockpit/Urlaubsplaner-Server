@@ -9,6 +9,14 @@ interface ISimontabelleeintragstruktur  {
   Bis: number;
   Vertrag: number;
   Rechnungseintraege: IRechnungseintragstruktur[];
+
+  Honorarsumme?: number;
+  Honorarsummeprozent?: number;
+  Nettohonorar?: number;
+  Nettonebenkosten?: number;
+  Nettogesamthonorar?: number;
+  Mehrwertsteuer?: number;
+  Bruttogesamthonorar?: number;
 };
 
 const Simontabelleeintragshema = new mongoose.Schema({
