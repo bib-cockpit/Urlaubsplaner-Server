@@ -49,6 +49,7 @@ const Simontabelleshema = new mongoose.Schema({
   Verfasser:         Verfassershema,
   Eintraegeliste:    [Simontabelleeintragshema],
   Rechnungen:        [Rechnungshema],
+
 });
 
 export { ISimontabellestruktur, Simontabelleshema };
