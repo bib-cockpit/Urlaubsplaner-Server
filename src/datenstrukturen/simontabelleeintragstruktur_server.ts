@@ -13,6 +13,10 @@ interface ISimontabelleeintragstruktur  {
   Honorarsumme?: number;
   Honorarsummeprozent?: number;
   Nettohonorar?: number;
+  Nettoumbauzuschlag?: number;
+  Bruttoumbauzuschlag?: number;
+  Nettoleistungen?: number;
+  Nettozwischensumme?: number;
   Nettonebenkosten?: number;
   Nettogesamthonorar?: number;
   Mehrwertsteuer?: number;

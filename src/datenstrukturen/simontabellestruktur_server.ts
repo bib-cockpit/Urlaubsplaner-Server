@@ -19,19 +19,18 @@ interface ISimontabellestruktur  {
   Eintraegeliste: ISimontabelleeintragstruktur[];
   Deleted: boolean;
   Kosten: number;
-  Honorar: number;
+  Nettobasishonorar: number;
   Umbauzuschlag: number;
   Sicherheitseinbehalt: number;
   Nebenkosten: number;
   Besondereleistungenliste: ISimontabellebesondereleistungstruktur[];
   Rechnungen: IRechnungstruktur[];
 
-  Nettonebenkosten?:    number;
-  Bruttonebenkosten?:   number;
-  Nettozwischensumme?:  number;
-  Bruttozwischensumme?: number;
-  Nettogesamthonorar?:  number;
-  Bruttogesamthonorar?: number;
+  Nettoumbauzuschlag?: number;
+  Nettoleistungen?:    number;
+  Nettogrundhonorar?:  number;
+  Nettonebenkosten?:   number;
+  Nettogesamthonorar?: number;
 };
 
 const Simontabelleshema = new mongoose.Schema({
@@ -39,7 +38,7 @@ const Simontabelleshema = new mongoose.Schema({
   Projektkey:           {type: String,  required: false},
   Leistungsphase:       {type: String,  required: false},
   Kosten:               {type: Number,  required: false, default: 0},
-  Honorar:              {type: Number,  required: false, default: 0},
+  Nettobasishonorar:    {type: Number,  required: false, default: 0},
   Umbauzuschlag:        {type: Number,  required: false, default: 0},
   Sicherheitseinbehalt: {type: Number,  required: false, default: 0},
   Nebenkosten:          {type: Number,  required: false, default: 0},

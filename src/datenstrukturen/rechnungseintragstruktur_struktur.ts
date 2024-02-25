@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import {Honorarsummenstruktur} from "./honorarsummenstruktur_server";
 
 interface IRechnungseintragstruktur  {
 
@@ -6,11 +7,7 @@ interface IRechnungseintragstruktur  {
   Honoraranteil: number;
 
   Valid?: boolean;
-  Nettohonorar?: number;
-  Nettonebenkosten?: number;
-  Nettogesamthonorar?: number;
-  Mehrwertsteuer?: number;
-  Bruttogesamthonorar?: number;
+  Honorarberechnung?: Honorarsummenstruktur;
 };
 
 const Rechnungseintraghema = new mongoose.Schema({
