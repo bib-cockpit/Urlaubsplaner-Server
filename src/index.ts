@@ -129,7 +129,7 @@ const options: IBearerStrategyOptionWithRequest =  {
   identityMetadata:`https://login.microsoftonline.com/${Tenant_ID}/${version}/.well-known/openid-configuration`,
   clientID: Server_App_ID, //  Server_App_ID,
   // issuer: `https://login.microsoftonline.com/${Tenant_ID}/${version}`, // nicht notwendig
-  audience: 'api://8289bad1-d444-4958-9033-832603d0e244', // notwendig
+  audience: 'api://ca7568f7-4672-4348-843b-b80b210d692f', // notwendig
   loggingLevel: "info", // 'info', 'warn','error'.
   passReqToCallback: false, // auf false lassen sonst done function in BearerStrategy undefined
   // isB2C:false, nicht notwendig
