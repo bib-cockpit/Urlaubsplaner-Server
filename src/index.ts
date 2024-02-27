@@ -212,6 +212,7 @@ Notizenkapitelroutes.SetRoutes();
 Festlegungskategorieroutes.SetRoutes();
 Simontabellenrouts.SetRoutes();
 
+
 app.use('/',               Homerouter.homerouter);
 app.use('/.auth/login/aad/callback', Homerouter.homerouter);
 app.use('/error',          Errorrouter.errorrouter);
