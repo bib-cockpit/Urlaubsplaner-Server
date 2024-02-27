@@ -50,6 +50,7 @@ interface IProjektestruktur  {
   ProtokolleFolderID:    string;
   BautagebuchFolderID:   string;
   BaustellenLOPFolderID: string;
+  RechnungListefolderID: string;
   LastLOPEintragnummer:   number;
 };
 
@@ -103,7 +104,9 @@ const Projekteshema = new mongoose.Schema({
   ProtokolleFolderID:    {type: String,  required: false},
   BautagebuchFolderID:   {type: String,  required: false},
   BaustellenLOPFolderID: {type: String,  required: false},
+  RechnungListefolderID: {type: String,  required: false}
 });
 
 export { IProjektestruktur, Projekteshema };
+
 
