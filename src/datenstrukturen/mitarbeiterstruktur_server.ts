@@ -26,9 +26,11 @@ interface IMitarbeiterstruktur  {
     Fachbereich: string;
     Deleted:    boolean;
     Archiviert: boolean;
-    Urlaubsfreigaben: boolean;
-    Urlaubsadministrator: boolean;
-    ShowUrlaubOnly: boolean;
+
+    Planeradministrator: boolean;
+    Urlaubsfreigaben:    boolean;
+    Homeofficefreigaben: boolean;
+
     Favoritenliste:  IFavoritenstruktur[];
     Meintagliste:    IMeintagstruktur[];
     Meinewocheliste: IMeinewochestruktur[];
@@ -55,9 +57,10 @@ const Mitarbeitershema = new mongoose.Schema({
   Fachbereich:    {type: String, required: false},
   Deleted:        {type: Boolean, default: false},
   Archiviert:     {type: Boolean, default: false},
-  Urlaubsfreigaben:     {type: Boolean, default: false},
-  Urlaubsadministrator: {type: Boolean, default: false},
-  ShowUrlaubOnly: {type: Boolean, default: true},
+
+  Planeradministrator: {type: Boolean, default: false},
+  Urlaubsfreigaben:    {type: Boolean, default: false},
+  Homeofficefreigaben: {type: Boolean, default: false},
 
   Favoritenliste:  [Favoritenshema],
   Meintagliste:    [Meintagshema],
